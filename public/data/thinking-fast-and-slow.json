@@ -1,0 +1,17 @@
+{
+  "title": "Thinking, Fast and Slow",
+  "author": "Daniel Kahneman",
+  "amazonLink": "https://www.amazon.com/Thinking-Fast-Slow-Daniel-Kahneman/dp/0374533555",
+  "excerpts": [
+    {
+      "id": "tfs1",
+      "text": "A reliable way to make people believe in falsehoods is frequent repetition, because familiarity is not easily distinguished from truth.",
+      "chapter": "5"
+    },
+    {
+      "id": "tfs2",
+      "text": "Nothing in life is as important as you think it is when you are thinking about it.",
+      "chapter": "8"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Atomic Habits",
+  "author": "James Clear",
+  "amazonLink": "https://www.amazon.com/Atomic-Habits-Proven-Build-Break/dp/0735211299",
+  "excerpts": [
+    {
+      "id": "ah1",
+      "text": "Habits are the compound interest of self-improvement. The same way that money multiplies through compound interest, the effects of your habits multiply as you repeat them.",
+      "chapter": "1"
+    },
+    {
+      "id": "ah2",
+      "text": "You do not rise to the level of your goals. You fall to the level of your systems.",
+      "chapter": "2"
+    }
+  ]
+}
