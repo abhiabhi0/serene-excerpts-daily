@@ -1,7 +1,7 @@
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Share as ShareIcon } from "lucide-react";
+import { Share as ShareIcon, ShoppingCart } from "lucide-react";
 import { Share } from '@capacitor/share';
 
 interface ExcerptCardProps {
@@ -16,10 +16,15 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
         title: `${excerpt.bookTitle} by ${excerpt.bookAuthor}`,
         text: `"${excerpt.text}"\n\nFrom ${excerpt.bookTitle} by ${excerpt.bookAuthor}`,
         url: excerpt.amazonLink,
+        dialogTitle: 'Share this excerpt'
       });
     } catch (error) {
       console.error("Error sharing:", error);
     }
+  };
+
+  const handleBuyBook = () => {
+    window.open(excerpt.amazonLink, '_blank');
   };
 
   return (
@@ -49,6 +54,16 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
           <ShareIcon className="w-4 h-4 mr-2" />
           Share
         </Button>
+        {excerpt.amazonLink && (
+          <Button 
+            variant="default"
+            className="flex-1"
+            onClick={handleBuyBook}
+          >
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Buy Book
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
