@@ -1,11 +1,43 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useQuery } from "@tanstack/react-query";
+import { getRandomExcerpt } from "@/services/excerptService";
+import { ExcerptCard } from "@/components/ExcerptCard";
+import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
+  const { toast } = useToast();
+  
+  const { data: excerpt, refetch, isLoading, isError } = useQuery({
+    queryKey: ["excerpt"],
+    queryFn: getRandomExcerpt,
+    retry: 2,
+  });
+
+  const handleNewExcerpt = () => {
+    refetch();
+  };
+
+  if (isError) {
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: "Failed to load excerpt. Please try again.",
+    });
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="min-h-screen p-4 bg-gradient-to-br from-primary/50 to-secondary/50">
+      <div className="container max-w-2xl mx-auto pt-8">
+        {isLoading ? (
+          <div className="animate-pulse space-y-4">
+            <div className="h-40 bg-white/50 rounded-lg"></div>
+            <div className="h-20 bg-white/50 rounded-lg"></div>
+          </div>
+        ) : excerpt ? (
+          <ExcerptCard 
+            excerpt={excerpt} 
+            onNewExcerpt={handleNewExcerpt}
+          />
+        ) : null}
       </div>
     </div>
   );
