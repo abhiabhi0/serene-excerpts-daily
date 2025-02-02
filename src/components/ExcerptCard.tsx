@@ -1,9 +1,8 @@
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Share } from "lucide-react";
-import { Plugins } from '@capacitor/core';
-const { Share: SharePlugin } = Plugins;
+import { Share as ShareIcon } from "lucide-react";
+import { Share } from '@capacitor/share';
 
 interface ExcerptCardProps {
   excerpt: ExcerptWithMeta;
@@ -13,7 +12,7 @@ interface ExcerptCardProps {
 export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   const handleShare = async () => {
     try {
-      await SharePlugin.share({
+      await Share.share({
         title: `${excerpt.bookTitle} by ${excerpt.bookAuthor}`,
         text: `"${excerpt.text}"\n\nFrom ${excerpt.bookTitle} by ${excerpt.bookAuthor}`,
         url: excerpt.amazonLink,
@@ -47,7 +46,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
           className="flex-1"
           onClick={handleShare}
         >
-          <Share className="w-4 h-4 mr-2" />
+          <ShareIcon className="w-4 h-4 mr-2" />
           Share
         </Button>
       </CardFooter>
