@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useToast } from "@/components/ui/use-toast";
+import { useEffect } from "react";
 
 const Index = () => {
   const { toast } = useToast();
@@ -16,13 +17,15 @@ const Index = () => {
     refetch();
   };
 
-  if (isError) {
-    toast({
-      variant: "destructive",
-      title: "Error",
-      description: "Failed to load excerpt. Please try again.",
-    });
-  }
+  useEffect(() => {
+    if (isError) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to load excerpt. Please try again.",
+      });
+    }
+  }, [isError, toast]);
 
   return (
     <div className="min-h-screen p-4 bg-gradient-to-br from-primary/50 to-secondary/50">
