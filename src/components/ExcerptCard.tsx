@@ -38,17 +38,17 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
           <p>by {excerpt.bookAuthor}</p>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between gap-4 px-6 pb-6">
+      <CardFooter className="flex flex-wrap justify-between gap-4 px-6 pb-6">
         <Button 
           variant="outline" 
-          className="flex-1"
+          className="flex-1 min-w-[120px]"
           onClick={onNewExcerpt}
         >
           New Excerpt
         </Button>
         <Button 
           variant="secondary"
-          className="flex-1"
+          className="flex-1 min-w-[120px]"
           onClick={handleShare}
         >
           <ShareIcon className="w-4 h-4 mr-2" />
@@ -57,7 +57,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
         {excerpt.amazonLink && (
           <Button 
             variant="default"
-            className="flex-1"
+            className="flex-1 min-w-[120px]"
             onClick={handleBuyBook}
           >
             <ShoppingCart className="w-4 h-4 mr-2" />
