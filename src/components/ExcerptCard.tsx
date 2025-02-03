@@ -88,22 +88,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
         <CardContent className="p-6 text-center">
           <h2 className="text-lg font-semibold mb-4">Support Excerpt</h2>
           <div className="flex flex-col items-center gap-4">
-            <QRCodeSVG 
-              value="upi://pay?pa=razorpay-handle@upi" 
-              size={150}
-              className="mb-2"
-            />
-            <p className="text-sm text-muted-foreground">
-              Scan QR code or visit{' '}
-              <a 
-                href="https://razorpay.me/your-handle" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
-              >
-                razorpay.me/your-handle
-              </a>
-            </p>
+          <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="botman1001" data-description="Support me on Buy me a coffee!" data-message="" data-color="#BD5FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
           </div>
         </CardContent>
         <CardFooter className="p-6 pt-0 flex justify-center gap-4">
