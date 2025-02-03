@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'dev.lovable.dailyexcerpts',
-  appName: 'Daily Excerpts',
+  appId: 'dev.lovable.excerpt',
+  appName: 'Excerpt',
   webDir: 'dist',
   server: {
     androidScheme: 'https'
