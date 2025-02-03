@@ -13,8 +13,8 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   const handleShare = async () => {
     try {
       await Share.share({
-        title: `${excerpt.bookTitle} by ${excerpt.bookAuthor}`,
-        text: `"${excerpt.text}"\n\nFrom ${excerpt.bookTitle} by ${excerpt.bookAuthor}`,
+        title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
+        text: `"${excerpt.text}"\n\n${excerpt.bookTitle ? `From ${excerpt.bookTitle}` : ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
         url: excerpt.amazonLink,
         dialogTitle: 'Share this excerpt'
       });
@@ -34,8 +34,8 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
           "{excerpt.text}"
         </blockquote>
         <div className="text-sm text-muted-foreground">
-          <p className="font-semibold">{excerpt.bookTitle}</p>
-          <p>by {excerpt.bookAuthor}</p>
+          {excerpt.bookTitle && <p className="font-semibold">{excerpt.bookTitle}</p>}
+          {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
         </div>
       </CardContent>
       <CardFooter className="flex flex-wrap justify-between gap-4 px-6 pb-6">
