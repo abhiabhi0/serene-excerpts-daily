@@ -22,9 +22,10 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     
     return {
       ...randomExcerpt,
-      bookTitle: book.title,
-      bookAuthor: book.author,
-      amazonLink: book.amazonLink,
+      bookTitle: book.metadata.title,
+      bookAuthor: book.metadata.author,
+      translator: book.metadata.translator,
+      amazonLink: book.metadata.amazonLink,
     };
   } catch (error) {
     console.error("Error fetching excerpt:", error);

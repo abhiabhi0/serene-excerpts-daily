@@ -1,19 +1,24 @@
 export interface Book {
-  title: string;
-  author: string;
-  amazonLink: string;
+  metadata: {
+    title: string;
+    author: string;
+    translator: string;
+    amazonLink: string;
+    tags: string[];
+  };
   excerpts: Excerpt[];
 }
 
 export interface Excerpt {
-  id: string;
   text: string;
-  page?: number;
   chapter?: string;
+  verse?: string;
+  commentary: boolean;
 }
 
 export interface ExcerptWithMeta extends Excerpt {
   bookTitle: string;
   bookAuthor: string;
+  translator: string;
   amazonLink: string;
 }
