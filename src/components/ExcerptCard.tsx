@@ -88,7 +88,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
         <CardContent className="p-6 text-center">
           <h2 className="text-lg font-semibold mb-4">Support Excerpt</h2>
           <div className="flex flex-col items-center gap-4">
-          <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="botman1001" data-description="Support me on Buy me a coffee!" data-message="" data-color="#BD5FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+          <a href="https://www.buymeacoffee.com/botman1001"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a book&emoji=📖&slug=botman1001&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" /></a>
           </div>
         </CardContent>
         <CardFooter className="p-6 pt-0 flex justify-center gap-4">
