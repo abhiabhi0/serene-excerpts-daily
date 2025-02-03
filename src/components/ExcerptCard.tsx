@@ -33,9 +33,10 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
         <blockquote className="text-lg mb-4 leading-relaxed">
           "{excerpt.text}"
         </blockquote>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground space-y-1">
           {excerpt.bookTitle && <p className="font-semibold">{excerpt.bookTitle}</p>}
           {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
+          {excerpt.translator && <p>translated by {excerpt.translator}</p>}
         </div>
       </CardContent>
       <CardFooter className="flex flex-wrap justify-between gap-4 px-6 pb-6">
