@@ -104,7 +104,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
         </CardContent>
         <CardFooter className="p-6 pt-0 flex justify-center gap-4">
           <a 
-            href="https://instagram.com/your-handle" 
+            href="https://instagram.com/atmanam.viddhi" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-pink-600 hover:text-pink-700"
@@ -112,7 +112,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
             <Instagram className="w-6 h-6" />
           </a>
           <a 
-            href="https://facebook.com/your-page" 
+            href="https://facebook.com/atmanam.viddhi" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-blue-600 hover:text-blue-700"
