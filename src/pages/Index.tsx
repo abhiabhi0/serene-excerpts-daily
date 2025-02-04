@@ -3,7 +3,6 @@ import { getRandomExcerpt } from "@/services/excerptService";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
-import { QRCodeSVG } from "qrcode.react";
 
 const Index = () => {
   const { toast } = useToast();
@@ -29,12 +28,12 @@ const Index = () => {
   }, [isError, toast]);
 
   return (
-    <div className="min-h-screen p-4 bg-gradient-to-br from-primary/50 to-secondary/50">
+    <div className="min-h-screen p-4 bg-gradient-to-br from-[#0A1929] via-[#0F2942] to-[#1A4067]">
       <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8">
         {isLoading ? (
           <div className="animate-pulse space-y-4">
-            <div className="h-40 bg-white/50 rounded-lg"></div>
-            <div className="h-20 bg-white/50 rounded-lg"></div>
+            <div className="h-40 bg-white/5 rounded-lg"></div>
+            <div className="h-20 bg-white/5 rounded-lg"></div>
           </div>
         ) : excerpt ? (
           <>
