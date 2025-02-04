@@ -1,6 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Check if environment variables are defined
+if (!import.meta.env.VITE_SUPABASE_URL) {
+  console.error('VITE_SUPABASE_URL is not defined');
+}
+if (!import.meta.env.VITE_SUPABASE_ANON_KEY) {
+  console.error('VITE_SUPABASE_ANON_KEY is not defined');
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL || '',
+  import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+);
