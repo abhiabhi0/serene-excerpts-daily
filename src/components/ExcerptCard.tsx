@@ -34,7 +34,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
       {/* Excerpt Card */}
-      <Card className="bg-white/80 backdrop-blur-sm">
+      <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="pt-6 px-6">
           <blockquote className="text-lg mb-4 leading-relaxed">
             "{excerpt.text}"
@@ -44,7 +44,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
             {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
             {excerpt.translator && <p>translated by {excerpt.translator}</p>}
           </div>
-          <div className="mt-6 pt-4 border-t text-sm text-center text-muted-foreground">
+          <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
             <p className="font-semibold">Excerpt - Daily Book Excerpts</p>
             <p className="mt-1">Available on Google Play Store</p>
           </div>
@@ -52,7 +52,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       </Card>
 
       {/* Action Buttons */}
-      <Card className="bg-white/80 backdrop-blur-sm">
+      <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="flex flex-wrap justify-between gap-4 p-6">
           <Button 
             variant="outline" 
@@ -84,11 +84,13 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       </Card>
 
       {/* Support Section */}
-      <Card className="bg-white/80 backdrop-blur-sm">
+      <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="p-6 text-center">
           <h2 className="text-lg font-semibold mb-4">Support Excerpt</h2>
           <div className="flex flex-col items-center gap-4">
-          <a href="https://www.buymeacoffee.com/botman1001"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a book&emoji=📖&slug=botman1001&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" /></a>
+            <a href="https://www.buymeacoffee.com/botman1001">
+              <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a book&emoji=📖&slug=botman1001&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" />
+            </a>
           </div>
         </CardContent>
         <CardFooter className="p-6 pt-0 flex justify-center gap-4">
