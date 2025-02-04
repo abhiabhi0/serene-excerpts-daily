@@ -45,6 +45,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
             {excerpt.translator && <p>translated by {excerpt.translator}</p>}
           </div>
           <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
+            <img 
+              src="/lovable-uploads/6ef4d839-81dd-44d4-a345-1b9b13936176.png" 
+              alt="Excerpt Logo" 
+              className="w-8 h-8 mx-auto mb-2"
+            />
             <p className="font-semibold">Excerpt - Daily Book Excerpts</p>
             <p className="mt-1">Available on Google Play Store</p>
           </div>
@@ -59,7 +64,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
             className="flex-1"
             onClick={onNewExcerpt}
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
+            <img 
+              src="/lovable-uploads/d306306a-eab4-4962-a421-fad5aabf1171.png" 
+              alt="New Excerpt" 
+              className="w-4 h-4 mr-2"
+            />
             New Excerpt
           </Button>
           <Button 
