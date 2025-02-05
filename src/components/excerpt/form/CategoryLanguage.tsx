@@ -37,6 +37,10 @@ export const CategoryLanguage = ({
     !["hi", "bn", "te", "mr", "ta", "ur", "gu", "kn", "ml", "pa", "sa"].includes(lang.code)
   );
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+  };
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -85,6 +89,8 @@ export const CategoryLanguage = ({
                 placeholder="Search language..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+                onClick={(e) => e.stopPropagation()}
                 className="mb-2"
               />
             </div>
