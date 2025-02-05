@@ -40,17 +40,18 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
             {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
             {excerpt.translator && <p>translated by {excerpt.translator}</p>}
           </div>
-          {!excerpt.isLocal && (
-            <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
-              <img 
-                src="/lovable-uploads/6ef4d839-81dd-44d4-a345-1b9b13936176.png" 
-                alt="Excerpt Logo" 
-                className="w-8 h-8 mx-auto mb-2"
-              />
-              <p className="font-semibold">Excerpt - Daily Book Excerpts</p>
-              <p className="mt-1">Available on Google Play Store</p>
-            </div>
-          )}
+          <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
+            <img 
+              src="/lovable-uploads/6ef4d839-81dd-44d4-a345-1b9b13936176.png" 
+              alt="Excerpt Logo" 
+              className="w-8 h-8 mx-auto mb-2"
+            />
+            <p className="font-semibold">Excerpt - Daily Book Excerpts</p>
+            <p className="mt-1">Available on Google Play Store</p>
+            {excerpt.isLocal && (
+              <p className="mt-2 text-xs italic">Take a screenshot and share your excerpt with the world!</p>
+            )}
+          </div>
         </CardContent>
       </Card>
 

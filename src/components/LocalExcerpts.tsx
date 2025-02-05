@@ -28,6 +28,12 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
     setExcerpts(newExcerpts);
     localStorage.setItem("localExcerpts", JSON.stringify(newExcerpts));
     setIsFormOpen(false);
+    
+    // Automatically display the new excerpt
+    if (onSelectForDisplay) {
+      console.log("Automatically displaying new excerpt");
+      onSelectForDisplay(excerpt);
+    }
   };
 
   return (
