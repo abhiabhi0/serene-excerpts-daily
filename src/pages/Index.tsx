@@ -7,10 +7,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LocalExcerpts } from "@/components/LocalExcerpts";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
+import { useSearchParams } from "react-router-dom";
 
 const Index = () => {
   const { toast } = useToast();
   const [localExcerpts, setLocalExcerpts] = useState<LocalExcerpt[]>([]);
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'random');
+  
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
   
   useEffect(() => {
     const saved = localStorage.getItem("localExcerpts");
@@ -76,7 +86,7 @@ const Index = () => {
   return (
     <div className="min-h-screen p-4 bg-gradient-to-br from-[#0A1929] via-[#0F2942] to-[#1A4067]">
       <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8">
-        <Tabs defaultValue="random" className="w-full">
+        <Tabs value={activeTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="random">Random Excerpts</TabsTrigger>
             <TabsTrigger value="local">My Excerpts</TabsTrigger>
