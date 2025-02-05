@@ -9,6 +9,7 @@ import { LocalExcerpt } from "@/types/localExcerpt";
 import { useSearchParams } from "react-router-dom";
 import { TabsContainer } from "@/components/excerpt/TabsContainer";
 import { RandomExcerptsTab } from "@/components/excerpt/RandomExcerptsTab";
+import { useGesture } from "@use-gesture/react";
 
 const Index = () => {
   const { toast } = useToast();
@@ -16,6 +17,28 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'random');
   const [currentExcerpt, setCurrentExcerpt] = useState<ExcerptWithMeta | null>(null);
+
+  // Bind swipe gestures
+  useGesture(
+    {
+      onSwipeLeft: ({ direction: [dx] }) => {
+        if (dx < 0 && activeTab === 'random') {
+          setActiveTab('local');
+          setSearchParams({ tab: 'local' });
+        }
+      },
+      onSwipeRight: ({ direction: [dx] }) => {
+        if (dx > 0 && activeTab === 'local') {
+          setActiveTab('random');
+          setSearchParams({ tab: 'random' });
+        }
+      },
+    },
+    {
+      target: window,
+      eventOptions: { passive: false },
+    }
+  );
 
   useEffect(() => {
     const tab = searchParams.get('tab');
