@@ -5,7 +5,7 @@ import { ExcerptList } from "./ExcerptList";
 import { ExcerptForm } from "./ExcerptForm";
 import { Button } from "./ui/button";
 import { ImportExport } from "./ImportExport";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { ScrollArea } from "./ui/scroll-area";
 import { useToast } from "./ui/use-toast";
@@ -32,6 +32,10 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
       const savedBookData = localStorage.getItem(bookFileName);
       let bookData: LocalExcerptBook;
       
+      // Get existing files list
+      const savedFiles = localStorage.getItem("files.json");
+      const files: string[] = savedFiles ? JSON.parse(savedFiles) : [];
+      
       if (savedBookData) {
         bookData = JSON.parse(savedBookData);
       } else {
@@ -50,9 +54,7 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
           excerpts: []
         };
 
-        // Update files.json
-        const savedFiles = localStorage.getItem("files.json");
-        const files: string[] = savedFiles ? JSON.parse(savedFiles) : [];
+        // Update files.json if it's a new book
         if (!files.includes(bookFileName)) {
           files.push(bookFileName);
           localStorage.setItem("files.json", JSON.stringify(files));
@@ -188,3 +190,4 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
     </div>
   );
 };
+
