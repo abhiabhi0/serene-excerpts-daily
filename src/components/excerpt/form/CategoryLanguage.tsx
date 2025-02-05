@@ -64,7 +64,7 @@ export const CategoryLanguage = ({
           <SelectTrigger>
             <SelectValue placeholder="Select language" />
           </SelectTrigger>
-          <SelectContent className="h-[200px] overflow-y-auto">
+          <SelectContent className="h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500">
             <div className="p-2 font-semibold text-sm text-muted-foreground">Indian Languages</div>
             {languages
               .filter(lang => ["hi", "bn", "te", "mr", "ta", "ur", "gu", "kn", "ml", "pa", "sa"].includes(lang.code))
