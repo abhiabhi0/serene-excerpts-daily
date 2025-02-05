@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { categories, languages } from "@/types/localExcerpt";
+import { useState } from "react";
 
 interface CategoryLanguageProps {
   category: string;
@@ -22,6 +23,20 @@ export const CategoryLanguage = ({
   language,
   onFormDataChange,
 }: CategoryLanguageProps) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredLanguages = languages.filter(lang => 
+    lang.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const indianLanguages = filteredLanguages.filter(lang => 
+    ["hi", "bn", "te", "mr", "ta", "ur", "gu", "kn", "ml", "pa", "sa"].includes(lang.code)
+  );
+
+  const internationalLanguages = filteredLanguages.filter(lang => 
+    !["hi", "bn", "te", "mr", "ta", "ur", "gu", "kn", "ml", "pa", "sa"].includes(lang.code)
+  );
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -64,24 +79,43 @@ export const CategoryLanguage = ({
           <SelectTrigger>
             <SelectValue placeholder="Select language" />
           </SelectTrigger>
-          <SelectContent className="h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500">
-            <div className="p-2 font-semibold text-sm text-muted-foreground">Indian Languages</div>
-            {languages
-              .filter(lang => ["hi", "bn", "te", "mr", "ta", "ur", "gu", "kn", "ml", "pa", "sa"].includes(lang.code))
-              .map((lang) => (
-                <SelectItem key={lang.code} value={lang.code}>
-                  {lang.name}
-                </SelectItem>
-              ))}
+          <SelectContent className="h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500">
+            <div className="p-2 sticky top-0 bg-background border-b">
+              <Input
+                placeholder="Search language..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="mb-2"
+              />
+            </div>
+
+            {indianLanguages.length > 0 && (
+              <>
+                <div className="p-2 font-semibold text-sm text-muted-foreground">Indian Languages</div>
+                {indianLanguages.map((lang) => (
+                  <SelectItem key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </SelectItem>
+                ))}
+              </>
+            )}
             
-            <div className="p-2 font-semibold text-sm text-muted-foreground border-t mt-2">International Languages</div>
-            {languages
-              .filter(lang => !["hi", "bn", "te", "mr", "ta", "ur", "gu", "kn", "ml", "pa", "sa"].includes(lang.code))
-              .map((lang) => (
-                <SelectItem key={lang.code} value={lang.code}>
-                  {lang.name}
-                </SelectItem>
-              ))}
+            {internationalLanguages.length > 0 && (
+              <>
+                <div className="p-2 font-semibold text-sm text-muted-foreground border-t mt-2">International Languages</div>
+                {internationalLanguages.map((lang) => (
+                  <SelectItem key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </SelectItem>
+                ))}
+              </>
+            )}
+
+            {filteredLanguages.length === 0 && (
+              <div className="p-2 text-sm text-muted-foreground text-center">
+                No languages found
+              </div>
+            )}
           </SelectContent>
         </Select>
       </div>
