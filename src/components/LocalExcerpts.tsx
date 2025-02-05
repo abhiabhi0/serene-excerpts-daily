@@ -28,7 +28,7 @@ export const LocalExcerpts = () => {
   };
 
   return (
-    <div className="w-full min-h-screen space-y-6 px-2 sm:px-4 max-w-[95vw] mx-auto">
+    <div className="w-[98%] mx-auto min-h-screen space-y-4 px-1">
       <ExcerptList excerpts={excerpts} />
       <ExcerptForm onSubmit={handleAddExcerpt} existingBooks={getUniqueBooks()} />
       <ImportExport excerpts={excerpts} onImport={handleImport} />

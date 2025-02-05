@@ -28,10 +28,10 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   };
 
   return (
-    <div className="w-full max-w-[95vw] mx-auto space-y-6">
+    <div className="w-[98%] mx-auto space-y-4">
       {/* Excerpt Card */}
       <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
-        <CardContent className="pt-6 px-4 sm:px-6">
+        <CardContent className="pt-6 px-2">
           <blockquote className="text-lg mb-4 leading-relaxed">
             "{excerpt.text}"
           </blockquote>
@@ -56,7 +56,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
 
       {/* Action Buttons */}
       <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
-        <CardContent className="p-4 sm:p-6">
+        <CardContent className="p-2">
           <div className="flex flex-wrap gap-4">
             <Button 
               variant="outline" 
