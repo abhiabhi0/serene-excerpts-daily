@@ -11,16 +11,37 @@ export interface LocalExcerpt {
 }
 
 export const categories = [
-  "Poetry",
-  "Prose",
   "Philosophy",
   "Spirituality",
+  "Manifestation",
+  "Self Help",
   "Other"
 ];
 
 export const languages = [
-  { code: "en", name: "English" },
+  // Indian Languages
   { code: "hi", name: "Hindi" },
+  { code: "bn", name: "Bengali" },
+  { code: "te", name: "Telugu" },
+  { code: "mr", name: "Marathi" },
+  { code: "ta", name: "Tamil" },
+  { code: "ur", name: "Urdu" },
+  { code: "gu", name: "Gujarati" },
+  { code: "kn", name: "Kannada" },
+  { code: "ml", name: "Malayalam" },
+  { code: "pa", name: "Punjabi" },
   { code: "sa", name: "Sanskrit" },
-  { code: "mr", name: "Marathi" }
+  
+  // International Languages
+  { code: "en", name: "English" },
+  { code: "es", name: "Spanish" },
+  { code: "fr", name: "French" },
+  { code: "de", name: "German" },
+  { code: "it", name: "Italian" },
+  { code: "pt", name: "Portuguese" },
+  { code: "ru", name: "Russian" },
+  { code: "ja", name: "Japanese" },
+  { code: "ko", name: "Korean" },
+  { code: "zh", name: "Chinese" },
+  { code: "ar", name: "Arabic" }
 ];

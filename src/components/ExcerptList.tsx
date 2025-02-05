@@ -35,19 +35,17 @@ export const ExcerptList = ({ excerpts, onSelectForDisplay }: ExcerptListProps) 
               {bookExcerpts.map((excerpt) => (
                 <div 
                   key={excerpt.id} 
-                  className="relative group"
+                  className="relative group flex items-start justify-between gap-4"
                 >
-                  <p className="text-sm text-left pr-12">{excerpt.text}</p>
-                  {onSelectForDisplay && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => onSelectForDisplay(excerpt)}
-                    >
-                      <BookOpen className="w-4 h-4" />
-                    </Button>
-                  )}
+                  <p className="text-sm text-left flex-1">{excerpt.text}</p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="shrink-0 opacity-70 hover:opacity-100 transition-opacity"
+                    onClick={() => onSelectForDisplay && onSelectForDisplay(excerpt)}
+                  >
+                    <BookOpen className="w-4 h-4" />
+                  </Button>
                 </div>
               ))}
             </div>

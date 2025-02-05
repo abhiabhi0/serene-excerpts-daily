@@ -34,9 +34,9 @@ export const CategoryLanguage = ({
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
-            {categories.map((category) => (
-              <SelectItem key={category} value={category}>
-                {category}
+            {categories.map((cat) => (
+              <SelectItem key={cat} value={cat}>
+                {cat}
               </SelectItem>
             ))}
           </SelectContent>
@@ -45,12 +45,12 @@ export const CategoryLanguage = ({
 
       {category === "Other" && (
         <div className="space-y-2">
-          <Label htmlFor="otherCategory">Other Category Name</Label>
+          <Label htmlFor="otherCategory">Custom Category</Label>
           <Input
             id="otherCategory"
             value={otherCategory}
             onChange={(e) => onFormDataChange('otherCategory', e.target.value)}
-            placeholder="Enter category name"
+            placeholder="Enter your own category (optional)"
           />
         </div>
       )}
@@ -64,7 +64,7 @@ export const CategoryLanguage = ({
           <SelectTrigger>
             <SelectValue placeholder="Select language" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-h-[300px]">
             {languages.map((lang) => (
               <SelectItem key={lang.code} value={lang.code}>
                 {lang.name}
