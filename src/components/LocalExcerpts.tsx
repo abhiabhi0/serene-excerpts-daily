@@ -39,13 +39,16 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
               Add Excerpt
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-2xl">
             <ExcerptForm 
               onSubmit={handleSubmit}
               existingBooks={excerpts.map(e => e.bookTitle).filter((value, index, self) => self.indexOf(value) === index)}
             />
           </DialogContent>
         </Dialog>
+      </div>
+      <ExcerptList excerpts={excerpts} onSelectForDisplay={onSelectForDisplay} />
+      <div className="mt-8">
         <ImportExport 
           excerpts={excerpts} 
           onImport={(imported) => {
@@ -54,7 +57,6 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
           }} 
         />
       </div>
-      <ExcerptList excerpts={excerpts} onSelectForDisplay={onSelectForDisplay} />
     </div>
   );
 };
