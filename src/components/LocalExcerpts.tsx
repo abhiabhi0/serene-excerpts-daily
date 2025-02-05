@@ -14,6 +14,14 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { v4 as uuidv4 } from "uuid";
+import { ChevronDown, ChevronUp, Download, Upload } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export const LocalExcerpts = () => {
   const { toast } = useToast();
@@ -31,6 +39,33 @@ export const LocalExcerpts = () => {
     language: "",
     text: "",
   });
+
+  const [expandedBook, setExpandedBook] = useState<string | null>(null);
+
+  const handleBookSelect = (bookTitle: string) => {
+    const existingExcerpt = excerpts.find(e => e.bookTitle === bookTitle);
+    if (existingExcerpt) {
+      setFormData({
+        ...formData,
+        bookTitle: existingExcerpt.bookTitle,
+        bookAuthor: existingExcerpt.bookAuthor || "",
+        translator: existingExcerpt.translator || "",
+        category: existingExcerpt.category,
+        otherCategory: "",
+        language: existingExcerpt.language,
+        text: ""
+      });
+    }
+  };
+
+  const getUniqueBooks = () => {
+    const books = new Set(excerpts.map(e => e.bookTitle));
+    return Array.from(books);
+  };
+
+  const getExcerptsForBook = (bookTitle: string) => {
+    return excerpts.filter(e => e.bookTitle === bookTitle);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,8 +105,92 @@ export const LocalExcerpts = () => {
     });
   };
 
+  const handleExport = () => {
+    const dataStr = JSON.stringify(excerpts, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'my-excerpts.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedExcerpts = JSON.parse(e.target?.result as string);
+        if (Array.isArray(importedExcerpts) && importedExcerpts.every(isValidExcerpt)) {
+          setExcerpts(prev => [...importedExcerpts, ...prev]);
+          localStorage.setItem("localExcerpts", JSON.stringify([...importedExcerpts, ...excerpts]));
+          toast({
+            title: "Success",
+            description: "Excerpts imported successfully!",
+          });
+        } else {
+          throw new Error("Invalid format");
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Invalid file format",
+          variant: "destructive",
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const isValidExcerpt = (excerpt: any): excerpt is LocalExcerpt => {
+    return typeof excerpt.id === 'string' &&
+           typeof excerpt.bookTitle === 'string' &&
+           typeof excerpt.category === 'string' &&
+           typeof excerpt.language === 'string' &&
+           typeof excerpt.text === 'string' &&
+           typeof excerpt.createdAt === 'string';
+  };
+
   return (
     <div className="space-y-6">
+      {/* Existing Books Section */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">My Books</h2>
+        <Accordion type="single" collapsible>
+          {getUniqueBooks().map((bookTitle) => (
+            <AccordionItem key={bookTitle} value={bookTitle}>
+              <AccordionTrigger className="text-left">
+                {bookTitle}
+              </AccordionTrigger>
+              <AccordionContent>
+                <ScrollArea className="w-full whitespace-nowrap rounded-md">
+                  <div className="flex w-max space-x-4 p-4">
+                    {getExcerptsForBook(bookTitle).map((excerpt) => (
+                      <Card key={excerpt.id} className="w-[300px] flex-none">
+                        <CardContent className="p-4">
+                          <blockquote className="text-sm mb-2">"{excerpt.text}"</blockquote>
+                          <div className="text-xs text-muted-foreground">
+                            {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
+                            {excerpt.translator && <p>translated by {excerpt.translator}</p>}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+
+      {/* Add Excerpt Form */}
       <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -84,7 +203,13 @@ export const LocalExcerpts = () => {
                   setFormData({ ...formData, bookTitle: e.target.value })
                 }
                 placeholder="Enter book title"
+                list="book-suggestions"
               />
+              <datalist id="book-suggestions">
+                {getUniqueBooks().map((book) => (
+                  <option key={book} value={book} />
+                ))}
+              </datalist>
             </div>
 
             <div className="space-y-2">
@@ -180,40 +305,47 @@ export const LocalExcerpts = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full">
-              Add Excerpt
-            </Button>
+            <div className="flex gap-4">
+              <Button type="submit" className="flex-1">
+                Add Excerpt
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
-        {excerpts.map((excerpt) => (
-          <Card
-            key={excerpt.id}
-            className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm"
-          >
-            <CardContent className="pt-6">
-              <blockquote className="text-lg mb-4 leading-relaxed">
-                "{excerpt.text}"
-              </blockquote>
-              <div className="text-sm text-muted-foreground space-y-1">
-                <p className="font-semibold">{excerpt.bookTitle}</p>
-                {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
-                {excerpt.translator && <p>translated by {excerpt.translator}</p>}
-                <p>Category: {excerpt.category}</p>
-                <p>
-                  Language:{" "}
-                  {languages.find((l) => l.code === excerpt.language)?.name}
-                </p>
-                <p className="text-xs">
-                  Added on: {new Date(excerpt.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Import/Export Section */}
+      <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+        <CardContent className="p-6">
+          <div className="flex gap-4">
+            <Button 
+              onClick={handleExport}
+              className="flex-1"
+              variant="outline"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export Excerpts
+            </Button>
+            <div className="flex-1">
+              <Input
+                type="file"
+                accept=".json"
+                onChange={handleImport}
+                className="hidden"
+                id="import-file"
+              />
+              <Button 
+                onClick={() => document.getElementById('import-file')?.click()}
+                className="w-full"
+                variant="outline"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Import Excerpts
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

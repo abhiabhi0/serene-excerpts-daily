@@ -2,22 +2,61 @@ import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useToast } from "@/components/ui/use-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LocalExcerpts } from "@/components/LocalExcerpts";
+import { ExcerptWithMeta } from "@/types/excerpt";
+import { LocalExcerpt } from "@/types/localExcerpt";
 
 const Index = () => {
   const { toast } = useToast();
+  const [localExcerpts, setLocalExcerpts] = useState<LocalExcerpt[]>([]);
   
-  const { data: excerpt, refetch, isLoading, isError } = useQuery({
+  useEffect(() => {
+    const saved = localStorage.getItem("localExcerpts");
+    if (saved) {
+      setLocalExcerpts(JSON.parse(saved));
+    }
+  }, []);
+
+  const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
     queryFn: getRandomExcerpt,
     retry: 2,
   });
 
-  const handleNewExcerpt = () => {
-    refetch();
+  const getRandomLocalExcerpt = (): ExcerptWithMeta | null => {
+    if (localExcerpts.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * localExcerpts.length);
+    const localExcerpt = localExcerpts[randomIndex];
+    return {
+      text: localExcerpt.text,
+      bookTitle: localExcerpt.bookTitle,
+      bookAuthor: localExcerpt.bookAuthor,
+      translator: localExcerpt.translator,
+      isLocal: true
+    };
   };
+
+  const handleNewExcerpt = () => {
+    if (Math.random() > 0.7 && localExcerpts.length > 0) {
+      // 30% chance to show a local excerpt if available
+      const localExcerpt = getRandomLocalExcerpt();
+      if (localExcerpt) {
+        setCurrentExcerpt(localExcerpt);
+        return;
+      }
+    }
+    refetchRemote();
+  };
+
+  const [currentExcerpt, setCurrentExcerpt] = useState<ExcerptWithMeta | null>(null);
+
+  useEffect(() => {
+    if (remoteExcerpt) {
+      setCurrentExcerpt(remoteExcerpt);
+    }
+  }, [remoteExcerpt]);
 
   useEffect(() => {
     if (isError) {
@@ -43,8 +82,11 @@ const Index = () => {
                 <div className="h-40 bg-white/5 rounded-lg"></div>
                 <div className="h-20 bg-white/5 rounded-lg"></div>
               </div>
-            ) : excerpt ? (
-              <ExcerptCard excerpt={excerpt} onNewExcerpt={handleNewExcerpt} />
+            ) : currentExcerpt ? (
+              <ExcerptCard 
+                excerpt={currentExcerpt} 
+                onNewExcerpt={handleNewExcerpt} 
+              />
             ) : null}
           </TabsContent>
           <TabsContent value="local">

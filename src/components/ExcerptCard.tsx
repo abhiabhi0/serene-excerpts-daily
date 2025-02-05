@@ -5,15 +5,12 @@ import { Share as ShareIcon, ShoppingCart, RefreshCw, Instagram, Facebook } from
 import { Share } from '@capacitor/share';
 import { QRCodeSVG } from "qrcode.react";
 
-interface ExcerptCardProps {
-  excerpt: ExcerptWithMeta;
-  onNewExcerpt: () => void;
-}
-
 export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   const handleShare = async () => {
+    if (excerpt.isLocal) return;
+    
     try {
-      const appUrl = "https://play.google.com/store/apps/details?id=your.app.id"; // Replace with your actual Play Store URL
+      const appUrl = "https://play.google.com/store/apps/details?id=your.app.id";
       await Share.share({
         title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
         text: `"${excerpt.text}"\n\nRead more spiritual excerpts on Excerpt app:`,
@@ -44,15 +41,17 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
             {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
             {excerpt.translator && <p>translated by {excerpt.translator}</p>}
           </div>
-          <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
-            <img 
-              src="/lovable-uploads/6ef4d839-81dd-44d4-a345-1b9b13936176.png" 
-              alt="Excerpt Logo" 
-              className="w-8 h-8 mx-auto mb-2"
-            />
-            <p className="font-semibold">Excerpt - Daily Book Excerpts</p>
-            <p className="mt-1">Available on Google Play Store</p>
-          </div>
+          {!excerpt.isLocal && (
+            <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
+              <img 
+                src="/lovable-uploads/6ef4d839-81dd-44d4-a345-1b9b13936176.png" 
+                alt="Excerpt Logo" 
+                className="w-8 h-8 mx-auto mb-2"
+              />
+              <p className="font-semibold">Excerpt - Daily Book Excerpts</p>
+              <p className="mt-1">Available on Google Play Store</p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -71,29 +70,34 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
             />
             New Excerpt
           </Button>
-          <Button 
-            variant="secondary"
-            className="flex-1"
-            onClick={handleShare}
-          >
-            <ShareIcon className="w-4 h-4 mr-2" />
-            Share
-          </Button>
-          {excerpt.amazonLink && (
-            <Button 
-              variant="default"
-              className="flex-1"
-              onClick={handleBuyBook}
-            >
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Buy Book
-            </Button>
+          {!excerpt.isLocal && (
+            <>
+              <Button 
+                variant="secondary"
+                className="flex-1"
+                onClick={handleShare}
+              >
+                <ShareIcon className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+              {excerpt.amazonLink && (
+                <Button 
+                  variant="default"
+                  className="flex-1"
+                  onClick={handleBuyBook}
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Buy Book
+                </Button>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
 
       {/* Support Section */}
-      <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+      {!excerpt.isLocal && (
+        <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="p-6 text-center">
           <h2 className="text-lg font-semibold mb-4">Support Excerpt</h2>
           <div className="flex flex-col items-center gap-4">
@@ -120,7 +124,8 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
             <Facebook className="w-6 h-6" />
           </a>
         </CardFooter>
-      </Card>
+        </Card>
+      )}
     </div>
   );
 };
