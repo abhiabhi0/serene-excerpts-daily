@@ -1,9 +1,8 @@
-import { ExcerptWithMeta } from "@/types/excerpt";
+import { ExcerptWithMeta, ExcerptCardProps } from "@/types/excerpt";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Share as ShareIcon, ShoppingCart, RefreshCw, Instagram, Facebook } from "lucide-react";
 import { Share } from '@capacitor/share';
-import { QRCodeSVG } from "qrcode.react";
 
 export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   const handleShare = async () => {
