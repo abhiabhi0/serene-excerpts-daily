@@ -7,7 +7,6 @@ import { ImportExport } from "./ImportExport";
 import { Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { ScrollArea } from "./ui/scroll-area";
-import { useNavigate } from "react-router-dom";
 
 interface LocalExcerptsProps {
   onSelectForDisplay?: (excerpt: LocalExcerpt) => void;
@@ -16,7 +15,6 @@ interface LocalExcerptsProps {
 export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
   const [excerpts, setExcerpts] = useState<LocalExcerpt[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const saved = localStorage.getItem("localExcerpts");
@@ -31,20 +29,15 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
     localStorage.setItem("localExcerpts", JSON.stringify(newExcerpts));
     setIsFormOpen(false);
     
-    // Automatically display the new excerpt and switch to random tab
     if (onSelectForDisplay) {
       console.log("Automatically displaying new excerpt");
       onSelectForDisplay(excerpt);
-      // Force a navigation to trigger tab switch
-      navigate('/?tab=random');
     }
   };
 
   const handleExcerptSelect = (excerpt: LocalExcerpt) => {
     if (onSelectForDisplay) {
       onSelectForDisplay(excerpt);
-      // Force a navigation to trigger tab switch
-      navigate('/?tab=random');
     }
   };
 

@@ -1,20 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
-import { ExcerptCard } from "@/components/ExcerptCard";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LocalExcerpts } from "@/components/LocalExcerpts";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { useSearchParams } from "react-router-dom";
+import { TabsContainer } from "@/components/excerpt/TabsContainer";
+import { RandomExcerptsTab } from "@/components/excerpt/RandomExcerptsTab";
 
 const Index = () => {
   const { toast } = useToast();
   const [localExcerpts, setLocalExcerpts] = useState<LocalExcerpt[]>([]);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'random');
-  
+  const [currentExcerpt, setCurrentExcerpt] = useState<ExcerptWithMeta | null>(null);
+
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab) {
@@ -61,17 +63,16 @@ const Index = () => {
     refetchRemote();
   };
 
-  const [currentExcerpt, setCurrentExcerpt] = useState<ExcerptWithMeta | null>(null);
+  const handleSelectExcerpt = (excerpt: LocalExcerpt) => {
+    setCurrentExcerpt(convertLocalToExcerptWithMeta(excerpt));
+    setSearchParams({ tab: 'random' });
+  };
 
   useEffect(() => {
     if (remoteExcerpt) {
       setCurrentExcerpt(remoteExcerpt);
     }
   }, [remoteExcerpt]);
-
-  const handleSelectExcerpt = (excerpt: LocalExcerpt) => {
-    setCurrentExcerpt(convertLocalToExcerptWithMeta(excerpt));
-  };
 
   useEffect(() => {
     if (isError) {
@@ -86,25 +87,17 @@ const Index = () => {
   return (
     <div className="min-h-screen p-4 bg-gradient-to-br from-[#0A1929] via-[#0F2942] to-[#1A4067]">
       <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8">
-        <Tabs value={activeTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="random">Random Excerpts</TabsTrigger>
-            <TabsTrigger value="local">My Excerpts</TabsTrigger>
-          </TabsList>
+        <Tabs value={activeTab} onValueChange={(value) => {
+          setActiveTab(value);
+          setSearchParams({ tab: value });
+        }} className="w-full">
+          <TabsContainer activeTab={activeTab} />
           <TabsContent value="random">
-            <div className="relative">
-              {isLoading ? (
-                <div className="animate-pulse space-y-4">
-                  <div className="h-40 bg-white/5 rounded-lg"></div>
-                  <div className="h-20 bg-white/5 rounded-lg"></div>
-                </div>
-              ) : currentExcerpt ? (
-                <ExcerptCard 
-                  excerpt={currentExcerpt} 
-                  onNewExcerpt={handleNewExcerpt} 
-                />
-              ) : null}
-            </div>
+            <RandomExcerptsTab 
+              currentExcerpt={currentExcerpt}
+              isLoading={isLoading}
+              handleNewExcerpt={handleNewExcerpt}
+            />
           </TabsContent>
           <TabsContent value="local">
             <LocalExcerpts onSelectForDisplay={handleSelectExcerpt} />
