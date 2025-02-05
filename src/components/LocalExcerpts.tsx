@@ -24,7 +24,10 @@ export const LocalExcerpts = () => {
 
   const [formData, setFormData] = useState({
     bookTitle: "",
+    bookAuthor: "",
+    translator: "",
     category: "",
+    otherCategory: "",
     language: "",
     text: "",
   });
@@ -53,7 +56,10 @@ export const LocalExcerpts = () => {
 
     setFormData({
       bookTitle: "",
+      bookAuthor: "",
+      translator: "",
       category: "",
+      otherCategory: "",
       language: "",
       text: "",
     });
@@ -82,6 +88,30 @@ export const LocalExcerpts = () => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="bookAuthor">Author Name</Label>
+              <Input
+                id="bookAuthor"
+                value={formData.bookAuthor}
+                onChange={(e) =>
+                  setFormData({ ...formData, bookAuthor: e.target.value })
+                }
+                placeholder="Enter author name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="translator">Translator Name</Label>
+              <Input
+                id="translator"
+                value={formData.translator}
+                onChange={(e) =>
+                  setFormData({ ...formData, translator: e.target.value })
+                }
+                placeholder="Enter translator name"
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="category">Category *</Label>
               <Select
                 value={formData.category}
@@ -101,6 +131,20 @@ export const LocalExcerpts = () => {
                 </SelectContent>
               </Select>
             </div>
+
+            {formData.category === "Other" && (
+              <div className="space-y-2">
+                <Label htmlFor="otherCategory">Other Category Name</Label>
+                <Input
+                  id="otherCategory"
+                  value={formData.otherCategory}
+                  onChange={(e) =>
+                    setFormData({ ...formData, otherCategory: e.target.value })
+                  }
+                  placeholder="Enter category name"
+                />
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="language">Language *</Label>
@@ -155,6 +199,8 @@ export const LocalExcerpts = () => {
               </blockquote>
               <div className="text-sm text-muted-foreground space-y-1">
                 <p className="font-semibold">{excerpt.bookTitle}</p>
+                {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
+                {excerpt.translator && <p>translated by {excerpt.translator}</p>}
                 <p>Category: {excerpt.category}</p>
                 <p>
                   Language:{" "}
