@@ -1,14 +1,17 @@
+
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Trash2 } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
 
 interface ExcerptListProps {
   excerpts: LocalExcerpt[];
   onSelectForDisplay?: (excerpt: LocalExcerpt) => void;
+  onDelete?: (excerpt: LocalExcerpt) => void;
 }
 
-export const ExcerptList = ({ excerpts, onSelectForDisplay }: ExcerptListProps) => {
+export const ExcerptList = ({ excerpts, onSelectForDisplay, onDelete }: ExcerptListProps) => {
   // Group excerpts by book title
   const groupedExcerpts = excerpts.reduce((acc, excerpt) => {
     const bookTitle = excerpt.bookTitle || 'Untitled';
@@ -35,17 +38,49 @@ export const ExcerptList = ({ excerpts, onSelectForDisplay }: ExcerptListProps) 
               {bookExcerpts.map((excerpt) => (
                 <div 
                   key={excerpt.id} 
-                  className="relative group flex items-start justify-between gap-4"
+                  className="relative group flex items-start justify-between gap-4 p-2 rounded-lg hover:bg-[#1A4067]/10"
                 >
                   <p className="text-sm text-left flex-1">{excerpt.text}</p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="shrink-0 opacity-70 hover:opacity-100 transition-opacity"
-                    onClick={() => onSelectForDisplay && onSelectForDisplay(excerpt)}
-                  >
-                    <BookOpen className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="shrink-0 opacity-70 hover:opacity-100 transition-opacity"
+                      onClick={() => onSelectForDisplay && onSelectForDisplay(excerpt)}
+                    >
+                      <BookOpen className="w-4 h-4" />
+                    </Button>
+                    {onDelete && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="shrink-0 opacity-70 hover:opacity-100 transition-opacity text-red-500 hover:text-red-600"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Excerpt</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to delete this excerpt? This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => onDelete(excerpt)}
+                              className="bg-red-500 hover:bg-red-600"
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
