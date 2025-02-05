@@ -1,37 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LocalExcerpt } from "@/types/localExcerpt";
-import { ExcerptForm } from "./ExcerptForm";
 import { ExcerptList } from "./ExcerptList";
+import { ExcerptForm } from "./ExcerptForm";
+import { Button } from "./ui/button";
 import { ImportExport } from "./ImportExport";
+import { Plus } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 
-export const LocalExcerpts = () => {
-  const [excerpts, setExcerpts] = useState<LocalExcerpt[]>(() => {
+interface LocalExcerptsProps {
+  onSelectForDisplay?: (excerpt: LocalExcerpt) => void;
+}
+
+export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
+  const [excerpts, setExcerpts] = useState<LocalExcerpt[]>([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  useEffect(() => {
     const saved = localStorage.getItem("localExcerpts");
-    return saved ? JSON.parse(saved) : [];
-  });
+    if (saved) {
+      setExcerpts(JSON.parse(saved));
+    }
+  }, []);
 
-  const handleAddExcerpt = (newExcerpt: LocalExcerpt) => {
-    const updatedExcerpts = [newExcerpt, ...excerpts];
-    setExcerpts(updatedExcerpts);
-    localStorage.setItem("localExcerpts", JSON.stringify(updatedExcerpts));
-  };
-
-  const handleImport = (importedExcerpts: LocalExcerpt[]) => {
-    const updatedExcerpts = [...importedExcerpts, ...excerpts];
-    setExcerpts(updatedExcerpts);
-    localStorage.setItem("localExcerpts", JSON.stringify(updatedExcerpts));
-  };
-
-  const getUniqueBooks = () => {
-    const books = new Set(excerpts.map(e => e.bookTitle));
-    return Array.from(books);
+  const handleSave = (excerpt: LocalExcerpt) => {
+    const newExcerpts = [...excerpts, excerpt];
+    setExcerpts(newExcerpts);
+    localStorage.setItem("localExcerpts", JSON.stringify(newExcerpts));
+    setIsFormOpen(false);
   };
 
   return (
-    <div className="w-[98%] mx-auto min-h-screen space-y-4 px-1">
-      <ExcerptList excerpts={excerpts} />
-      <ExcerptForm onSubmit={handleAddExcerpt} existingBooks={getUniqueBooks()} />
-      <ImportExport excerpts={excerpts} onImport={handleImport} />
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Excerpt
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <ExcerptForm onSave={handleSave} />
+          </DialogContent>
+        </Dialog>
+        <ImportExport 
+          excerpts={excerpts} 
+          onImport={(imported) => {
+            setExcerpts(imported);
+            localStorage.setItem("localExcerpts", JSON.stringify(imported));
+          }} 
+        />
+      </div>
+      <ExcerptList excerpts={excerpts} onSelectForDisplay={onSelectForDisplay} />
     </div>
   );
 };
