@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { LocalExcerpt, LocalExcerptBook } from "@/types/localExcerpt";
 import { ExcerptList } from "./ExcerptList";
@@ -24,37 +25,39 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
     setLocalExcerpts(newExcerpts);
     
     try {
-      // Get existing files list
-      const filesResponse = await fetch("/data/files.json");
-      let files: string[] = [];
-      if (filesResponse.ok) {
-        files = await filesResponse.json();
-      }
-
+      // Generate filename from book title
       const bookFileName = `${excerpt.bookTitle.toLowerCase().replace(/\s+/g, '-')}.json`;
       
-      // Check if book file exists
-      let existingBook: LocalExcerptBook | null = null;
-      try {
-        const bookResponse = await fetch(`/data/${bookFileName}`);
-        if (bookResponse.ok) {
-          existingBook = await bookResponse.json();
-        }
-      } catch (error) {
-        console.log("Book file doesn't exist yet");
-      }
+      // Get existing book data if it exists
+      const savedBookData = localStorage.getItem(bookFileName);
+      let bookData: LocalExcerptBook;
+      
+      if (savedBookData) {
+        bookData = JSON.parse(savedBookData);
+      } else {
+        // Create new book data structure
+        bookData = {
+          metadata: {
+            title: excerpt.bookTitle,
+            author: excerpt.bookAuthor,
+            translator: excerpt.translator,
+            amazonLink: "",
+            tags: [],
+            category: excerpt.category,
+            otherCategory: excerpt.otherCategory,
+            language: excerpt.language
+          },
+          excerpts: []
+        };
 
-      // Create or update book file
-      const bookData: LocalExcerptBook = existingBook || {
-        metadata: {
-          title: excerpt.bookTitle,
-          author: excerpt.bookAuthor,
-          translator: excerpt.translator,
-          amazonLink: "",
-          tags: [excerpt.category]
-        },
-        excerpts: []
-      };
+        // Update files.json
+        const savedFiles = localStorage.getItem("files.json");
+        const files: string[] = savedFiles ? JSON.parse(savedFiles) : [];
+        if (!files.includes(bookFileName)) {
+          files.push(bookFileName);
+          localStorage.setItem("files.json", JSON.stringify(files));
+        }
+      }
 
       // Add new excerpt
       bookData.excerpts.push({
@@ -100,18 +103,18 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
       const bookFileName = `${excerptToDelete.bookTitle.toLowerCase().replace(/\s+/g, '-')}.json`;
       
       // Get book data
-      const bookResponse = await fetch(`/data/${bookFileName}`);
-      if (bookResponse.ok) {
-        const bookData: LocalExcerptBook = await bookResponse.json();
+      const savedBookData = localStorage.getItem(bookFileName);
+      if (savedBookData) {
+        const bookData: LocalExcerptBook = JSON.parse(savedBookData);
         
         // Remove excerpt
         bookData.excerpts = bookData.excerpts.filter(e => e.text !== excerptToDelete.text);
         
         if (bookData.excerpts.length === 0) {
           // If no excerpts left, remove book file from files.json
-          const filesResponse = await fetch("/data/files.json");
-          if (filesResponse.ok) {
-            const files: string[] = await filesResponse.json();
+          const savedFiles = localStorage.getItem("files.json");
+          if (savedFiles) {
+            const files: string[] = JSON.parse(savedFiles);
             const updatedFiles = files.filter(f => f !== bookFileName);
             localStorage.setItem("files.json", JSON.stringify(updatedFiles));
           }

@@ -5,6 +5,9 @@ export interface LocalExcerptMetadata {
   translator?: string;
   amazonLink?: string;
   tags: string[];
+  category: string;
+  otherCategory?: string;
+  language: string;
 }
 
 export interface LocalExcerptEntry {
