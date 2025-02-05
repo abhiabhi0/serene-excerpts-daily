@@ -31,11 +31,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
     <div className="w-[98%] mx-auto space-y-4">
       {/* Excerpt Card */}
       <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
-        <CardContent className="pt-6 px-2">
-          <blockquote className="text-lg mb-4 leading-relaxed">
+        <CardContent className="pt-6 px-4">
+          <blockquote className="text-lg mb-4 leading-relaxed text-left">
             "{excerpt.text}"
           </blockquote>
-          <div className="text-sm text-muted-foreground space-y-1">
+          <div className="text-sm text-muted-foreground space-y-1 text-left">
             {excerpt.bookTitle && <p className="font-semibold">{excerpt.bookTitle}</p>}
             {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
             {excerpt.translator && <p>translated by {excerpt.translator}</p>}
