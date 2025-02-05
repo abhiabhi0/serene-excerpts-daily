@@ -31,6 +31,9 @@ export const FormFields = ({
   onBookTitleChange,
   onFormDataChange,
 }: FormFieldsProps) => {
+  console.log('Categories:', categories);
+  console.log('Languages:', languages);
+  
   return (
     <>
       <div className="space-y-2 w-full">

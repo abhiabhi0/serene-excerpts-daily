@@ -22,7 +22,7 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
     }
   }, []);
 
-  const handleSave = (excerpt: LocalExcerpt) => {
+  const handleSubmit = (excerpt: LocalExcerpt) => {
     const newExcerpts = [...excerpts, excerpt];
     setExcerpts(newExcerpts);
     localStorage.setItem("localExcerpts", JSON.stringify(newExcerpts));
@@ -40,7 +40,10 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <ExcerptForm onSave={handleSave} />
+            <ExcerptForm 
+              onSubmit={handleSubmit}
+              existingBooks={excerpts.map(e => e.bookTitle).filter((value, index, self) => self.indexOf(value) === index)}
+            />
           </DialogContent>
         </Dialog>
         <ImportExport 
