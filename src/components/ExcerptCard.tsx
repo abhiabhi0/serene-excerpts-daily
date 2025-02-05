@@ -42,7 +42,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
           </div>
           <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
             <img 
-              src="/lovable-uploads/049c7c1d-245a-423f-8726-c035ddb757ce.png" 
+              src="/lovable-uploads/ic_launcher_round.png" 
               alt="Atmanam.Viddhi Logo" 
               className="w-8 h-8 mx-auto mb-2"
             />
@@ -68,7 +68,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
               onClick={onNewExcerpt}
             >
               <img 
-                src="/lovable-uploads/049c7c1d-245a-423f-8726-c035ddb757ce.png" 
+                src="/lovable-uploads/ic_launcher_round.png" 
                 alt="New Excerpt" 
                 className="w-4 h-4 mr-2"
               />

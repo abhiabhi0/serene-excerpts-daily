@@ -1,4 +1,4 @@
-package dev.lovable.excerpt;
+package dev.lovable.atmanamviddhi;
 
 import com.getcapacitor.BridgeActivity;
 
