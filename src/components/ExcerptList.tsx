@@ -35,7 +35,7 @@ export const ExcerptList = ({ excerpts }: ExcerptListProps) => {
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 p-4">
                   {getExcerptsForBook(bookTitle).map((excerpt) => (
-                    <Card key={excerpt.id} className="w-[300px] flex-none">
+                    <Card key={excerpt.id} className="w-[90vw] sm:w-[300px] flex-none">
                       <CardContent className="p-4">
                         <blockquote className="text-sm mb-2">"{excerpt.text}"</blockquote>
                         <div className="text-xs text-muted-foreground">

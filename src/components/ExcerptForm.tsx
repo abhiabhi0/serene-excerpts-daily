@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LocalExcerpt, languages, categories } from "@/types/localExcerpt";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,36 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
     language: "",
     text: "",
   });
+
+  // Function to find existing book metadata
+  const findExistingBookMetadata = (bookTitle: string) => {
+    console.log("Finding metadata for book:", bookTitle);
+    const savedExcerpts = localStorage.getItem("localExcerpts");
+    if (!savedExcerpts) return null;
+    
+    const excerpts: LocalExcerpt[] = JSON.parse(savedExcerpts);
+    return excerpts.find(e => e.bookTitle === bookTitle);
+  };
+
+  // Auto-fill book metadata when title is selected
+  const handleBookTitleChange = (value: string) => {
+    setFormData(prev => ({ ...prev, bookTitle: value }));
+    
+    if (existingBooks.includes(value)) {
+      const existingBook = findExistingBookMetadata(value);
+      if (existingBook) {
+        console.log("Found existing book metadata:", existingBook);
+        setFormData(prev => ({
+          ...prev,
+          bookTitle: value,
+          bookAuthor: existingBook.bookAuthor || "",
+          translator: existingBook.translator || "",
+          category: existingBook.category || "",
+          language: existingBook.language || "",
+        }));
+      }
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,9 +106,7 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
             <Input
               id="bookTitle"
               value={formData.bookTitle}
-              onChange={(e) =>
-                setFormData({ ...formData, bookTitle: e.target.value })
-              }
+              onChange={(e) => handleBookTitleChange(e.target.value)}
               placeholder="Enter book title"
               list="book-suggestions"
               className="w-full"
