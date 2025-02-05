@@ -1,3 +1,4 @@
+
 import { ExcerptWithMeta, ExcerptCardProps } from "@/types/excerpt";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,8 +7,6 @@ import { Share } from '@capacitor/share';
 
 export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   const handleShare = async () => {
-    if (excerpt.isLocal) return;
-    
     try {
       const appUrl = "https://play.google.com/store/apps/details?id=your.app.id";
       await Share.share({
@@ -74,27 +73,23 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
               />
               New Excerpt
             </Button>
-            {!excerpt.isLocal && (
-              <>
-                <Button 
-                  variant="secondary"
-                  className="flex-1 min-w-[140px]"
-                  onClick={handleShare}
-                >
-                  <ShareIcon className="w-4 h-4 mr-2" />
-                  Share
-                </Button>
-                {excerpt.amazonLink && (
-                  <Button 
-                    variant="default"
-                    className="flex-1 min-w-[140px]"
-                    onClick={handleBuyBook}
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Buy Book
-                  </Button>
-                )}
-              </>
+            <Button 
+              variant="secondary"
+              className="flex-1 min-w-[140px]"
+              onClick={handleShare}
+            >
+              <ShareIcon className="w-4 h-4 mr-2" />
+              Share
+            </Button>
+            {excerpt.amazonLink && (
+              <Button 
+                variant="default"
+                className="flex-1 min-w-[140px]"
+                onClick={handleBuyBook}
+              >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Buy Book
+              </Button>
             )}
           </div>
         </CardContent>
