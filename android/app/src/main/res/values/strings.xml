@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Excerpt</string>
-    <string name="title_activity_main">Excerpt</string>
-    <string name="package_name">dev.lovable.excerpt</string>
-    <string name="custom_url_scheme">dev.lovable.excerpt</string>
+    <string name="app_name">Atmanam.Viddhi</string>
+    <string name="title_activity_main">Atmanam.Viddhi</string>
+    <string name="package_name">dev.lovable.atmanamviddhi</string>
+    <string name="custom_url_scheme">dev.lovable.atmanamviddhi</string>
 </resources>

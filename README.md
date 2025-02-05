@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# Atmanam.Viddhi - Know Thyself
 
 ## Project info
 
