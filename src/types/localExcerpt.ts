@@ -1,3 +1,23 @@
+export interface LocalExcerptMetadata {
+  title: string;
+  author?: string;
+  translator?: string;
+  amazonLink?: string;
+  tags: string[];
+}
+
+export interface LocalExcerptEntry {
+  text: string;
+  chapter?: string;
+  verse?: string;
+  commentary: boolean;
+}
+
+export interface LocalExcerptBook {
+  metadata: LocalExcerptMetadata;
+  excerpts: LocalExcerptEntry[];
+}
+
 export interface LocalExcerpt {
   id: string;
   bookTitle: string;
@@ -19,7 +39,6 @@ export const categories = [
 ];
 
 export const languages = [
-  // Indian Languages
   { code: "hi", name: "Hindi" },
   { code: "bn", name: "Bengali" },
   { code: "te", name: "Telugu" },
@@ -31,8 +50,6 @@ export const languages = [
   { code: "ml", name: "Malayalam" },
   { code: "pa", name: "Punjabi" },
   { code: "sa", name: "Sanskrit" },
-  
-  // International Languages
   { code: "en", name: "English" },
   { code: "es", name: "Spanish" },
   { code: "fr", name: "French" },
