@@ -103,7 +103,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       {/* Support Section - Now shown for both local and remote excerpts */}
       <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="p-4 sm:p-6 text-center">
-          <h2 className="text-lg font-semibold mb-4">Support Atmanam.Viddhi</h2>
+          <h2 className="text-lg font-semibold mb-4">Support Atmanam Viddhi</h2>
           <div className="flex flex-col items-center gap-4">
             <a href="https://www.buymeacoffee.com/botman1001">
               <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a book&emoji=📖&slug=botman1001&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" />

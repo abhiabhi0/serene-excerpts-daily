@@ -1,4 +1,4 @@
-# Atmanam.Viddhi - Know Thyself
+# Atmanam Viddhi - Know Thyself
 
 ## Project info
 
