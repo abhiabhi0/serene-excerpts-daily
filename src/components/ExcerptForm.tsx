@@ -91,7 +91,7 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
   };
 
   return (
-    <Card className="w-[80vw] mx-auto bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+    <Card className="w-full mx-auto bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="w-full space-y-4">
           <FormFields

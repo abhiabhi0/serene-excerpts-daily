@@ -17,14 +17,14 @@ export const ExcerptList = ({ excerpts }: ExcerptListProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       {getUniqueBooks().map((bookTitle) => (
         <div key={bookTitle} className="space-y-2">
           <h3 className="text-lg font-semibold">{bookTitle}</h3>
           <ScrollArea className="w-full whitespace-nowrap rounded-md">
             <div className="flex w-max space-x-4 p-4">
               {getExcerptsForBook(bookTitle).map((excerpt) => (
-                <Card key={excerpt.id} className="w-[80vw] sm:w-[400px] flex-none">
+                <Card key={excerpt.id} className="w-[90vw] sm:w-[90vw] md:w-[600px] flex-none">
                   <CardContent className="p-4">
                     <blockquote className="text-sm mb-2">"{excerpt.text}"</blockquote>
                     <div className="text-xs text-muted-foreground">
