@@ -4,6 +4,7 @@
   margin: 0;
   padding: 1rem;
   text-align: center;
+  background: linear-gradient(to bottom right, #0A1929, #0F2942, #1A4067);
 }
 
 .logo {

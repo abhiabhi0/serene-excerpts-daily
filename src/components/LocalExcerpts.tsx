@@ -157,11 +157,11 @@ export const LocalExcerpts = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-3xl mx-auto">
       {/* Existing Books Section */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold">My Books</h2>
-        <Accordion type="single" collapsible>
+        <h2 className="text-lg font-semibold text-left">My Books</h2>
+        <Accordion type="single" collapsible className="w-full">
           {getUniqueBooks().map((bookTitle) => (
             <AccordionItem key={bookTitle} value={bookTitle}>
               <AccordionTrigger className="text-left">
@@ -195,7 +195,7 @@ export const LocalExcerpts = () => {
         <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="bookTitle">Book Title *</Label>
+              <Label htmlFor="bookTitle" className="text-left block">Book Title *</Label>
               <Input
                 id="bookTitle"
                 value={formData.bookTitle}
@@ -213,7 +213,7 @@ export const LocalExcerpts = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bookAuthor">Author Name</Label>
+              <Label htmlFor="bookAuthor" className="text-left block">Author Name</Label>
               <Input
                 id="bookAuthor"
                 value={formData.bookAuthor}
@@ -225,7 +225,7 @@ export const LocalExcerpts = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="translator">Translator Name</Label>
+              <Label htmlFor="translator" className="text-left block">Translator Name</Label>
               <Input
                 id="translator"
                 value={formData.translator}
@@ -237,7 +237,7 @@ export const LocalExcerpts = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
+              <Label htmlFor="category" className="text-left block">Category *</Label>
               <Select
                 value={formData.category}
                 onValueChange={(value) =>
@@ -259,7 +259,7 @@ export const LocalExcerpts = () => {
 
             {formData.category === "Other" && (
               <div className="space-y-2">
-                <Label htmlFor="otherCategory">Other Category Name</Label>
+                <Label htmlFor="otherCategory" className="text-left block">Other Category Name</Label>
                 <Input
                   id="otherCategory"
                   value={formData.otherCategory}
@@ -272,7 +272,7 @@ export const LocalExcerpts = () => {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="language">Language *</Label>
+              <Label htmlFor="language" className="text-left block">Language *</Label>
               <Select
                 value={formData.language}
                 onValueChange={(value) =>
@@ -293,7 +293,7 @@ export const LocalExcerpts = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="text">Excerpt *</Label>
+              <Label htmlFor="text" className="text-left block">Excerpt *</Label>
               <Textarea
                 id="text"
                 value={formData.text}
@@ -306,7 +306,7 @@ export const LocalExcerpts = () => {
             </div>
 
             <div className="flex gap-4">
-              <Button type="submit" className="flex-1">
+              <Button type="submit" className="w-full">
                 Add Excerpt
               </Button>
             </div>
@@ -317,7 +317,7 @@ export const LocalExcerpts = () => {
       {/* Import/Export Section */}
       <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="p-6">
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Button 
               onClick={handleExport}
               className="flex-1"

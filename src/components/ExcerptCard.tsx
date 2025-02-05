@@ -28,9 +28,9 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6">
+    <div className="w-full max-w-3xl mx-auto space-y-6">
       {/* Excerpt Card */}
-      <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+      <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="pt-6 px-4 sm:px-6">
           <blockquote className="text-lg mb-4 leading-relaxed">
             "{excerpt.text}"
@@ -55,7 +55,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       </Card>
 
       {/* Action Buttons */}
-      <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+      <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="p-4 sm:p-6">
           <div className="flex flex-wrap gap-4">
             <Button 
@@ -98,7 +98,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
 
       {/* Support Section */}
       {!excerpt.isLocal && (
-        <Card className="bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+        <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
           <CardContent className="p-4 sm:p-6 text-center">
             <h2 className="text-lg font-semibold mb-4">Support Excerpt</h2>
             <div className="flex flex-col items-center gap-4">
