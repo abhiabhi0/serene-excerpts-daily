@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -48,12 +49,32 @@ const Index = () => {
     }
   }, [searchParams]);
   
+  // Load local excerpts from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("localExcerpts");
-    if (saved) {
-      setLocalExcerpts(JSON.parse(saved));
-    }
-  }, []);
+    const loadLocalExcerpts = () => {
+      const saved = localStorage.getItem("localExcerpts");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          setLocalExcerpts(parsed);
+          console.log("Loaded local excerpts:", parsed.length);
+        } catch (error) {
+          console.error("Error parsing local excerpts:", error);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Failed to load saved excerpts.",
+          });
+        }
+      }
+    };
+
+    loadLocalExcerpts();
+
+    // Listen for storage changes from other tabs/windows
+    window.addEventListener('storage', loadLocalExcerpts);
+    return () => window.removeEventListener('storage', loadLocalExcerpts);
+  }, [toast]);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
@@ -124,7 +145,11 @@ const Index = () => {
             />
           </TabsContent>
           <TabsContent value="local">
-            <LocalExcerpts onSelectForDisplay={handleSelectExcerpt} />
+            <LocalExcerpts 
+              onSelectForDisplay={handleSelectExcerpt}
+              localExcerpts={localExcerpts}
+              setLocalExcerpts={setLocalExcerpts}
+            />
           </TabsContent>
         </Tabs>
       </div>

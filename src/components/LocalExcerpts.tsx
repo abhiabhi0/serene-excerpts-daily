@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { ExcerptList } from "./ExcerptList";
 import { ExcerptForm } from "./ExcerptForm";
@@ -10,22 +10,16 @@ import { ScrollArea } from "./ui/scroll-area";
 
 interface LocalExcerptsProps {
   onSelectForDisplay?: (excerpt: LocalExcerpt) => void;
+  localExcerpts: LocalExcerpt[];
+  setLocalExcerpts: (excerpts: LocalExcerpt[]) => void;
 }
 
-export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
-  const [excerpts, setExcerpts] = useState<LocalExcerpt[]>([]);
+export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcerpts }: LocalExcerptsProps) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("localExcerpts");
-    if (saved) {
-      setExcerpts(JSON.parse(saved));
-    }
-  }, []);
-
   const handleSubmit = (excerpt: LocalExcerpt) => {
-    const newExcerpts = [...excerpts, excerpt];
-    setExcerpts(newExcerpts);
+    const newExcerpts = [...localExcerpts, excerpt];
+    setLocalExcerpts(newExcerpts);
     localStorage.setItem("localExcerpts", JSON.stringify(newExcerpts));
     setIsFormOpen(false);
     
@@ -43,7 +37,7 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
 
   return (
     <div className="space-y-4">
-      <ExcerptList excerpts={excerpts} onSelectForDisplay={handleExcerptSelect} />
+      <ExcerptList excerpts={localExcerpts} onSelectForDisplay={handleExcerptSelect} />
       
       <div className="flex flex-col gap-4">
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
@@ -57,16 +51,16 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
             <ScrollArea className="h-full max-h-[90vh] p-6">
               <ExcerptForm 
                 onSubmit={handleSubmit}
-                existingBooks={excerpts.map(e => e.bookTitle).filter((value, index, self) => self.indexOf(value) === index)}
+                existingBooks={localExcerpts.map(e => e.bookTitle).filter((value, index, self) => self.indexOf(value) === index)}
               />
             </ScrollArea>
           </DialogContent>
         </Dialog>
 
         <ImportExport 
-          excerpts={excerpts} 
+          excerpts={localExcerpts} 
           onImport={(imported) => {
-            setExcerpts(imported);
+            setLocalExcerpts(imported);
             localStorage.setItem("localExcerpts", JSON.stringify(imported));
           }} 
         />
