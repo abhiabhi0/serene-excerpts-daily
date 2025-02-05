@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'dev.lovable.atmanamviddhi',
-  appName: 'Atmanam.Viddhi',
+  appName: 'Atmanam Viddhi',
   webDir: 'dist',
   server: {
     androidScheme: 'https'

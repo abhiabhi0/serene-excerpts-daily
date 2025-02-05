@@ -12,7 +12,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       const appUrl = "https://play.google.com/store/apps/details?id=your.app.id";
       await Share.share({
         title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
-        text: `"${excerpt.text}"\n\nRead more spiritual excerpts on Atmanam.Viddhi app:`,
+        text: `"${excerpt.text}"\n\nRead more spiritual excerpts on Atmanam Viddhi app:`,
         url: appUrl,
         dialogTitle: 'Share this excerpt'
       });
@@ -43,10 +43,10 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
           <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
             <img 
               src="/lovable-uploads/ic_launcher_round.png" 
-              alt="Atmanam.Viddhi Logo" 
+              alt="Atmanam Viddhi Logo" 
               className="w-8 h-8 mx-auto mb-2"
             />
-            <p className="font-semibold">Atmanam.Viddhi - Know Thyself</p>
+            <p className="font-semibold">Atmanam Viddhi - Know Thyself</p>
             <p className="mt-1">Available on Google Play Store</p>
           </div>
         </CardContent>

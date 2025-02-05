@@ -21,18 +21,19 @@ const Index = () => {
   // Bind swipe gestures
   useGesture(
     {
-      onSwipeLeft: ({ direction: [dx] }) => {
-        if (dx < 0 && activeTab === 'random') {
+      onDrag: ({ direction: [dx], distance }) => {
+        if (distance < 50) return; // Minimum swipe distance
+        
+        if (dx > 0 && activeTab === 'random') {
+          // Right swipe on Today's Wisdom -> go to My Collection
           setActiveTab('local');
           setSearchParams({ tab: 'local' });
-        }
-      },
-      onSwipeRight: ({ direction: [dx] }) => {
-        if (dx > 0 && activeTab === 'local') {
+        } else if (dx < 0 && activeTab === 'local') {
+          // Left swipe on My Collection -> go to Today's Wisdom
           setActiveTab('random');
           setSearchParams({ tab: 'random' });
         }
-      },
+      }
     },
     {
       target: window,
