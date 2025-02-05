@@ -1,3 +1,4 @@
+
 import { Book, ExcerptWithMeta } from "@/types/excerpt";
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
@@ -9,6 +10,10 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     }
     
     const files: string[] = await filesResponse.json();
+    if (!files.length) {
+      throw new Error("No excerpt files available");
+    }
+    
     const randomBookFile = files[Math.floor(Math.random() * files.length)];
     console.log("Selected book file:", randomBookFile);
     
