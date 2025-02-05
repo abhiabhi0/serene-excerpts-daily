@@ -7,6 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LocalExcerpts } from "@/components/LocalExcerpts";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { List } from "lucide-react";
 
 const Index = () => {
   const { toast } = useToast();
@@ -29,14 +33,16 @@ const Index = () => {
     if (localExcerpts.length === 0) return null;
     const randomIndex = Math.floor(Math.random() * localExcerpts.length);
     const localExcerpt = localExcerpts[randomIndex];
-    return {
-      text: localExcerpt.text,
-      bookTitle: localExcerpt.bookTitle,
-      bookAuthor: localExcerpt.bookAuthor,
-      translator: localExcerpt.translator,
-      isLocal: true
-    };
+    return convertLocalToExcerptWithMeta(localExcerpt);
   };
+
+  const convertLocalToExcerptWithMeta = (local: LocalExcerpt): ExcerptWithMeta => ({
+    text: local.text,
+    bookTitle: local.bookTitle,
+    bookAuthor: local.bookAuthor,
+    translator: local.translator,
+    isLocal: true
+  });
 
   const handleNewExcerpt = () => {
     if (Math.random() > 0.7 && localExcerpts.length > 0) {
@@ -58,6 +64,10 @@ const Index = () => {
     }
   }, [remoteExcerpt]);
 
+  const handleSelectExcerpt = (excerpt: LocalExcerpt) => {
+    setCurrentExcerpt(convertLocalToExcerptWithMeta(excerpt));
+  };
+
   useEffect(() => {
     if (isError) {
       toast({
@@ -77,17 +87,52 @@ const Index = () => {
             <TabsTrigger value="local">My Excerpts</TabsTrigger>
           </TabsList>
           <TabsContent value="random">
-            {isLoading ? (
-              <div className="animate-pulse space-y-4">
-                <div className="h-40 bg-white/5 rounded-lg"></div>
-                <div className="h-20 bg-white/5 rounded-lg"></div>
-              </div>
-            ) : currentExcerpt ? (
-              <ExcerptCard 
-                excerpt={currentExcerpt} 
-                onNewExcerpt={handleNewExcerpt} 
-              />
-            ) : null}
+            <div className="relative">
+              {isLoading ? (
+                <div className="animate-pulse space-y-4">
+                  <div className="h-40 bg-white/5 rounded-lg"></div>
+                  <div className="h-20 bg-white/5 rounded-lg"></div>
+                </div>
+              ) : currentExcerpt ? (
+                <>
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="absolute top-2 right-2 z-10"
+                      >
+                        <List className="w-4 h-4 mr-2" />
+                        My Excerpts
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                      <SheetHeader>
+                        <SheetTitle>Select an Excerpt</SheetTitle>
+                      </SheetHeader>
+                      <ScrollArea className="h-[90vh] mt-4">
+                        <div className="space-y-4 pr-4">
+                          {localExcerpts.map((excerpt) => (
+                            <div
+                              key={excerpt.id}
+                              onClick={() => handleSelectExcerpt(excerpt)}
+                              className="p-4 rounded-lg bg-[#0A1929]/50 border border-[#1A4067]/30 cursor-pointer hover:bg-[#1A4067]/20 transition-colors"
+                            >
+                              <p className="text-sm line-clamp-3">{excerpt.text}</p>
+                              <p className="text-xs text-muted-foreground mt-2">{excerpt.bookTitle}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </ScrollArea>
+                    </SheetContent>
+                  </Sheet>
+                  <ExcerptCard 
+                    excerpt={currentExcerpt} 
+                    onNewExcerpt={handleNewExcerpt} 
+                  />
+                </>
+              ) : null}
+            </div>
           </TabsContent>
           <TabsContent value="local">
             <LocalExcerpts />
