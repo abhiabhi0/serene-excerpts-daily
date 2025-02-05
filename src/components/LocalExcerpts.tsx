@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { ImportExport } from "./ImportExport";
 import { Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface LocalExcerptsProps {
   onSelectForDisplay?: (excerpt: LocalExcerpt) => void;
@@ -41,11 +42,13 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
               Add Excerpt
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl pt-8">
-            <ExcerptForm 
-              onSubmit={handleSubmit}
-              existingBooks={excerpts.map(e => e.bookTitle).filter((value, index, self) => self.indexOf(value) === index)}
-            />
+          <DialogContent className="max-w-2xl max-h-[90vh] p-0">
+            <ScrollArea className="h-full max-h-[90vh] p-6">
+              <ExcerptForm 
+                onSubmit={handleSubmit}
+                existingBooks={excerpts.map(e => e.bookTitle).filter((value, index, self) => self.indexOf(value) === index)}
+              />
+            </ScrollArea>
           </DialogContent>
         </Dialog>
 
