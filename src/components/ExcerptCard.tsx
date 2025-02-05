@@ -8,7 +8,7 @@ import { Share } from '@capacitor/share';
 export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   const handleShare = async () => {
     try {
-      const appUrl = "https://play.google.com/store/apps/details?id=your.app.id";
+      const appUrl = "https://play.google.com/store/apps/details?id=4974078350660020055";
       await Share.share({
         title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
         text: `"${excerpt.text}"\n\nRead more spiritual excerpts on Atmanam Viddhi app:`,
