@@ -31,7 +31,9 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <ExcerptList excerpts={excerpts} onSelectForDisplay={onSelectForDisplay} />
+      
+      <div className="flex flex-col gap-4">
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -39,16 +41,14 @@ export const LocalExcerpts = ({ onSelectForDisplay }: LocalExcerptsProps) => {
               Add Excerpt
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl pt-8">
             <ExcerptForm 
               onSubmit={handleSubmit}
               existingBooks={excerpts.map(e => e.bookTitle).filter((value, index, self) => self.indexOf(value) === index)}
             />
           </DialogContent>
         </Dialog>
-      </div>
-      <ExcerptList excerpts={excerpts} onSelectForDisplay={onSelectForDisplay} />
-      <div className="mt-8">
+
         <ImportExport 
           excerpts={excerpts} 
           onImport={(imported) => {
