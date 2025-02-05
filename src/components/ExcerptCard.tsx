@@ -12,7 +12,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       const appUrl = "https://play.google.com/store/apps/details?id=your.app.id";
       await Share.share({
         title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
-        text: `"${excerpt.text}"\n\nRead more spiritual excerpts on Excerpt app:`,
+        text: `"${excerpt.text}"\n\nRead more spiritual excerpts on Atmanam.Viddhi app:`,
         url: appUrl,
         dialogTitle: 'Share this excerpt'
       });
@@ -42,11 +42,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
           </div>
           <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
             <img 
-              src="/lovable-uploads/6ef4d839-81dd-44d4-a345-1b9b13936176.png" 
-              alt="Excerpt Logo" 
+              src="/lovable-uploads/049c7c1d-245a-423f-8726-c035ddb757ce.png" 
+              alt="Atmanam.Viddhi Logo" 
               className="w-8 h-8 mx-auto mb-2"
             />
-            <p className="font-semibold">Excerpt - Daily Book Excerpts</p>
+            <p className="font-semibold">Atmanam.Viddhi - Know Thyself</p>
             <p className="mt-1">Available on Google Play Store</p>
           </div>
         </CardContent>
@@ -68,7 +68,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
               onClick={onNewExcerpt}
             >
               <img 
-                src="/lovable-uploads/d306306a-eab4-4962-a421-fad5aabf1171.png" 
+                src="/lovable-uploads/049c7c1d-245a-423f-8726-c035ddb757ce.png" 
                 alt="New Excerpt" 
                 className="w-4 h-4 mr-2"
               />
@@ -103,7 +103,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       {/* Support Section - Now shown for both local and remote excerpts */}
       <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="p-4 sm:p-6 text-center">
-          <h2 className="text-lg font-semibold mb-4">Support Excerpt</h2>
+          <h2 className="text-lg font-semibold mb-4">Support Atmanam.Viddhi</h2>
           <div className="flex flex-col items-center gap-4">
             <a href="https://www.buymeacoffee.com/botman1001">
               <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a book&emoji=📖&slug=botman1001&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" />
