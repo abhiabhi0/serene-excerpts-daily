@@ -21,8 +21,8 @@ const Index = () => {
   // Bind swipe gestures
   useGesture(
     {
-      onDrag: ({ direction: [dx], distance }) => {
-        if (distance < 50) return; // Minimum swipe distance
+      onDrag: ({ direction: [dx], distance: [dist] }) => {
+        if (dist < 50) return; // Minimum swipe distance
         
         if (dx > 0 && activeTab === 'random') {
           // Right swipe on Today's Wisdom -> go to My Collection
