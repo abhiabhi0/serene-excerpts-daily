@@ -64,12 +64,24 @@ export const CategoryLanguage = ({
           <SelectTrigger>
             <SelectValue placeholder="Select language" />
           </SelectTrigger>
-          <SelectContent className="max-h-[300px]">
-            {languages.map((lang) => (
-              <SelectItem key={lang.code} value={lang.code}>
-                {lang.name}
-              </SelectItem>
-            ))}
+          <SelectContent className="h-[200px] overflow-y-auto">
+            <div className="p-2 font-semibold text-sm text-muted-foreground">Indian Languages</div>
+            {languages
+              .filter(lang => ["hi", "bn", "te", "mr", "ta", "ur", "gu", "kn", "ml", "pa", "sa"].includes(lang.code))
+              .map((lang) => (
+                <SelectItem key={lang.code} value={lang.code}>
+                  {lang.name}
+                </SelectItem>
+              ))}
+            
+            <div className="p-2 font-semibold text-sm text-muted-foreground border-t mt-2">International Languages</div>
+            {languages
+              .filter(lang => !["hi", "bn", "te", "mr", "ta", "ur", "gu", "kn", "ml", "pa", "sa"].includes(lang.code))
+              .map((lang) => (
+                <SelectItem key={lang.code} value={lang.code}>
+                  {lang.name}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
       </div>
