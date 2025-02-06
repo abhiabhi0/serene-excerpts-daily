@@ -3,19 +3,50 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Share as ShareIcon, ShoppingCart, RefreshCw, Instagram, Facebook } from "lucide-react";
 import { Share } from '@capacitor/share';
+import { useToast } from "@/components/ui/use-toast";
 
 export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
+  const { toast } = useToast();
+
   const handleShare = async () => {
+    const websiteUrl = "https://atmanamviddhi.github.io";
+    const shareData = {
+      title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
+      text: `"${excerpt.text}"\n\nRead more spiritual excerpts at:`,
+      url: websiteUrl
+    };
+
     try {
-      const websiteUrl = "https://atmanamviddhi.github.io";
+      // Try Capacitor Share first
       await Share.share({
-        title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
-        text: `"${excerpt.text}"\n\nRead more spiritual excerpts at:`,
-        url: websiteUrl,
+        ...shareData,
         dialogTitle: 'Share this excerpt'
       });
     } catch (error) {
-      console.error("Error sharing:", error);
+      console.log("Capacitor Share failed, trying Web Share API:", error);
+      
+      // Fallback to Web Share API
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else {
+          // If Web Share API is not available, show a fallback message
+          toast({
+            title: "Sharing not supported",
+            description: "Please copy and share the link manually",
+            variant: "destructive",
+          });
+        }
+      } catch (webShareError) {
+        console.error("Web Share API error:", webShareError);
+        if (webShareError instanceof Error && webShareError.name !== "AbortError") {
+          toast({
+            title: "Error sharing",
+            description: "Unable to share at this time",
+            variant: "destructive",
+          });
+        }
+      }
     }
   };
 
