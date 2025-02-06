@@ -1,7 +1,7 @@
 import { ExcerptWithMeta, ExcerptCardProps } from "@/types/excerpt";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Share as ShareIcon, ShoppingCart, RefreshCw, Instagram, Facebook } from "lucide-react";
+import { Share as ShareIcon, ShoppingCart, RefreshCw, Instagram, Facebook, Copy } from "lucide-react";
 import { Share } from '@capacitor/share';
 import { useToast } from "@/components/ui/use-toast";
 
@@ -10,9 +10,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
 
   const handleShare = async () => {
     const websiteUrl = "https://atmanamviddhi.github.io";
+    const shareText = `"${excerpt.text}"\n\n${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}\n\nRead more spiritual excerpts at: ${websiteUrl}`;
+    
     const shareData = {
       title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
-      text: `"${excerpt.text}"\n\nRead more spiritual excerpts at:`,
+      text: shareText,
       url: websiteUrl
     };
 
@@ -30,19 +32,26 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
         if (navigator.share) {
           await navigator.share(shareData);
         } else {
-          // If Web Share API is not available, show a fallback message
+          // If Web Share API is not available, copy to clipboard
+          await navigator.clipboard.writeText(shareText);
           toast({
-            title: "Sharing not supported",
-            description: "Please copy and share the link manually",
-            variant: "destructive",
+            title: "Text copied to clipboard",
+            description: "You can now paste and share it anywhere",
           });
         }
       } catch (webShareError) {
         console.error("Web Share API error:", webShareError);
-        if (webShareError instanceof Error && webShareError.name !== "AbortError") {
+        // Try clipboard as last resort
+        try {
+          await navigator.clipboard.writeText(shareText);
           toast({
-            title: "Error sharing",
-            description: "Unable to share at this time",
+            title: "Text copied to clipboard",
+            description: "You can now paste and share it anywhere",
+          });
+        } catch (clipboardError) {
+          toast({
+            title: "Sharing failed",
+            description: "Unable to share or copy text at this time",
             variant: "destructive",
           });
         }
