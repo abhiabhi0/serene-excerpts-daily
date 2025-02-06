@@ -11,10 +11,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
 
   const handleShare = async () => {
     const websiteUrl = "https://atmanamviddhi.github.io";
-    const shareText = `"${excerpt.text}"\n\n${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`;
+    const bookInfo = `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`.trim();
+    const shareText = `"${excerpt.text}"\n${bookInfo}\n\nDiscover more spiritual wisdom at: ${websiteUrl}`;
     
     const shareData = {
-      title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
+      title: bookInfo,
       text: shareText,
       url: websiteUrl
     };
@@ -44,7 +45,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
         } catch (error) {
           console.log("Mobile sharing failed:", error);
           // Fallback to clipboard
-          await navigator.clipboard.writeText(shareText + "\n\nRead more at: " + websiteUrl);
+          await navigator.clipboard.writeText(shareText);
           toast({
             title: "Text copied to clipboard",
             description: "You can now paste and share it anywhere",
@@ -53,7 +54,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       } else {
         // Desktop behavior: Copy to clipboard and show toast
         console.log("Desktop sharing: copying to clipboard");
-        await navigator.clipboard.writeText(shareText + "\n\nRead more at: " + websiteUrl);
+        await navigator.clipboard.writeText(shareText);
         toast({
           title: "Text copied to clipboard",
           description: "You can now paste and share it anywhere",
