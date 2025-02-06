@@ -194,7 +194,10 @@ Here are the steps to deploy the website to a different GitHub account (atmanam)
 
 First, build the static website:
 
+```
 npm run build
+```
+
 This will create a dist folder with the static files.
 
 Create a new repository in the atmanam GitHub account named atmanam.github.io
