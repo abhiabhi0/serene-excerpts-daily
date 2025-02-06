@@ -209,9 +209,9 @@ cd dist
 git init
 git add .
 git commit -m "Initial deploy"
-git branch -M main
+git branch -M master
 git remote add origin https://github.com/atmanam/atmanam.github.io.git
-git push -u origin main
+git push -u origin master
 ```
 In the repository settings (https://github.com/atmanam/atmanam.github.io/settings/pages):
 
