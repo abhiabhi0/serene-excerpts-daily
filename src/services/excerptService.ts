@@ -1,10 +1,9 @@
-
 import { Book, ExcerptWithMeta } from "@/types/excerpt";
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
     console.log("Fetching files list...");
-    const filesResponse = await fetch("/data/files.json");
+    const filesResponse = await fetch("/atmanam-viddhi/data/files.json");
     if (!filesResponse.ok) {
       throw new Error(`Failed to fetch files list: ${filesResponse.statusText}`);
     }
@@ -17,7 +16,7 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     const randomBookFile = files[Math.floor(Math.random() * files.length)];
     console.log("Selected book file:", randomBookFile);
     
-    const bookResponse = await fetch(`/data/${randomBookFile}`);
+    const bookResponse = await fetch(`/atmanam-viddhi/data/${randomBookFile}`);
     if (!bookResponse.ok) {
       throw new Error(`Failed to fetch book data: ${bookResponse.statusText}`);
     }
