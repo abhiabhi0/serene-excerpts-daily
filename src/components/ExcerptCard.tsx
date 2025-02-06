@@ -1,4 +1,3 @@
-
 import { ExcerptWithMeta, ExcerptCardProps } from "@/types/excerpt";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,11 +7,11 @@ import { Share } from '@capacitor/share';
 export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   const handleShare = async () => {
     try {
-      const appUrl = "https://play.google.com/store/apps/details?id=4974078350660020055";
+      const websiteUrl = "https://atmanamviddhi.github.io";
       await Share.share({
         title: `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`,
-        text: `"${excerpt.text}"\n\nRead more spiritual excerpts on Atmanam Viddhi app:`,
-        url: appUrl,
+        text: `"${excerpt.text}"\n\nRead more spiritual excerpts at:`,
+        url: websiteUrl,
         dialogTitle: 'Share this excerpt'
       });
     } catch (error) {
@@ -95,7 +94,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
         </CardContent>
       </Card>
 
-      {/* Support Section - Now shown for both local and remote excerpts */}
+      {/* Support Section */}
       <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="p-4 sm:p-6 text-center">
           <h2 className="text-lg font-semibold mb-4">Support Atmanam Viddhi</h2>
