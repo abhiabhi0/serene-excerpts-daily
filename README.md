@@ -213,6 +213,11 @@ git branch -M master
 git remote add origin https://github.com/atmanam/atmanam.github.io.git
 git push -u origin master
 ```
+
+```
+npm run build && cd dist && git add . && git commit -m "new changes" && git push
+```
+
 In the repository settings (https://github.com/atmanam/atmanam.github.io/settings/pages):
 
 Go to "Pages" section
