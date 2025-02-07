@@ -8,7 +8,7 @@ import { ActionButtons } from "./excerpt/ActionButtons";
 import { SupportSection } from "./excerpt/SupportSection";
 import { useState } from "react";
 
-export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
+export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: ExcerptCardProps) => {
   const { toast } = useToast();
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
 
@@ -70,7 +70,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   };
 
   const toggleScreenshotMode = () => {
-    setIsScreenshotMode(!isScreenshotMode);
+    const newMode = !isScreenshotMode;
+    setIsScreenshotMode(newMode);
+    if (onScreenshotModeChange) {
+      onScreenshotModeChange(newMode);
+    }
   };
 
   return (
@@ -119,3 +123,4 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
     </div>
   );
 };
+

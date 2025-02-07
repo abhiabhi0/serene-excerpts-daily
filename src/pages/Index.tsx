@@ -18,6 +18,7 @@ const Index = () => {
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
   const { activeTab, setActiveTab, setSearchParams } = useTabNavigation();
   const [currentExcerpt, setCurrentExcerpt] = useState<ExcerptWithMeta | null>(null);
+  const [isScreenshotMode, setIsScreenshotMode] = useState(false);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
@@ -84,11 +85,19 @@ const Index = () => {
         }} className="w-full">
           <TabsContainer activeTab={activeTab} />
           <TabsContent value="random">
-            <RandomExcerptsTab 
-              currentExcerpt={currentExcerpt}
-              isLoading={isLoading}
-              handleNewExcerpt={handleNewExcerpt}
-            />
+            {currentExcerpt && (
+              <ExcerptCard 
+                excerpt={currentExcerpt}
+                onNewExcerpt={handleNewExcerpt}
+                onScreenshotModeChange={setIsScreenshotMode}
+              />
+            )}
+            {isLoading && (
+              <div className="animate-pulse space-y-4">
+                <div className="h-40 bg-white/5 rounded-lg"></div>
+                <div className="h-20 bg-white/5 rounded-lg"></div>
+              </div>
+            )}
           </TabsContent>
           <TabsContent value="local">
             <LocalExcerpts 
@@ -99,7 +108,7 @@ const Index = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <footer className="mt-8 pb-4 text-center relative z-10">
+      <footer className={`mt-8 pb-4 text-center relative z-10 transition-opacity duration-300 ${isScreenshotMode ? 'opacity-0' : 'opacity-100'}`}>
         <a 
           href="https://www.termsfeed.com/live/cecc03b1-3815-4a4e-b8f8-015d7679369d" 
           target="_blank" 
@@ -114,3 +123,4 @@ const Index = () => {
 };
 
 export default Index;
+
