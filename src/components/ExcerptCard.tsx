@@ -1,3 +1,4 @@
+
 import { ExcerptWithMeta, ExcerptCardProps } from "@/types/excerpt";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Share } from '@capacitor/share';
@@ -73,7 +74,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   return (
     <div className="w-[98%] mx-auto space-y-4">
       {/* Excerpt Card */}
-      <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+      <Card className="w-full bg-[#0A1929]/80 border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent>
           <ExcerptContent excerpt={excerpt} />
         </CardContent>
@@ -86,7 +87,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       )}
 
       {/* Action Buttons */}
-      <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+      <Card className="w-full bg-[#0A1929]/80 border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="p-2">
           <ActionButtons 
             excerpt={excerpt}
@@ -97,7 +98,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       </Card>
 
       {/* Support Section */}
-      <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+      <Card className="w-full bg-[#0A1929]/80 border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent>
           <SupportSection />
         </CardContent>
