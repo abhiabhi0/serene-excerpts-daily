@@ -15,7 +15,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
   const handleShare = async () => {
     const websiteUrl = "https://atmanamviddhi.in";
     const bookInfo = `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`.trim();
-    const shareText = `"${excerpt.text}"\n${bookInfo}\n\nDiscover more spiritual wisdom at: ${websiteUrl}`;
+    const shareText = `${excerpt.text}\n\n~ ${bookInfo}\n\nExplore more spiritual wisdom at: ${websiteUrl}`;
     
     const shareData = {
       title: bookInfo,
@@ -36,9 +36,12 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
             return;
           }
           
+          // For Android, don't include the URL in the text since it will be added separately
+          const capacitorShareText = isMobile ? excerpt.text + "\n\n~ " + bookInfo : shareText;
+          
           await Share.share({
             title: shareData.title,
-            text: shareData.text,
+            text: capacitorShareText,
             url: websiteUrl,
             dialogTitle: 'Share this excerpt'
           });

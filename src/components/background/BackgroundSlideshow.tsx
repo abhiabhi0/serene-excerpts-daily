@@ -2,12 +2,15 @@
 import { useEffect, useState } from "react";
 
 const backgroundImages = [
-  'https://images.unsplash.com/photo-1470813740244-df37b8c1edcb', // blue starry night
-  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05', // foggy mountain
-  'https://images.unsplash.com/photo-1501854140801-50d01698950b', // bird's eye mountains
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e', // sun rays mountains
-  'https://images.unsplash.com/photo-1439337153520-7082a56a81f4', // glass roof
-  'https://images.unsplash.com/photo-1433086966358-54859d0ed716', // bridge waterfalls
+  '/lovable-uploads/bg-images/pexels-aronvisuals-1694621.jpg',
+  '/lovable-uploads/bg-images/pexels-azharphotography-8230166.jpg',
+  '/lovable-uploads/bg-images/pexels-being-the-traveller-579914-2619724.jpg',
+  '/lovable-uploads/bg-images/pexels-mali-1278952.jpg',
+  '/lovable-uploads/bg-images/pexels-pixabay-248032.jpg',
+  '/lovable-uploads/bg-images/pexels-pixabay-268134.jpg',
+  '/lovable-uploads/bg-images/pexels-prasanthinturi-1051838.jpg',
+  '/lovable-uploads/bg-images/pexels-rahulp9800-9835791.jpg',
+  '/lovable-uploads/bg-images/pexels-ravikant-5406476.jpg',
 ];
 
 export const BackgroundSlideshow = () => {
