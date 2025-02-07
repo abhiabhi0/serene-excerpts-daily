@@ -74,40 +74,47 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   };
 
   return (
-    <div 
-      className={`w-[98%] mx-auto space-y-4 ${isScreenshotMode ? 'fixed inset-0 flex items-center justify-center bg-black/50 z-50' : ''}`}
-      onClick={toggleScreenshotMode}
-    >
-      <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
-        <CardContent>
-          <ExcerptContent excerpt={excerpt} />
-        </CardContent>
-      </Card>
+    <div className="w-[98%] mx-auto space-y-4">
+      <div 
+        className={`relative ${isScreenshotMode ? 'z-50' : ''}`}
+        onClick={toggleScreenshotMode}
+      >
+        <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
+          <CardContent>
+            <ExcerptContent excerpt={excerpt} />
+          </CardContent>
+        </Card>
+      </div>
 
-      {!isScreenshotMode && (
-        <>
-          {excerpt.isLocal && (
-            <p className="text-center text-sm text-muted-foreground italic">
-              Click on the excerpt to enter screenshot mode!
-            </p>
-          )}
+      <div className={`transition-opacity duration-300 ${isScreenshotMode ? 'opacity-0 pointer-events-none absolute' : 'opacity-100'}`}>
+        {excerpt.isLocal && (
+          <p className="text-center text-sm text-muted-foreground italic">
+            Click on the excerpt to enter screenshot mode!
+          </p>
+        )}
 
-          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
-            <CardContent className="p-2">
-              <ActionButtons 
-                excerpt={excerpt}
-                onShare={handleShare}
-                onNewExcerpt={onNewExcerpt}
-              />
-            </CardContent>
-          </Card>
+        <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
+          <CardContent className="p-2">
+            <ActionButtons 
+              excerpt={excerpt}
+              onShare={handleShare}
+              onNewExcerpt={onNewExcerpt}
+            />
+          </CardContent>
+        </Card>
 
-          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
-            <CardContent>
-              <SupportSection />
-            </CardContent>
-          </Card>
-        </>
+        <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
+          <CardContent>
+            <SupportSection />
+          </CardContent>
+        </Card>
+      </div>
+
+      {isScreenshotMode && (
+        <div 
+          className="fixed inset-0 bg-black/50 -z-10" 
+          onClick={toggleScreenshotMode}
+        />
       )}
     </div>
   );
