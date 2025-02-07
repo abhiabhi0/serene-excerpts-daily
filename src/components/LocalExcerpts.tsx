@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { LocalExcerpt, LocalExcerptBook } from "@/types/localExcerpt";
 import { ExcerptList } from "./ExcerptList";
@@ -164,12 +163,12 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
       <div className="flex flex-col gap-4">
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
               <Plus className="w-4 h-4 mr-2" />
               Add Excerpt
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] p-0">
+          <DialogContent className="max-w-2xl max-h-[90vh] p-0 bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
             <ScrollArea className="h-full max-h-[90vh] p-6">
               <ExcerptForm 
                 onSubmit={handleSubmit}
@@ -190,4 +189,3 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
     </div>
   );
 };
-
