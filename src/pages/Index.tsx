@@ -153,6 +153,16 @@ const Index = () => {
           </TabsContent>
         </Tabs>
       </div>
+      <footer className="mt-8 pb-4 text-center">
+        <a 
+          href="https://www.termsfeed.com/live/cecc03b1-3815-4a4e-b8f8-015d7679369d" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-xs text-muted-foreground hover:text-primary transition-colors"
+        >
+          Privacy Policy
+        </a>
+      </footer>
     </div>
   );
 };
