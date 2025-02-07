@@ -12,6 +12,7 @@ import { RandomExcerptsTab } from "@/components/excerpt/RandomExcerptsTab";
 import { BackgroundSlideshow } from "@/components/background/BackgroundSlideshow";
 import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
+import { ExcerptCard } from "@/components/ExcerptCard";
 
 const Index = () => {
   const { toast } = useToast();
@@ -123,4 +124,3 @@ const Index = () => {
 };
 
 export default Index;
-

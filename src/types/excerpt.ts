@@ -1,3 +1,4 @@
+
 export interface ExcerptWithMeta {
   text: string;
   bookTitle?: string;
@@ -27,4 +28,5 @@ export interface Book {
 export interface ExcerptCardProps {
   excerpt: ExcerptWithMeta;
   onNewExcerpt: () => void;
+  onScreenshotModeChange?: (mode: boolean) => void;
 }
