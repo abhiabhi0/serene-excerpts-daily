@@ -215,7 +215,12 @@ git push -u origin master
 ```
 
 ```
-npm run build && cd dist && git add . && git commit -m "new changes" && git push
+npm run build && cd dist && git add . && git commit -m "new changes" && git push && cd ..
+```
+
+for android
+```
+npm run build && npx cap sync && npx cap open android
 ```
 
 In the repository settings (https://github.com/atmanam/atmanam.github.io/settings/pages):
