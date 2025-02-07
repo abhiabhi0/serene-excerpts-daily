@@ -24,23 +24,15 @@ export const BackgroundSlideshow = () => {
   }, []);
 
   return (
-    <>
-      <div 
-        className="fixed inset-0 transition-opacity duration-1000 ease-in-out"
-        style={{
-          backgroundImage: `url(${backgroundImages[currentBgIndex]})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity: 0.25,
-        }}
-      />
-      <div 
-        className="fixed inset-0"
-        style={{
-          background: 'linear-gradient(to bottom right, rgba(10, 25, 41, 0.90), rgba(15, 41, 66, 0.90), rgba(26, 64, 103, 0.90))',
-          zIndex: 1,
-        }}
-      />
-    </>
+    <div 
+      className="fixed inset-0 transition-opacity duration-1000 ease-in-out"
+      style={{
+        backgroundImage: `url(${backgroundImages[currentBgIndex]})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.25,
+      }}
+    />
   );
 };
+
