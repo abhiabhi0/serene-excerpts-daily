@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -12,11 +13,12 @@ import { RandomExcerptsTab } from "@/components/excerpt/RandomExcerptsTab";
 import { useGesture } from "@use-gesture/react";
 
 const backgroundImages = [
-  'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',  // trees
-  'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9',  // pine trees
-  'https://images.unsplash.com/photo-1470813740244-df37b8c1edcb',  // starry night
-  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05',  // foggy mountain
-  'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843',  // forest
+  'https://images.unsplash.com/photo-1528319725582-ddc096101511', // Person meditating in nature
+  'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc', // Sunset meditation
+  'https://images.unsplash.com/photo-1508672019048-805c876b67e2', // Buddha statue
+  'https://images.unsplash.com/photo-1531685250784-7569952593d2', // Zen stones
+  'https://images.unsplash.com/photo-1499209974431-9dddcece7f88', // Peaceful forest
+  'https://images.unsplash.com/photo-1600585152220-90363fe7e115', // Lotus flower
 ];
 
 const Index = () => {
@@ -157,14 +159,14 @@ const Index = () => {
           backgroundImage: `url(${backgroundImages[currentBgIndex]})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          opacity: 0.15,
+          opacity: 0.25, // Increased opacity for better visibility
         }}
       />
       {/* Gradient overlay */}
       <div 
         className="fixed inset-0"
         style={{
-          background: 'linear-gradient(to bottom right, rgba(10, 25, 41, 0.95), rgba(15, 41, 66, 0.95), rgba(26, 64, 103, 0.95))',
+          background: 'linear-gradient(to bottom right, rgba(10, 25, 41, 0.90), rgba(15, 41, 66, 0.90), rgba(26, 64, 103, 0.90))',
           zIndex: 1,
         }}
       />
