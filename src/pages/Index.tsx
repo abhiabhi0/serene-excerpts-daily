@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -12,12 +11,32 @@ import { TabsContainer } from "@/components/excerpt/TabsContainer";
 import { RandomExcerptsTab } from "@/components/excerpt/RandomExcerptsTab";
 import { useGesture } from "@use-gesture/react";
 
+const backgroundImages = [
+  'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',  // trees
+  'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9',  // pine trees
+  'https://images.unsplash.com/photo-1470813740244-df37b8c1edcb',  // starry night
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05',  // foggy mountain
+  'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843',  // forest
+];
+
 const Index = () => {
   const { toast } = useToast();
   const [localExcerpts, setLocalExcerpts] = useState<LocalExcerpt[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'random');
   const [currentExcerpt, setCurrentExcerpt] = useState<ExcerptWithMeta | null>(null);
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+
+  // Background image rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBgIndex((prevIndex) => 
+        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 10000); // Change every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Bind swipe gestures
   useGesture(
@@ -130,8 +149,28 @@ const Index = () => {
   }, [isError, toast]);
 
   return (
-    <div className="min-h-screen p-4 bg-gradient-to-br from-[#0A1929] via-[#0F2942] to-[#1A4067]">
-      <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8">
+    <div className="min-h-screen p-4 relative">
+      {/* Background image with overlay */}
+      <div 
+        className="fixed inset-0 transition-opacity duration-1000 ease-in-out"
+        style={{
+          backgroundImage: `url(${backgroundImages[currentBgIndex]})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.15,
+        }}
+      />
+      {/* Gradient overlay */}
+      <div 
+        className="fixed inset-0"
+        style={{
+          background: 'linear-gradient(to bottom right, rgba(10, 25, 41, 0.95), rgba(15, 41, 66, 0.95), rgba(26, 64, 103, 0.95))',
+          zIndex: 1,
+        }}
+      />
+      
+      {/* Content */}
+      <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8 relative z-10">
         <Tabs value={activeTab} onValueChange={(value) => {
           setActiveTab(value);
           setSearchParams({ tab: value });
@@ -153,7 +192,7 @@ const Index = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <footer className="mt-8 pb-4 text-center">
+      <footer className="mt-8 pb-4 text-center relative z-10">
         <a 
           href="https://www.termsfeed.com/live/cecc03b1-3815-4a4e-b8f8-015d7679369d" 
           target="_blank" 
