@@ -1,3 +1,4 @@
+
 import { ExcerptWithMeta } from "@/types/excerpt";
 
 interface ExcerptContentProps {
@@ -22,7 +23,7 @@ export const ExcerptContent = ({ excerpt }: ExcerptContentProps) => {
           className="w-8 h-8 mx-auto mb-2"
         />
         <p className="font-semibold">Atmanam Viddhi - Know Thyself</p>
-        <p className="mt-1">atmanamviddhi.github.io</p>
+        <p className="mt-1">atmanamviddhi.in</p>
       </div>
     </div>
   );

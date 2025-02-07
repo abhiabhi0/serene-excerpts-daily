@@ -2,12 +2,12 @@
 import { useEffect, useState } from "react";
 
 const backgroundImages = [
-  'https://images.unsplash.com/photo-1528319725582-ddc096101511', // Person meditating in nature
-  'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc', // Sunset meditation
-  'https://images.unsplash.com/photo-1508672019048-805c876b67e2', // Buddha statue
-  'https://images.unsplash.com/photo-1531685250784-7569952593d2', // Zen stones
-  'https://images.unsplash.com/photo-1499209974431-9dddcece7f88', // Peaceful forest
-  'https://images.unsplash.com/photo-1600585152220-90363fe7e115', // Lotus flower
+  'https://images.unsplash.com/photo-1470813740244-df37b8c1edcb', // blue starry night
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05', // foggy mountain
+  'https://images.unsplash.com/photo-1501854140801-50d01698950b', // bird's eye mountains
+  'https://images.unsplash.com/photo-1469474968028-56623f02e42e', // sun rays mountains
+  'https://images.unsplash.com/photo-1439337153520-7082a56a81f4', // glass roof
+  'https://images.unsplash.com/photo-1433086966358-54859d0ed716', // bridge waterfalls
 ];
 
 export const BackgroundSlideshow = () => {
@@ -35,4 +35,3 @@ export const BackgroundSlideshow = () => {
     />
   );
 };
-

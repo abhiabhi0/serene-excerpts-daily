@@ -6,12 +6,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { ExcerptContent } from "./excerpt/ExcerptContent";
 import { ActionButtons } from "./excerpt/ActionButtons";
 import { SupportSection } from "./excerpt/SupportSection";
+import { useState } from "react";
 
 export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
   const { toast } = useToast();
+  const [isScreenshotMode, setIsScreenshotMode] = useState(false);
 
   const handleShare = async () => {
-    const websiteUrl = "https://atmanamviddhi.github.io";
+    const websiteUrl = "https://atmanamviddhi.in";
     const bookInfo = `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`.trim();
     const shareText = `"${excerpt.text}"\n${bookInfo}\n\nDiscover more spiritual wisdom at: ${websiteUrl}`;
     
@@ -28,14 +30,12 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
       if (isMobile) {
         console.log("Attempting mobile share...");
         try {
-          // Try Web Share API first for mobile browsers
           if (navigator.share) {
             await navigator.share(shareData);
             console.log("Web Share API successful");
             return;
           }
           
-          // Fallback to Capacitor Share
           await Share.share({
             title: shareData.title,
             text: shareData.text,
@@ -45,7 +45,6 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
           console.log("Capacitor Share successful");
         } catch (error) {
           console.log("Mobile sharing failed:", error);
-          // Fallback to clipboard
           await navigator.clipboard.writeText(shareText);
           toast({
             title: "Text copied to clipboard",
@@ -53,7 +52,6 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
           });
         }
       } else {
-        // Desktop behavior: Copy to clipboard and show toast
         console.log("Desktop sharing: copying to clipboard");
         await navigator.clipboard.writeText(shareText);
         toast({
@@ -71,38 +69,46 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt }: ExcerptCardProps) => {
     }
   };
 
+  const toggleScreenshotMode = () => {
+    setIsScreenshotMode(!isScreenshotMode);
+  };
+
   return (
-    <div className="w-[98%] mx-auto space-y-4">
-      {/* Excerpt Card */}
+    <div 
+      className={`w-[98%] mx-auto space-y-4 ${isScreenshotMode ? 'fixed inset-0 flex items-center justify-center bg-black/50 z-50' : ''}`}
+      onClick={toggleScreenshotMode}
+    >
       <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent>
           <ExcerptContent excerpt={excerpt} />
         </CardContent>
       </Card>
 
-      {excerpt.isLocal && (
-        <p className="text-center text-sm text-muted-foreground italic">
-          Take a screenshot and share your excerpt with the world!
-        </p>
+      {!isScreenshotMode && (
+        <>
+          {excerpt.isLocal && (
+            <p className="text-center text-sm text-muted-foreground italic">
+              Click on the excerpt to enter screenshot mode!
+            </p>
+          )}
+
+          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
+            <CardContent className="p-2">
+              <ActionButtons 
+                excerpt={excerpt}
+                onShare={handleShare}
+                onNewExcerpt={onNewExcerpt}
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
+            <CardContent>
+              <SupportSection />
+            </CardContent>
+          </Card>
+        </>
       )}
-
-      {/* Action Buttons */}
-      <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
-        <CardContent className="p-2">
-          <ActionButtons 
-            excerpt={excerpt}
-            onShare={handleShare}
-            onNewExcerpt={onNewExcerpt}
-          />
-        </CardContent>
-      </Card>
-
-      {/* Support Section */}
-      <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
-        <CardContent>
-          <SupportSection />
-        </CardContent>
-      </Card>
     </div>
   );
 };
