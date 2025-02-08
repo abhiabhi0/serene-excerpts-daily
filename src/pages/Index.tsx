@@ -13,6 +13,7 @@ import { BackgroundSlideshow } from "@/components/background/BackgroundSlideshow
 import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const { toast } = useToast();
@@ -20,11 +21,21 @@ const Index = () => {
   const { activeTab, setActiveTab, setSearchParams } = useTabNavigation();
   const [currentExcerpt, setCurrentExcerpt] = useState<ExcerptWithMeta | null>(null);
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
+  const isMobile = useIsMobile();
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
     queryFn: getRandomExcerpt,
-    retry: 2,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+    onError: (error) => {
+      console.error("Failed to fetch excerpt:", error);
+      toast({
+        variant: "destructive",
+        title: "Connection Error",
+        description: "Please check your internet connection and try again.",
+      });
+    }
   });
 
   const getRandomLocalExcerpt = (): ExcerptWithMeta | null => {
@@ -65,14 +76,22 @@ const Index = () => {
   }, [remoteExcerpt]);
 
   useEffect(() => {
-    if (isError) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load excerpt. Please try again.",
-      });
+    // Initial load
+    if (!currentExcerpt && !isLoading && !isError) {
+      handleNewExcerpt();
     }
-  }, [isError, toast]);
+  }, []);
+
+  if (!isMobile && window.innerWidth < 320) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2">Screen Too Small</h2>
+          <p>Please use a device with a larger screen for the best experience.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-4 relative">
@@ -97,6 +116,17 @@ const Index = () => {
               <div className="animate-pulse space-y-4">
                 <div className="h-40 bg-white/5 rounded-lg"></div>
                 <div className="h-20 bg-white/5 rounded-lg"></div>
+              </div>
+            )}
+            {isError && !currentExcerpt && (
+              <div className="text-center p-4 bg-white/5 rounded-lg">
+                <p className="text-red-400 mb-2">Unable to load excerpt</p>
+                <button 
+                  onClick={() => refetchRemote()} 
+                  className="text-blue-400 hover:text-blue-300"
+                >
+                  Try Again
+                </button>
               </div>
             )}
           </TabsContent>
