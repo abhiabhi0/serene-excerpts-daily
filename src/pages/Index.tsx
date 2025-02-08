@@ -28,13 +28,15 @@ const Index = () => {
     queryFn: getRandomExcerpt,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-    onError: (error) => {
-      console.error("Failed to fetch excerpt:", error);
-      toast({
-        variant: "destructive",
-        title: "Connection Error",
-        description: "Please check your internet connection and try again.",
-      });
+    meta: {
+      onError: () => {
+        console.error("Failed to fetch excerpt");
+        toast({
+          variant: "destructive",
+          title: "Connection Error",
+          description: "Please check your internet connection and try again.",
+        });
+      }
     }
   });
 
