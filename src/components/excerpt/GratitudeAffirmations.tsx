@@ -138,11 +138,12 @@ export const GratitudeAffirmations = () => {
               <ul className="space-y-2">
                 {gratitudeList.map((item, index) => (
                   <li key={index} className="flex items-center justify-between p-2 rounded bg-white/5">
-                    <span>{item}</span>
+                    <span className="break-words overflow-hidden mr-2 flex-1">{item}</span>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleRemoveGratitude(index)}
+                      className="shrink-0"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -183,11 +184,12 @@ export const GratitudeAffirmations = () => {
               <ul className="space-y-2">
                 {affirmationList.map((item, index) => (
                   <li key={index} className="flex items-center justify-between p-2 rounded bg-white/5">
-                    <span>{item}</span>
+                    <span className="break-words overflow-hidden mr-2 flex-1">{item}</span>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleRemoveAffirmation(index)}
+                      className="shrink-0"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -201,3 +203,4 @@ export const GratitudeAffirmations = () => {
     </div>
   );
 };
+
