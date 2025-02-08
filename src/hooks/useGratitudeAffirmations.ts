@@ -5,19 +5,39 @@ import { useToast } from "@/components/ui/use-toast";
 const MAX_ITEMS = 5;
 const MAX_CHARS = 100;
 
+const getStoredData = (key: string): string[] => {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error(`Error reading ${key} from localStorage:`, error);
+    return [];
+  }
+};
+
 export const useGratitudeAffirmations = () => {
-  const [gratitudeList, setGratitudeList] = useState<string[]>([]);
-  const [affirmationList, setAffirmationList] = useState<string[]>([]);
+  const [gratitudeList, setGratitudeList] = useState<string[]>(() => 
+    getStoredData("userGratitude")
+  );
+  const [affirmationList, setAffirmationList] = useState<string[]>(() => 
+    getStoredData("userAffirmation")
+  );
   const [newGratitude, setNewGratitude] = useState("");
   const [newAffirmation, setNewAffirmation] = useState("");
   const { toast } = useToast();
 
-  useEffect(() => {
-    const savedGratitude = localStorage.getItem("userGratitude");
-    const savedAffirmation = localStorage.getItem("userAffirmation");
-    if (savedGratitude) setGratitudeList(JSON.parse(savedGratitude));
-    if (savedAffirmation) setAffirmationList(JSON.parse(savedAffirmation));
-  }, []);
+  const saveToStorage = (key: string, data: string[]) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch (error) {
+      console.error(`Error saving ${key} to localStorage:`, error);
+      toast({
+        variant: "destructive",
+        title: "Storage Error",
+        description: "Failed to save your data. Please try again.",
+      });
+    }
+  };
 
   const handleAddGratitude = () => {
     if (gratitudeList.length >= MAX_ITEMS) {
@@ -30,7 +50,7 @@ export const useGratitudeAffirmations = () => {
     if (newGratitude.trim()) {
       const updatedList = [...gratitudeList, newGratitude];
       setGratitudeList(updatedList);
-      localStorage.setItem("userGratitude", JSON.stringify(updatedList));
+      saveToStorage("userGratitude", updatedList);
       setNewGratitude("");
       toast({
         description: "Gratitude added successfully",
@@ -49,7 +69,7 @@ export const useGratitudeAffirmations = () => {
     if (newAffirmation.trim()) {
       const updatedList = [...affirmationList, newAffirmation];
       setAffirmationList(updatedList);
-      localStorage.setItem("userAffirmation", JSON.stringify(updatedList));
+      saveToStorage("userAffirmation", updatedList);
       setNewAffirmation("");
       toast({
         description: "Affirmation added successfully",
@@ -60,7 +80,7 @@ export const useGratitudeAffirmations = () => {
   const handleRemoveGratitude = (index: number) => {
     const updatedList = gratitudeList.filter((_, i) => i !== index);
     setGratitudeList(updatedList);
-    localStorage.setItem("userGratitude", JSON.stringify(updatedList));
+    saveToStorage("userGratitude", updatedList);
     toast({
       description: "Gratitude removed successfully",
     });
@@ -69,7 +89,7 @@ export const useGratitudeAffirmations = () => {
   const handleRemoveAffirmation = (index: number) => {
     const updatedList = affirmationList.filter((_, i) => i !== index);
     setAffirmationList(updatedList);
-    localStorage.setItem("userAffirmation", JSON.stringify(updatedList));
+    saveToStorage("userAffirmation", updatedList);
     toast({
       description: "Affirmation removed successfully",
     });
@@ -110,4 +130,3 @@ export const useGratitudeAffirmations = () => {
     handleAffirmationChange,
   };
 };
-
