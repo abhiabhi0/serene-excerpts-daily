@@ -10,8 +10,8 @@ import { ChevronDown } from "lucide-react";
 export const GratitudeAffirmations = () => {
   const [gratitude, setGratitude] = useState("");
   const [affirmation, setAffirmation] = useState("");
-  const [openGratitude, setOpenGratitude] = useState(true);
-  const [openAffirmation, setOpenAffirmation] = useState(true);
+  const [openGratitude, setOpenGratitude] = useState(false);
+  const [openAffirmation, setOpenAffirmation] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -87,4 +87,3 @@ export const GratitudeAffirmations = () => {
     </div>
   );
 };
-
