@@ -1,11 +1,12 @@
 
 import { ExcerptWithMeta, ExcerptCardProps } from "@/types/excerpt";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Share } from '@capacitor/share';
 import { useToast } from "@/components/ui/use-toast";
 import { ExcerptContent } from "./excerpt/ExcerptContent";
 import { ActionButtons } from "./excerpt/ActionButtons";
 import { SupportSection } from "./excerpt/SupportSection";
+import { GratitudeAffirmations } from "./excerpt/GratitudeAffirmations";
 import { useState } from "react";
 
 export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: ExcerptCardProps) => {
@@ -15,14 +16,8 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
   const handleShare = async () => {
     const websiteUrl = "https://atmanamviddhi.in";
     const bookInfo = `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`.trim();
-    const shareText = `${excerpt.text}\n\n~ ${bookInfo}\n\nExplore more spiritual wisdom at: ${websiteUrl}`;
+    const shareText = `${excerpt.text}\n\n~ ${bookInfo}\n\n${websiteUrl}`;
     
-    const shareData = {
-      title: bookInfo,
-      text: shareText,
-      url: websiteUrl
-    };
-
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     console.log("Device detection:", { isMobile, userAgent: navigator.userAgent });
 
@@ -31,17 +26,18 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
         console.log("Attempting mobile share...");
         try {
           if (navigator.share) {
-            await navigator.share(shareData);
+            await navigator.share({
+              title: bookInfo,
+              text: excerpt.text + "\n\n~ " + bookInfo,
+              url: websiteUrl
+            });
             console.log("Web Share API successful");
             return;
           }
           
-          // For Android, don't include the URL in the text since it will be added separately
-          const capacitorShareText = isMobile ? excerpt.text + "\n\n~ " + bookInfo : shareText;
-          
           await Share.share({
-            title: shareData.title,
-            text: capacitorShareText,
+            title: bookInfo,
+            text: excerpt.text + "\n\n~ " + bookInfo,
             url: websiteUrl,
             dialogTitle: 'Share this excerpt'
           });
@@ -110,6 +106,8 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
           </CardContent>
         </Card>
 
+        <GratitudeAffirmations />
+
         <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
           <CardContent>
             <SupportSection />
@@ -126,4 +124,3 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
     </div>
   );
 };
-
