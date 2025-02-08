@@ -40,7 +40,7 @@ export const GratitudeAffirmations = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 my-8">
       <Card className="w-full bg-[#F2FCE2]/20 border-[#1A4067]/30 backdrop-blur-sm">
         <CardContent className="pt-6">
           <Collapsible open={openGratitude} onOpenChange={setOpenGratitude}>
