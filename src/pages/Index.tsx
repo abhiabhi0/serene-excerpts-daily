@@ -22,6 +22,7 @@ const Index = () => {
   const [currentExcerpt, setCurrentExcerpt] = useState<ExcerptWithMeta | null>(null);
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
+  const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
@@ -84,7 +85,18 @@ const Index = () => {
     }
   }, []);
 
-  if (!isMobile && window.innerWidth < 320) {
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsScreenTooSmall(window.innerWidth < 320);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  if (isScreenTooSmall && !isMobile) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center">
