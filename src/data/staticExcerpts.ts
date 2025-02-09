@@ -10,8 +10,14 @@ const importAllBooks = async (): Promise<Book[]> => {
   
   for (const file of files) {
     try {
+      console.log(`Attempting to import ${file}...`);
       const bookModule = await import(`../../public/data/${file}`);
-      books.push(bookModule.default);
+      if (bookModule && bookModule.default) {
+        books.push(bookModule.default);
+        console.log(`Successfully imported ${file}`);
+      } else {
+        console.error(`Invalid module format for ${file}`);
+      }
     } catch (error) {
       console.error(`Error importing ${file}:`, error);
     }
@@ -33,33 +39,42 @@ export let staticBooks: {
 
 // Function to update static arrays
 const updateStaticArrays = async () => {
-  const allBooks = await importAllBooks();
-  
-  // Update staticExcerpts
-  staticExcerpts = allBooks.flatMap(book => 
-    transformBookToFlatExcerpts(book)
-  );
+  try {
+    const allBooks = await importAllBooks();
+    console.log(`Imported ${allBooks.length} books successfully`);
+    
+    if (allBooks.length === 0) {
+      console.error("No books were imported successfully");
+      return;
+    }
 
-  // Update staticLanguages
-  staticLanguages = Array.from(
-    new Set(allBooks.map(book => book.metadata.language))
-  ).sort();
+    // Update staticExcerpts
+    staticExcerpts = allBooks.flatMap(book => 
+      transformBookToFlatExcerpts(book)
+    );
 
-  // Update staticBooks
-  staticBooks = allBooks.map(book => ({
-    title: book.metadata.title,
-    author: book.metadata.author,
-    translator: book.metadata.translator,
-    language: book.metadata.language,
-    excerptCount: book.excerpts.length
-  }));
+    // Update staticLanguages
+    staticLanguages = Array.from(
+      new Set(allBooks.map(book => book.metadata.language))
+    ).sort();
 
-  // Log all static data
-  console.log('All Static Excerpts:', staticExcerpts);
-  console.log('All Languages:', staticLanguages);
-  console.log('All Books:', staticBooks);
+    // Update staticBooks
+    staticBooks = allBooks.map(book => ({
+      title: book.metadata.title,
+      author: book.metadata.author,
+      translator: book.metadata.translator,
+      language: book.metadata.language,
+      excerptCount: book.excerpts.length
+    }));
+
+    // Log all static data
+    console.log('All Static Excerpts:', staticExcerpts);
+    console.log('All Languages:', staticLanguages);
+    console.log('All Books:', staticBooks);
+  } catch (error) {
+    console.error("Error updating static arrays:", error);
+  }
 };
 
 // Initialize arrays on module load
 updateStaticArrays();
-
