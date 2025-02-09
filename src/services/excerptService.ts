@@ -15,6 +15,17 @@ const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
   return excerpts;
 };
 
+// Get all unique languages from static excerpts
+export const getAllLanguages = (): string[] => {
+  const languages = new Set<string>();
+  staticExcerpts.forEach(excerpt => {
+    if (excerpt.language) {
+      languages.add(excerpt.language);
+    }
+  });
+  return Array.from(languages);
+};
+
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
     // Log the static excerpts to see the array
@@ -47,3 +58,4 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     throw error;
   }
 };
+

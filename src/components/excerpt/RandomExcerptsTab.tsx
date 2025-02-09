@@ -1,5 +1,15 @@
+
+import { useEffect, useState } from "react";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { ExcerptWithMeta } from "@/types/excerpt";
+import { getAllLanguages } from "@/services/excerptService";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface RandomExcerptsTabProps {
   currentExcerpt: ExcerptWithMeta | null;
@@ -12,6 +22,15 @@ export const RandomExcerptsTab = ({
   isLoading, 
   handleNewExcerpt 
 }: RandomExcerptsTabProps) => {
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+
+  useEffect(() => {
+    const availableLanguages = getAllLanguages();
+    console.log("Available languages:", availableLanguages);
+    setLanguages(availableLanguages);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
@@ -21,10 +40,32 @@ export const RandomExcerptsTab = ({
     );
   }
 
-  return currentExcerpt ? (
-    <ExcerptCard 
-      excerpt={currentExcerpt} 
-      onNewExcerpt={handleNewExcerpt} 
-    />
-  ) : null;
+  return (
+    <div className="space-y-4">
+      <div className="w-full max-w-xs">
+        <Select
+          value={selectedLanguage}
+          onValueChange={setSelectedLanguage}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select Language" />
+          </SelectTrigger>
+          <SelectContent>
+            {languages.map((language) => (
+              <SelectItem key={language} value={language}>
+                {language}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      
+      {currentExcerpt && (
+        <ExcerptCard 
+          excerpt={currentExcerpt} 
+          onNewExcerpt={handleNewExcerpt} 
+        />
+      )}
+    </div>
+  );
 };
