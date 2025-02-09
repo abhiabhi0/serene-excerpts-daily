@@ -15,12 +15,15 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === 'development' && componentTagger(),
-    mode === 'production' && generateStaticExcerptsPlugin(),
+    generateStaticExcerptsPlugin(), // Run in both dev and prod
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  json: {
+    stringify: true, // This enables importing JSON as string
   },
   build: {
     outDir: "dist",
