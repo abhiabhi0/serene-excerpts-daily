@@ -53,3 +53,23 @@ const allBooks: Book[] = [
 export const staticExcerpts: FlattenedExcerpt[] = allBooks.flatMap(book => 
   transformBookToFlatExcerpts(book)
 );
+
+// Create array of unique languages from books
+export const staticLanguages: string[] = Array.from(
+  new Set(allBooks.map(book => book.metadata.language))
+).sort();
+
+// Create array of book titles and their metadata
+export const staticBooks = allBooks.map(book => ({
+  title: book.metadata.title,
+  author: book.metadata.author,
+  translator: book.metadata.translator,
+  language: book.metadata.language,
+  excerptCount: book.excerpts.length
+}));
+
+// Log all static data
+console.log('All Static Excerpts:', staticExcerpts);
+console.log('All Languages:', staticLanguages);
+console.log('All Books:', staticBooks);
+
