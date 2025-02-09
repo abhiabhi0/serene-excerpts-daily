@@ -26,11 +26,17 @@ export const RandomExcerptsTab = ({
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
   useEffect(() => {
-    // Immediately call getAllLanguages and set the result
     const availableLanguages = getAllLanguages();
     console.log("Available languages in component:", availableLanguages);
     setLanguages(availableLanguages);
-  }, []); // Empty dependency array means this runs once when component mounts
+  }, []);
+
+  const handleLanguageChange = (value: string) => {
+    console.log("Selected language:", value);
+    setSelectedLanguage(value);
+    // Trigger new excerpt fetch with selected language
+    handleNewExcerpt();
+  };
 
   if (isLoading) {
     return (
@@ -49,12 +55,18 @@ export const RandomExcerptsTab = ({
         </label>
         <Select
           value={selectedLanguage}
-          onValueChange={setSelectedLanguage}
+          onValueChange={handleLanguageChange}
         >
           <SelectTrigger className="w-[200px] bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600">
             <SelectValue placeholder="Choose language" />
           </SelectTrigger>
           <SelectContent className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600">
+            <SelectItem 
+              value=""
+              className="text-black dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              All Languages
+            </SelectItem>
             {languages.map((language) => (
               <SelectItem 
                 key={language} 
