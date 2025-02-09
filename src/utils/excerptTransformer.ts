@@ -9,42 +9,10 @@ export const transformBookToFlatExcerpts = (book: Book): FlattenedExcerpt[] => {
     bookAuthor: book.metadata.author || undefined,
     translator: book.metadata.translator,
     category: book.metadata.category || 'Spirituality',
-    language: book.metadata.language || 'en', // Use language from metadata, fallback to 'en'
+    language: book.metadata.language || 'en',
     text: excerpt.text,
     createdAt: new Date().toISOString()
   }));
-};
-
-export const createFlattenedExcerpts = async (): Promise<FlattenedExcerpt[]> => {
-  try {
-    console.log("Fetching files list...");
-    const filesResponse = await fetch("/data/files.json");
-    if (!filesResponse.ok) {
-      throw new Error(`Failed to fetch files list: ${filesResponse.statusText}`);
-    }
-    
-    const files: string[] = await filesResponse.json();
-    if (!files.length) {
-      throw new Error("No excerpt files available");
-    }
-
-    const allExcerpts: FlattenedExcerpt[] = [];
-    
-    // Fetch and process all book files
-    for (const file of files) {
-      const bookResponse = await fetch(`/data/${file}`);
-      if (!bookResponse.ok) continue;
-      
-      const book: Book = await bookResponse.json();
-      const flatExcerpts = transformBookToFlatExcerpts(book);
-      allExcerpts.push(...flatExcerpts);
-    }
-
-    return allExcerpts;
-  } catch (error) {
-    console.error("Error creating flattened excerpts:", error);
-    throw error;
-  }
 };
 
 export const getRandomExcerptFromFlattened = (excerpts: FlattenedExcerpt[]): FlattenedExcerpt => {
