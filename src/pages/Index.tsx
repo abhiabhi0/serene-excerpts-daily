@@ -7,7 +7,6 @@ import { LocalExcerpts } from "@/components/LocalExcerpts";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { TabsContainer } from "@/components/excerpt/TabsContainer";
-import { RandomExcerptsTab } from "@/components/excerpt/RandomExcerptsTab";
 import { BackgroundSlideshow } from "@/components/background/BackgroundSlideshow";
 import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
@@ -25,38 +24,22 @@ const Index = () => {
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
   const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
 
-  const { data: availableBooks = [] } = useQuery({
-    queryKey: ["books"],
+  const { data: availableBooks = [], isLoading: isBooksLoading } = useQuery({
+    queryKey: ["transformed-excerpts"],
     queryFn: async () => {
       const response = await fetch("/data/files.json");
       const files: string[] = await response.json();
-      return files.map(file => file.replace(".json", "").split("-").join(" "));
-    }
-  });
-
-  const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
-    queryKey: ["excerpt", selectedBooks],
-    queryFn: async () => getRandomExcerpt(selectedBooks),
-    enabled: false,
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-    meta: {
-      onError: () => {
-        console.error("Failed to fetch excerpt");
-        toast({
-          variant: "destructive",
-          title: "Connection Error",
-          description: "Please check your internet connection and try again.",
-        });
+      const uniqueBooks = new Set<string>();
+      
+      for (const file of files) {
+        const bookResponse = await fetch(`/data/${file}`);
+        const book = await bookResponse.json();
+        uniqueBooks.add(book.metadata.title);
       }
+      
+      return Array.from(uniqueBooks);
     }
   });
-
-  useEffect(() => {
-    if (availableBooks.length > 0) {
-      setSelectedBooks(availableBooks);
-    }
-  }, [availableBooks]);
 
   const getRandomLocalExcerpt = (): ExcerptWithMeta | null => {
     if (localExcerpts.length === 0) return null;
@@ -88,6 +71,30 @@ const Index = () => {
     setCurrentExcerpt(convertLocalToExcerptWithMeta(excerpt));
     setSearchParams({ tab: 'random' });
   };
+
+  const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
+    queryKey: ["excerpt", selectedBooks],
+    queryFn: async () => getRandomExcerpt(selectedBooks),
+    enabled: false,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+    meta: {
+      onError: () => {
+        console.error("Failed to fetch excerpt");
+        toast({
+          variant: "destructive",
+          title: "Connection Error",
+          description: "Please check your internet connection and try again.",
+        });
+      }
+    }
+  });
+
+  useEffect(() => {
+    if (availableBooks.length > 0) {
+      setSelectedBooks(availableBooks);
+    }
+  }, [availableBooks]);
 
   useEffect(() => {
     if (remoteExcerpt) {
