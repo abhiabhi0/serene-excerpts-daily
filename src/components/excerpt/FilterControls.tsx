@@ -48,6 +48,9 @@ export function FilterControls({
   const languages = data?.languages ?? [];
   const books = data?.books ?? [];
 
+  console.log("Languages:", languages);
+  console.log("Books:", books);
+
   const filteredBooks = selectedLanguages.length > 0
     ? books.filter(book => selectedLanguages.includes(book.language))
     : books;
@@ -68,6 +71,16 @@ export function FilterControls({
     setSelectedBooks(newBooks);
   }, [selectedBooks, setSelectedBooks]);
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button variant="outline" className="w-full sm:w-[200px]" disabled>
+          Loading...
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col sm:flex-row gap-4">
       <Popover open={openLanguages} onOpenChange={setOpenLanguages}>
@@ -77,7 +90,6 @@ export function FilterControls({
             role="combobox"
             aria-expanded={openLanguages}
             className="justify-between w-full sm:w-[200px] bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm"
-            disabled={isLoading}
           >
             {selectedLanguages.length === 0
               ? "Select languages"
@@ -86,38 +98,32 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          {languages.length > 0 ? (
-            <Command>
-              <CommandInput placeholder="Search languages..." />
-              <CommandEmpty>No language found.</CommandEmpty>
-              <CommandGroup>
-                {languages.map((language) => (
-                  <CommandItem
-                    key={language}
-                    value={language}
-                    onSelect={() => {
-                      toggleLanguage(language);
-                      setOpenLanguages(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selectedLanguages.includes(language)
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                    {language}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          ) : (
-            <div className="p-4 text-sm text-center">
-              {isLoading ? "Loading..." : "No languages available"}
-            </div>
-          )}
+          <Command>
+            <CommandInput placeholder="Search languages..." />
+            <CommandEmpty>No language found.</CommandEmpty>
+            <CommandGroup>
+              {languages.map((language) => (
+                <CommandItem
+                  key={language}
+                  value={language}
+                  onSelect={() => {
+                    toggleLanguage(language);
+                    setOpenLanguages(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      selectedLanguages.includes(language)
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
+                  {language}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
         </PopoverContent>
       </Popover>
 
@@ -128,7 +134,6 @@ export function FilterControls({
             role="combobox"
             aria-expanded={openBooks}
             className="justify-between w-full sm:w-[200px] bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm"
-            disabled={isLoading}
           >
             {selectedBooks.length === 0
               ? "Select books"
@@ -137,38 +142,32 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          {filteredBooks.length > 0 ? (
-            <Command>
-              <CommandInput placeholder="Search books..." />
-              <CommandEmpty>No book found.</CommandEmpty>
-              <CommandGroup>
-                {filteredBooks.map((book) => (
-                  <CommandItem
-                    key={book.title}
-                    value={book.title}
-                    onSelect={() => {
-                      toggleBook(book.title);
-                      setOpenBooks(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selectedBooks.includes(book.title)
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                    {book.title}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          ) : (
-            <div className="p-4 text-sm text-center">
-              {isLoading ? "Loading..." : "No books available"}
-            </div>
-          )}
+          <Command>
+            <CommandInput placeholder="Search books..." />
+            <CommandEmpty>No book found.</CommandEmpty>
+            <CommandGroup>
+              {filteredBooks.map((book) => (
+                <CommandItem
+                  key={book.title}
+                  value={book.title}
+                  onSelect={() => {
+                    toggleBook(book.title);
+                    setOpenBooks(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      selectedBooks.includes(book.title)
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
+                  {book.title}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
         </PopoverContent>
       </Popover>
     </div>
