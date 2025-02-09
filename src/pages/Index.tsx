@@ -14,6 +14,7 @@ import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { BookFilter } from "@/components/excerpt/BookFilter";
 
 const Index = () => {
   // Initialize all hooks first
@@ -24,6 +25,18 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
+  const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
+
+  // Query to get list of all available books
+  const { data: availableBooks } = useQuery({
+    queryKey: ["books"],
+    queryFn: async () => {
+      const response = await fetch("/data/files.json");
+      const files: string[] = await response.json();
+      return files.map(file => file.replace(".json", "").split("-").join(" "));
+    },
+    initialData: []
+  });
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
@@ -42,6 +55,13 @@ const Index = () => {
       }
     }
   });
+
+  // Set initial selected books on mount
+  useEffect(() => {
+    if (availableBooks.length > 0) {
+      setSelectedBooks(availableBooks);
+    }
+  }, [availableBooks]);
 
   const getRandomLocalExcerpt = (): ExcerptWithMeta | null => {
     if (localExcerpts.length === 0) return null;
@@ -124,11 +144,18 @@ const Index = () => {
             <TabsContainer activeTab={activeTab} />
             <TabsContent value="random">
               {currentExcerpt && (
-                <ExcerptCard 
-                  excerpt={currentExcerpt}
-                  onNewExcerpt={handleNewExcerpt}
-                  onScreenshotModeChange={setIsScreenshotMode}
-                />
+                <>
+                  <BookFilter 
+                    availableBooks={availableBooks}
+                    selectedBooks={selectedBooks}
+                    onSelectedBooksChange={setSelectedBooks}
+                  />
+                  <ExcerptCard 
+                    excerpt={currentExcerpt}
+                    onNewExcerpt={handleNewExcerpt}
+                    onScreenshotModeChange={setIsScreenshotMode}
+                  />
+                </>
               )}
               {isLoading && (
                 <div className="animate-pulse space-y-4">
