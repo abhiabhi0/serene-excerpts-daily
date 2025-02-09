@@ -1,7 +1,7 @@
 
 import { ExcerptWithMeta, FlattenedExcerpt } from "@/types/excerpt";
 import { getRandomExcerptFromFlattened } from "@/utils/excerptTransformer";
-import { staticExcerpts } from "@/data/staticExcerpts";
+import { excerptStore } from "@/data/staticExcerpts";
 
 const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta => ({
   text: flat.text,
@@ -11,7 +11,6 @@ const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta =
 });
 
 const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
-  // Add timestamp to cache to detect staleness
   const cacheData = {
     excerpts,
     timestamp: new Date().getTime()
@@ -22,7 +21,10 @@ const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
-    // Log the static excerpts to see the array
+    // Initialize excerpt store if not already initialized
+    await excerptStore.initialize();
+    
+    const staticExcerpts = excerptStore.excerpts;
     console.log("Static Excerpts Array:", staticExcerpts);
     
     // Try to get from localStorage first
@@ -33,12 +35,10 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
       const parsedCache = JSON.parse(cached);
       const cacheAge = new Date().getTime() - parsedCache.timestamp;
       
-      // Clear cache if it's empty or invalid
       if (!parsedCache.excerpts || !Array.isArray(parsedCache.excerpts) || parsedCache.excerpts.length === 0) {
         localStorage.removeItem('flattenedExcerpts');
         console.log("Cleared invalid cache");
       }
-      // If cache is older than 1 hour or content is different, update it
       else if (cacheAge > 3600000 || JSON.stringify(parsedCache.excerpts) !== JSON.stringify(staticExcerpts)) {
         console.log("Updating cache from static excerpts");
         flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
@@ -48,7 +48,6 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
       }
     }
 
-    // If no valid cache exists or static excerpts are available, use static excerpts
     if (!flattenedExcerpts || flattenedExcerpts.length === 0) {
       console.log("Using static excerpts and creating new cache");
       if (!staticExcerpts || staticExcerpts.length === 0) {
@@ -68,3 +67,4 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     throw error;
   }
 };
+
