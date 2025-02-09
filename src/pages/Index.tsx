@@ -24,12 +24,11 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
-    queryKey: ["excerpt", selectedLanguages],
-    queryFn: () => getRandomExcerpt(selectedLanguages),
-    enabled: false,
+    queryKey: ["excerpt"],
+    queryFn: getRandomExcerpt,
+    enabled: false, // This prevents automatic fetching
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     meta: {
@@ -59,11 +58,7 @@ const Index = () => {
     isLocal: true
   });
 
-  const handleNewExcerpt = (languages?: string[]) => {
-    if (languages !== undefined) {
-      setSelectedLanguages(languages);
-    }
-    
+  const handleNewExcerpt = () => {
     if (Math.random() > 0.7 && localExcerpts.length > 0) {
       const localExcerpt = getRandomLocalExcerpt();
       if (localExcerpt) {
@@ -128,11 +123,30 @@ const Index = () => {
           }} className="w-full">
             <TabsContainer activeTab={activeTab} />
             <TabsContent value="random">
-              <RandomExcerptsTab 
-                currentExcerpt={currentExcerpt}
-                isLoading={isLoading}
-                handleNewExcerpt={handleNewExcerpt}
-              />
+              {currentExcerpt && (
+                <ExcerptCard 
+                  excerpt={currentExcerpt}
+                  onNewExcerpt={handleNewExcerpt}
+                  onScreenshotModeChange={setIsScreenshotMode}
+                />
+              )}
+              {isLoading && (
+                <div className="animate-pulse space-y-4">
+                  <div className="h-40 bg-white/5 rounded-lg"></div>
+                  <div className="h-20 bg-white/5 rounded-lg"></div>
+                </div>
+              )}
+              {isError && !currentExcerpt && (
+                <div className="text-center p-4 bg-white/5 rounded-lg">
+                  <p className="text-red-400 mb-2">Unable to load excerpt</p>
+                  <button 
+                    onClick={() => refetchRemote()} 
+                    className="text-blue-400 hover:text-blue-300"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
             </TabsContent>
             <TabsContent value="local">
               <LocalExcerpts 
