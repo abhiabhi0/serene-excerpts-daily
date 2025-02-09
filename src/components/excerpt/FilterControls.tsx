@@ -37,6 +37,11 @@ export function FilterControls({
   const { data, isLoading, isError } = useQuery({
     queryKey: ["languages-and-books"],
     queryFn: getLanguagesAndBooks,
+    meta: {
+      onError: (error: Error) => {
+        console.error("Failed to fetch languages and books:", error);
+      }
+    }
   });
 
   const languages = data?.languages ?? [];
@@ -47,18 +52,18 @@ export function FilterControls({
     : books;
 
   const toggleLanguage = (language: string) => {
+    if (!language) return;
     setSelectedLanguages(
       selectedLanguages.includes(language)
         ? selectedLanguages.filter((l) => l !== language)
         : [...selectedLanguages, language]
     );
     // Clear book selection when changing languages
-    if (selectedBooks.length > 0) {
-      setSelectedBooks([]);
-    }
+    setSelectedBooks([]);
   };
 
   const toggleBook = (bookTitle: string) => {
+    if (!bookTitle) return;
     setSelectedBooks(
       selectedBooks.includes(bookTitle)
         ? selectedBooks.filter((b) => b !== bookTitle)
@@ -99,6 +104,7 @@ export function FilterControls({
               {languages.map((language) => (
                 <CommandItem
                   key={language}
+                  value={language}
                   onSelect={() => toggleLanguage(language)}
                 >
                   <Check
@@ -140,6 +146,7 @@ export function FilterControls({
               {filteredBooks.map((book) => (
                 <CommandItem
                   key={book.title}
+                  value={book.title}
                   onSelect={() => toggleBook(book.title)}
                 >
                   <Check

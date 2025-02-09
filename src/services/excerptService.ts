@@ -15,7 +15,7 @@ export const getLanguagesAndBooks = async (): Promise<LanguagesAndBooks> => {
     const filesResponse = await fetch("/data/files.json");
     if (!filesResponse.ok) {
       console.error(`Failed to fetch files list: ${filesResponse.statusText}`);
-      throw new Error(`Failed to fetch files list: ${filesResponse.statusText}`);
+      return { languages: [], books: [] };
     }
     
     const files: string[] = await filesResponse.json();
@@ -27,7 +27,7 @@ export const getLanguagesAndBooks = async (): Promise<LanguagesAndBooks> => {
         const bookResponse = await fetch(`/data/${file}`);
         if (!bookResponse.ok) {
           console.error(`Failed to fetch book data for ${file}: ${bookResponse.statusText}`);
-          continue; // Skip this file if there's an error, but continue with others
+          continue;
         }
         const book: Book = await bookResponse.json();
         if (book.metadata.language) {
@@ -39,7 +39,7 @@ export const getLanguagesAndBooks = async (): Promise<LanguagesAndBooks> => {
         }
       } catch (error) {
         console.error(`Error processing book ${file}:`, error);
-        continue; // Skip this file if there's an error, but continue with others
+        continue;
       }
     }
 
@@ -49,7 +49,7 @@ export const getLanguagesAndBooks = async (): Promise<LanguagesAndBooks> => {
     };
   } catch (error) {
     console.error("Error in getLanguagesAndBooks:", error);
-    throw error;
+    return { languages: [], books: [] };
   }
 };
 
@@ -71,7 +71,6 @@ export const getRandomExcerpt = async (
 
     let filteredFiles = [...files];
     
-    // Filter files based on selected languages and books
     if (selectedLanguages.length > 0 || selectedBooks.length > 0) {
       const validFiles = [];
       for (const file of files) {
