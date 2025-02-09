@@ -80,11 +80,14 @@ export const RandomExcerptsTab = ({
               <CommandInput placeholder="Search languages..." />
               <CommandEmpty>No language found.</CommandEmpty>
               <CommandGroup className="max-h-[300px] overflow-y-auto">
-                {languages.map((language) => (
+                {(languages || []).map((language) => (
                   <CommandItem
                     key={language.code}
                     value={language.code}
-                    onSelect={() => toggleLanguage(language.code)}
+                    onSelect={() => {
+                      toggleLanguage(language.code);
+                      setOpen(false);
+                    }}
                   >
                     <Check
                       className={cn(
@@ -124,3 +127,4 @@ export const RandomExcerptsTab = ({
     </div>
   );
 };
+
