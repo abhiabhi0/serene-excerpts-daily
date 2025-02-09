@@ -44,31 +44,27 @@ export function FilterControls({
     }
   });
 
-  // Ensure we always have arrays, even if empty
   const languages = data?.languages ?? [];
   const books = data?.books ?? [];
 
-  console.log("Languages:", languages);
-  console.log("Books:", books);
-
   const filteredBooks = selectedLanguages.length > 0
-    ? books.filter(book => selectedLanguages.includes(book.language))
+    ? (books || []).filter(book => selectedLanguages.includes(book.language))
     : books;
 
   const toggleLanguage = useCallback((language: string) => {
-    if (!language) return;
-    const newLanguages = selectedLanguages.includes(language)
-      ? selectedLanguages.filter((l) => l !== language)
-      : [...selectedLanguages, language];
-    setSelectedLanguages(newLanguages);
+    setSelectedLanguages(
+      selectedLanguages.includes(language)
+        ? selectedLanguages.filter((l) => l !== language)
+        : [...selectedLanguages, language]
+    );
   }, [selectedLanguages, setSelectedLanguages]);
 
   const toggleBook = useCallback((bookTitle: string) => {
-    if (!bookTitle) return;
-    const newBooks = selectedBooks.includes(bookTitle)
-      ? selectedBooks.filter((b) => b !== bookTitle)
-      : [...selectedBooks, bookTitle];
-    setSelectedBooks(newBooks);
+    setSelectedBooks(
+      selectedBooks.includes(bookTitle)
+        ? selectedBooks.filter((b) => b !== bookTitle)
+        : [...selectedBooks, bookTitle]
+    );
   }, [selectedBooks, setSelectedBooks]);
 
   if (isLoading) {
@@ -146,7 +142,7 @@ export function FilterControls({
             <CommandInput placeholder="Search books..." />
             <CommandEmpty>No book found.</CommandEmpty>
             <CommandGroup>
-              {filteredBooks.map((book) => (
+              {(filteredBooks || []).map((book) => (
                 <CommandItem
                   key={book.title}
                   value={book.title}
