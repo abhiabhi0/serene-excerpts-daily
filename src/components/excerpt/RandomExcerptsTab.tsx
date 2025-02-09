@@ -1,7 +1,6 @@
 
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { ExcerptWithMeta } from "@/types/excerpt";
-import { languages } from "@/types/localExcerpt";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { getAvailableLanguages } from "@/services/excerptService";
 
 interface RandomExcerptsTabProps {
   currentExcerpt: ExcerptWithMeta | null;
@@ -33,6 +33,7 @@ export const RandomExcerptsTab = ({
 }: RandomExcerptsTabProps) => {
   const [open, setOpen] = useState(false);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(['en']); // Default to English
+  const availableLanguages = getAvailableLanguages();
 
   const toggleLanguage = (langCode: string) => {
     setSelectedLanguages(prev => {
@@ -80,7 +81,7 @@ export const RandomExcerptsTab = ({
               <CommandInput placeholder="Search languages..." />
               <CommandEmpty>No language found.</CommandEmpty>
               <CommandGroup className="max-h-[300px] overflow-y-auto">
-                {(languages || []).map((language) => (
+                {availableLanguages.map((language) => (
                   <CommandItem
                     key={language.code}
                     value={language.code}
@@ -104,7 +105,7 @@ export const RandomExcerptsTab = ({
         </Popover>
         <div className="flex flex-wrap gap-2">
           {selectedLanguages.map(code => {
-            const langName = languages.find(l => l.code === code)?.name;
+            const langName = availableLanguages.find(l => l.code === code)?.name;
             return (
               <Badge 
                 key={code}
@@ -127,4 +128,3 @@ export const RandomExcerptsTab = ({
     </div>
   );
 };
-

@@ -15,6 +15,26 @@ const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
   return excerpts;
 };
 
+// Get all available languages from the excerpts
+export const getAvailableLanguages = (): { code: string; name: string }[] => {
+  const uniqueLanguages = new Set(staticExcerpts.map(excerpt => excerpt.language));
+  return Array.from(uniqueLanguages).map(code => ({
+    code,
+    name: getLanguageName(code)
+  }));
+};
+
+// Helper function to get language name from code
+const getLanguageName = (code: string): string => {
+  const languageNames: { [key: string]: string } = {
+    'en': 'English',
+    'hi': 'Hindi',
+    'sa': 'Sanskrit',
+    // Add more language mappings as needed
+  };
+  return languageNames[code] || code;
+};
+
 export const getRandomExcerpt = async (selectedLanguages: string[] = ['en']): Promise<ExcerptWithMeta> => {
   try {
     // Log the static excerpts and selected languages for debugging
