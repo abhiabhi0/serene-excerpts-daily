@@ -28,6 +28,7 @@ const Index = () => {
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
     queryFn: getRandomExcerpt,
+    enabled: false, // This prevents automatic fetching
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     meta: {
@@ -81,7 +82,7 @@ const Index = () => {
   }, [remoteExcerpt]);
 
   useEffect(() => {
-    // Initial load
+    // Initial load - only fetch once when component mounts
     if (!currentExcerpt && !isLoading && !isError) {
       handleNewExcerpt();
     }
