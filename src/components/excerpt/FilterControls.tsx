@@ -54,21 +54,19 @@ export function FilterControls({
 
   const toggleLanguage = useCallback((language: string) => {
     if (!language) return;
-    setSelectedLanguages(current => 
-      current.includes(language)
-        ? current.filter((l) => l !== language)
-        : [...current, language]
-    );
-  }, [setSelectedLanguages]);
+    const newLanguages = selectedLanguages.includes(language)
+      ? selectedLanguages.filter((l) => l !== language)
+      : [...selectedLanguages, language];
+    setSelectedLanguages(newLanguages);
+  }, [selectedLanguages, setSelectedLanguages]);
 
   const toggleBook = useCallback((bookTitle: string) => {
     if (!bookTitle) return;
-    setSelectedBooks(current =>
-      current.includes(bookTitle)
-        ? current.filter((b) => b !== bookTitle)
-        : [...current, bookTitle]
-    );
-  }, [setSelectedBooks]);
+    const newBooks = selectedBooks.includes(bookTitle)
+      ? selectedBooks.filter((b) => b !== bookTitle)
+      : [...selectedBooks, bookTitle];
+    setSelectedBooks(newBooks);
+  }, [selectedBooks, setSelectedBooks]);
 
   return (
     <div className="flex flex-col sm:flex-row gap-4">
