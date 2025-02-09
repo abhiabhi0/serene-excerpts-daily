@@ -5,8 +5,8 @@ export const transformBookToFlatExcerpts = (book: Book): FlattenedExcerpt[] => {
   return book.excerpts.map(excerpt => ({
     id: uuidv4(),
     bookTitle: book.metadata.title,
-    bookAuthor: book.metadata.language === 'en' ? book.metadata.author || undefined : '',
-    translator: book.metadata.language === 'en' ? book.metadata.translator : '',
+    bookAuthor:  '',
+    translator:  '',
     category: book.metadata.category || 'Spirituality',
     language: book.metadata.language || 'en',
     text: excerpt.text,
