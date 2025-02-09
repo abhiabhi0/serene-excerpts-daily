@@ -1,6 +1,7 @@
 
 import { ExcerptWithMeta, FlattenedExcerpt } from "@/types/excerpt";
 import { createFlattenedExcerpts, getRandomExcerptFromFlattened } from "@/utils/excerptTransformer";
+import { staticExcerpts } from "@/data/staticExcerpts";
 
 const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta => ({
   text: flat.text,
@@ -9,6 +10,11 @@ const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta =
   translator: flat.translator
 });
 
+const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
+  localStorage.setItem('flattenedExcerpts', JSON.stringify(excerpts));
+  return excerpts;
+};
+
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
     // Try to get from localStorage first
@@ -16,12 +22,25 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     let flattenedExcerpts: FlattenedExcerpt[];
 
     if (cached) {
-      flattenedExcerpts = JSON.parse(cached);
-      console.log("Using cached flattened excerpts");
+      const parsedCache = JSON.parse(cached);
+      
+      // If static excerpts are available and different from cache, update cache
+      if (staticExcerpts.length > 0 && JSON.stringify(parsedCache) !== JSON.stringify(staticExcerpts)) {
+        console.log("Updating cache from static excerpts");
+        flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
+      } else {
+        console.log("Using cached flattened excerpts");
+        flattenedExcerpts = parsedCache;
+      }
+    } else if (staticExcerpts.length > 0) {
+      // If no cache but static excerpts exist, use those
+      console.log("Using static excerpts and updating cache");
+      flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
     } else {
-      // If not in cache, create and store them
+      // If neither cache nor static excerpts exist, create new ones
       console.log("Creating new flattened excerpts");
       flattenedExcerpts = await createFlattenedExcerpts();
+      syncExcerptsWithCache(flattenedExcerpts);
     }
 
     const randomExcerpt = getRandomExcerptFromFlattened(flattenedExcerpts);
@@ -31,3 +50,4 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     throw error;
   }
 };
+

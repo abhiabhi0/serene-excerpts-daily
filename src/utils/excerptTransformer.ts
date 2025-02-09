@@ -40,8 +40,6 @@ export const createFlattenedExcerpts = async (): Promise<FlattenedExcerpt[]> => 
       allExcerpts.push(...flatExcerpts);
     }
 
-    // Save to localStorage
-    localStorage.setItem('flattenedExcerpts', JSON.stringify(allExcerpts));
     return allExcerpts;
   } catch (error) {
     console.error("Error creating flattened excerpts:", error);
@@ -52,3 +50,4 @@ export const createFlattenedExcerpts = async (): Promise<FlattenedExcerpt[]> => 
 export const getRandomExcerptFromFlattened = (excerpts: FlattenedExcerpt[]): FlattenedExcerpt => {
   return excerpts[Math.floor(Math.random() * excerpts.length)];
 };
+
