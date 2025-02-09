@@ -23,13 +23,35 @@ export const getAllLanguages = (): string[] => {
       languages.add(excerpt.language);
     }
   });
-  return Array.from(languages);
+  
+  // Log all unique languages found
+  const uniqueLanguages = Array.from(languages);
+  console.log("All available languages:", uniqueLanguages);
+  
+  return uniqueLanguages;
+};
+
+// Get all unique book titles
+export const getAllBookTitles = (): string[] => {
+  const titles = new Set<string>();
+  staticExcerpts.forEach(excerpt => {
+    if (excerpt.bookTitle) {
+      titles.add(excerpt.bookTitle);
+    }
+  });
+  
+  // Log all unique book titles
+  const uniqueTitles = Array.from(titles);
+  console.log("All book titles:", uniqueTitles);
+  
+  return uniqueTitles;
 };
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
     // Log the static excerpts to see the array
-    console.log("Static Excerpts Array:", staticExcerpts);
+    console.log("Total number of excerpts:", staticExcerpts.length);
+    console.log("Sample excerpt:", staticExcerpts[0]);
     
     // Try to get from localStorage first
     const cached = localStorage.getItem('flattenedExcerpts');

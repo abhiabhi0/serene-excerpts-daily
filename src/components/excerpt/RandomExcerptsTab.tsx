@@ -42,15 +42,15 @@ export const RandomExcerptsTab = ({
 
   return (
     <div className="space-y-4">
-      <div className="w-full max-w-xs">
+      <div className="w-full max-w-xs bg-background">
         <Select
           value={selectedLanguage}
           onValueChange={setSelectedLanguage}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full bg-background">
             <SelectValue placeholder="Select Language" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-background">
             {languages.map((language) => (
               <SelectItem key={language} value={language}>
                 {language}
@@ -69,3 +69,4 @@ export const RandomExcerptsTab = ({
     </div>
   );
 };
+
