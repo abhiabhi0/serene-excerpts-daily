@@ -17,6 +17,9 @@ const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
+    // Log the static excerpts to see the array
+    console.log("Static Excerpts Array:", staticExcerpts);
+    
     // Try to get from localStorage first
     const cached = localStorage.getItem('flattenedExcerpts');
     let flattenedExcerpts: FlattenedExcerpt[];
@@ -50,4 +53,3 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     throw error;
   }
 };
-
