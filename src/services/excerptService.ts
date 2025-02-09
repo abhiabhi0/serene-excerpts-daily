@@ -1,84 +1,54 @@
 
 import { ExcerptWithMeta, FlattenedExcerpt } from "@/types/excerpt";
-import { getRandomExcerptFromFlattened } from "@/utils/excerptTransformer";
-import { excerptStore } from "@/data/staticExcerpts";
 
-const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta => ({
-  text: flat.text,
-  bookTitle: flat.bookTitle,
-  bookAuthor: flat.bookAuthor,
-  translator: flat.translator
-});
-
-const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
-  if (!excerpts || excerpts.length === 0) {
-    console.error("Attempted to cache empty excerpts array");
-    return excerpts;
+const staticExcerpts: FlattenedExcerpt[] = [
+  {
+    text: "The form is perceived and the eye is its perceiver. It (eye) is perceived and the mind is its perceiver. The mind with its modifications is perceived and the Witness (the Self) is verily the perceiver. But It (the Witness) is not perceived (by any other)",
+    bookTitle: "Dṛg-Dṛśya Vivēka",
+    bookAuthor: "Adi Shankaracharya",
+    translator: "Swami Nikhilananda"
+  },
+  {
+    text: "That which is known as Matter or Material Energy (Prakarti) gives birth to the Material Universe (Jagat) beginning with the Intellect and ending with the particularised forms. The Life-Principle called Soul (Atma) enjoys the attributes of Matter as he interacts with it, and falls under its spell.",
+    bookTitle: "Tantrasāra of Abhinavagupta",
+    bookAuthor: "Abhinavagupta",
+    translator: "H N Chakravarty"
+  },
+  {
+    text: "I, the One Lord, through My Play of Darkness and Light bring forth everything in sight. All created things are but sparks of My Divine Light. A part of Me, of My Infinite Self, lies hidden in all things.",
+    bookTitle: "Shri Shiva Rahasya",
+    bookAuthor: "",
+    translator: ""
+  },
+  {
+    text: "When He is revealed, the Universe disappears;\nWhen He is concealed, the Universe shines forth.\nYet He doesn't hide Himself,\nNor does He reveal Himself;\nHe is always present before us at every moment.",
+    bookTitle: "Changadev Pasashti",
+    bookAuthor: "",
+    translator: "Swami Abhayananda"
+  },
+  {
+    text: "The mind may be subdued by regulating the breath, just as a bird is restrained when caught in a net. This practice controls the mind.",
+    bookTitle: "Sri Maharshi's Way, translation of Upadesa Saram",
+    bookAuthor: "",
+    translator: "D. M. Sastri"
   }
-  
-  const cacheData = {
-    excerpts,
-    timestamp: new Date().getTime()
-  };
-  localStorage.setItem('flattenedExcerpts', JSON.stringify(cacheData));
-  return excerpts;
-};
+];
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
-    // Initialize excerpt store if not already initialized
-    console.log("Initializing excerpt store...");
-    await excerptStore.initialize();
+    const randomIndex = Math.floor(Math.random() * staticExcerpts.length);
+    const randomExcerpt = staticExcerpts[randomIndex];
     
-    const staticExcerpts = excerptStore.excerpts;
-    console.log(`Loaded ${staticExcerpts?.length || 0} static excerpts`);
-    
-    if (!staticExcerpts || staticExcerpts.length === 0) {
-      console.error("No static excerpts were loaded");
-      throw new Error("No excerpts available");
-    }
-
-    // Try to get from localStorage first
-    let flattenedExcerpts: FlattenedExcerpt[] | null = null;
-    const cached = localStorage.getItem('flattenedExcerpts');
-
-    if (cached) {
-      try {
-        const parsedCache = JSON.parse(cached);
-        console.log("Found cached excerpts:", parsedCache);
-        
-        if (!parsedCache.excerpts || !Array.isArray(parsedCache.excerpts) || parsedCache.excerpts.length === 0) {
-          console.log("Invalid cache format, clearing cache");
-          localStorage.removeItem('flattenedExcerpts');
-        } else {
-          const cacheAge = new Date().getTime() - parsedCache.timestamp;
-          if (cacheAge > 3600000 || JSON.stringify(parsedCache.excerpts) !== JSON.stringify(staticExcerpts)) {
-            console.log("Cache expired or content changed, updating cache");
-            flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
-          } else {
-            console.log("Using valid cached excerpts");
-            flattenedExcerpts = parsedCache.excerpts;
-          }
-        }
-      } catch (error) {
-        console.error("Error parsing cache:", error);
-        localStorage.removeItem('flattenedExcerpts');
-      }
-    }
-
-    if (!flattenedExcerpts || flattenedExcerpts.length === 0) {
-      console.log("No valid cache found, using static excerpts");
-      flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
-    }
-
-    const randomExcerpt = getRandomExcerptFromFlattened(flattenedExcerpts);
     if (!randomExcerpt) {
-      console.error("Failed to get random excerpt from", flattenedExcerpts);
       throw new Error("No excerpts available");
     }
     
-    console.log("Successfully selected random excerpt:", randomExcerpt);
-    return convertFlatToExcerptWithMeta(randomExcerpt);
+    return {
+      text: randomExcerpt.text,
+      bookTitle: randomExcerpt.bookTitle,
+      bookAuthor: randomExcerpt.bookAuthor,
+      translator: randomExcerpt.translator
+    };
   } catch (error) {
     console.error("Error in getRandomExcerpt:", error);
     throw error;
