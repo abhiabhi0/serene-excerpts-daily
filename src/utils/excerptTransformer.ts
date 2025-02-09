@@ -9,7 +9,7 @@ export const transformBookToFlatExcerpts = (book: Book): FlattenedExcerpt[] => {
     bookAuthor: book.metadata.author || undefined,
     translator: book.metadata.translator,
     category: book.metadata.category || 'Spirituality',
-    language: 'en', // Default to English
+    language: book.metadata.language || 'en', // Use language from metadata, fallback to 'en'
     text: excerpt.text,
     createdAt: new Date().toISOString()
   }));
