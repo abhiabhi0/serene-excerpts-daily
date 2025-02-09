@@ -3,7 +3,7 @@ import { Plugin } from 'vite';
 import fs from 'fs';
 import path from 'path';
 import { transformBookToFlatExcerpts } from './excerptTransformer';
-import { Book, FlattenedExcerpt } from '@/types/excerpt';
+import type { Book, FlattenedExcerpt } from '../types/excerpt';
 
 export function generateStaticExcerptsPlugin(): Plugin {
   return {
