@@ -46,29 +46,31 @@ export function FilterControls({
 
   const languages = data?.languages ?? [];
   const books = data?.books ?? [];
+  console.log("Languages:", languages);
+  console.log("Books:", books);
 
   const filteredBooks = selectedLanguages.length > 0
     ? books.filter(book => selectedLanguages.includes(book.language))
     : books;
 
   const toggleLanguage = useCallback((value: string) => {
+    console.log("Toggling language:", value);
     if (!value) return;
     setSelectedLanguages(
       selectedLanguages.includes(value)
         ? selectedLanguages.filter((l) => l !== value)
         : [...selectedLanguages, value]
     );
-    setOpenLanguages(false);
   }, [selectedLanguages, setSelectedLanguages]);
 
   const toggleBook = useCallback((value: string) => {
+    console.log("Toggling book:", value);
     if (!value) return;
     setSelectedBooks(
       selectedBooks.includes(value)
         ? selectedBooks.filter((b) => b !== value)
         : [...selectedBooks, value]
     );
-    setOpenBooks(false);
   }, [selectedBooks, setSelectedBooks]);
 
   return (
@@ -89,16 +91,18 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          <Command className="w-full">
-            <CommandInput placeholder="Search languages..." className="h-9" />
+          <Command>
+            <CommandInput placeholder="Search languages..." />
             <CommandEmpty>No language found.</CommandEmpty>
-            <CommandGroup heading="Languages">
+            <CommandGroup>
               {languages.map((language) => (
                 <CommandItem
                   key={language}
                   value={language}
-                  onSelect={toggleLanguage}
-                  className="cursor-pointer"
+                  onSelect={() => {
+                    toggleLanguage(language);
+                    setOpenLanguages(false);
+                  }}
                 >
                   <Check
                     className={cn(
@@ -132,16 +136,18 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          <Command className="w-full">
-            <CommandInput placeholder="Search books..." className="h-9" />
+          <Command>
+            <CommandInput placeholder="Search books..." />
             <CommandEmpty>No book found.</CommandEmpty>
-            <CommandGroup heading="Books">
+            <CommandGroup>
               {filteredBooks.map((book) => (
                 <CommandItem
                   key={book.title}
                   value={book.title}
-                  onSelect={toggleBook}
-                  className="cursor-pointer"
+                  onSelect={() => {
+                    toggleBook(book.title);
+                    setOpenBooks(false);
+                  }}
                 >
                   <Check
                     className={cn(
