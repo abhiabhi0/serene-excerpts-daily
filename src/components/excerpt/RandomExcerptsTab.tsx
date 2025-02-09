@@ -27,7 +27,7 @@ export const RandomExcerptsTab = ({
 
   useEffect(() => {
     const availableLanguages = getAllLanguages();
-    console.log("Available languages:", availableLanguages);
+    console.log("Available languages in component:", availableLanguages);
     setLanguages(availableLanguages);
   }, []);
 
@@ -42,17 +42,21 @@ export const RandomExcerptsTab = ({
 
   return (
     <div className="space-y-4">
-      <div className="w-full max-w-xs bg-background">
+      <div className="w-full max-w-xs">
         <Select
           value={selectedLanguage}
           onValueChange={setSelectedLanguage}
         >
-          <SelectTrigger className="w-full bg-background">
+          <SelectTrigger className="w-full bg-background text-foreground border border-input">
             <SelectValue placeholder="Select Language" />
           </SelectTrigger>
-          <SelectContent className="bg-background">
+          <SelectContent className="bg-background border border-input">
             {languages.map((language) => (
-              <SelectItem key={language} value={language}>
+              <SelectItem 
+                key={language} 
+                value={language}
+                className="cursor-pointer hover:bg-accent"
+              >
                 {language}
               </SelectItem>
             ))}
@@ -69,4 +73,3 @@ export const RandomExcerptsTab = ({
     </div>
   );
 };
-
