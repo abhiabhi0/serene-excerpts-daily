@@ -1,10 +1,16 @@
+
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { ExcerptWithMeta } from "@/types/excerpt";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useEffect, useState } from "react";
+import { getAvailableLanguages } from "@/services/excerptService";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 
 interface RandomExcerptsTabProps {
   currentExcerpt: ExcerptWithMeta | null;
   isLoading: boolean;
-  handleNewExcerpt: () => void;
+  handleNewExcerpt: (languages?: string[]) => void;
 }
 
 export const RandomExcerptsTab = ({ 
@@ -12,6 +18,23 @@ export const RandomExcerptsTab = ({
   isLoading, 
   handleNewExcerpt 
 }: RandomExcerptsTabProps) => {
+  const [availableLanguages] = useState(getAvailableLanguages());
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+
+  const handleLanguageSelect = (language: string) => {
+    if (!selectedLanguages.includes(language)) {
+      const newSelectedLanguages = [...selectedLanguages, language];
+      setSelectedLanguages(newSelectedLanguages);
+      handleNewExcerpt(newSelectedLanguages);
+    }
+  };
+
+  const handleRemoveLanguage = (languageToRemove: string) => {
+    const newSelectedLanguages = selectedLanguages.filter(lang => lang !== languageToRemove);
+    setSelectedLanguages(newSelectedLanguages);
+    handleNewExcerpt(newSelectedLanguages);
+  };
+
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
@@ -21,10 +44,43 @@ export const RandomExcerptsTab = ({
     );
   }
 
-  return currentExcerpt ? (
-    <ExcerptCard 
-      excerpt={currentExcerpt} 
-      onNewExcerpt={handleNewExcerpt} 
-    />
-  ) : null;
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <div className="flex flex-col gap-2">
+          <Select onValueChange={handleLanguageSelect}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Filter by language" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableLanguages.map((language) => (
+                <SelectItem key={language} value={language}>
+                  {language}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {selectedLanguages.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {selectedLanguages.map((language) => (
+                <Badge key={language} variant="outline" className="flex items-center gap-1">
+                  {language}
+                  <X
+                    className="h-3 w-3 cursor-pointer hover:text-destructive"
+                    onClick={() => handleRemoveLanguage(language)}
+                  />
+                </Badge>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+      {currentExcerpt && (
+        <ExcerptCard 
+          excerpt={currentExcerpt} 
+          onNewExcerpt={() => handleNewExcerpt(selectedLanguages)} 
+        />
+      )}
+    </div>
+  );
 };
