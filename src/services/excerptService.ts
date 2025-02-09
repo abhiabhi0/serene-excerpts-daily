@@ -24,13 +24,14 @@ export const getLanguagesAndBooks = async (): Promise<LanguagesAndBooks> => {
 
     const fetchPromises = files.map(async (file) => {
       try {
+        console.log(`Fetching book data for ${file}...`);
         const bookResponse = await fetch(`/data/${file}`);
         if (!bookResponse.ok) {
           console.error(`Failed to fetch book data for ${file}: ${bookResponse.statusText}`);
           return;
         }
         const book: Book = await bookResponse.json();
-        if (book.metadata.language) {
+        if (book.metadata?.language) {
           languagesSet.add(book.metadata.language);
           books.push({
             title: book.metadata.title,
@@ -44,10 +45,13 @@ export const getLanguagesAndBooks = async (): Promise<LanguagesAndBooks> => {
 
     await Promise.allSettled(fetchPromises);
 
-    return {
+    const result = {
       languages: Array.from(languagesSet),
       books
     };
+    console.log("Processed languages and books:", result);
+    return result;
+
   } catch (error) {
     console.error("Error in getLanguagesAndBooks:", error);
     return { languages: [], books: [] };
@@ -82,7 +86,7 @@ export const getRandomExcerpt = async (
             continue;
           }
           const book: Book = await bookResponse.json();
-          const languageMatch = selectedLanguages.length === 0 || selectedLanguages.includes(book.metadata.language || '');
+          const languageMatch = selectedLanguages.length === 0 || selectedLanguages.includes(book.metadata?.language || '');
           const bookMatch = selectedBooks.length === 0 || selectedBooks.includes(book.metadata.title);
           
           if (languageMatch && bookMatch) {
