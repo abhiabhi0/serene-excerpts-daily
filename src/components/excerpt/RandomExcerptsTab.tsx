@@ -37,7 +37,6 @@ export const RandomExcerptsTab = ({
 
   useEffect(() => {
     const availableLanguages = getAllLanguages();
-    console.log("Available languages:", availableLanguages);
     setLanguages(availableLanguages);
   }, []);
 
