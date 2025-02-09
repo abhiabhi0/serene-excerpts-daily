@@ -6,10 +6,19 @@ interface ExcerptContentProps {
 }
 
 export const ExcerptContent = ({ excerpt }: ExcerptContentProps) => {
+  const renderText = (text: string) => {
+    return text.split('\n').map((line, index) => (
+      <span key={index}>
+        {line}
+        {index < text.split('\n').length - 1 && <br />}
+      </span>
+    ));
+  };
+
   return (
     <div className="pt-6 px-4">
       <blockquote className="text-lg mb-4 leading-relaxed text-left">
-        "{excerpt.text}"
+        "{renderText(excerpt.text)}"
       </blockquote>
       <div className="text-sm text-muted-foreground space-y-1 text-left">
         {excerpt.bookTitle && <p className="font-semibold">{excerpt.bookTitle}</p>}
@@ -28,3 +37,4 @@ export const ExcerptContent = ({ excerpt }: ExcerptContentProps) => {
     </div>
   );
 };
+
