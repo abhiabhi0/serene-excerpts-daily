@@ -2,6 +2,10 @@
 import { ExcerptWithMeta, FlattenedExcerpt } from "@/types/excerpt";
 import { getRandomExcerptFromFlattened } from "@/utils/excerptTransformer";
 import { staticExcerpts } from "@/data/staticExcerpts";
+import { getFilesHash, hasFilesChanged } from "@/utils/fileVersioning";
+
+const FILES_HASH_KEY = 'filesHash';
+const EXCERPTS_CACHE_KEY = 'flattenedExcerpts';
 
 const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta => ({
   text: flat.text,
@@ -11,33 +15,33 @@ const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta =
 });
 
 const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
-  localStorage.setItem('flattenedExcerpts', JSON.stringify(excerpts));
+  localStorage.setItem(EXCERPTS_CACHE_KEY, JSON.stringify(excerpts));
+  localStorage.setItem(FILES_HASH_KEY, getFilesHash());
   return excerpts;
 };
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
-    // Log the static excerpts to see the array
-    console.log("Static Excerpts Array:", staticExcerpts);
-    
-    // Try to get from localStorage first
-    const cached = localStorage.getItem('flattenedExcerpts');
+    const previousHash = localStorage.getItem(FILES_HASH_KEY);
+    const filesChanged = hasFilesChanged(previousHash);
+    console.log("Files changed?", filesChanged);
+
     let flattenedExcerpts: FlattenedExcerpt[];
 
-    if (cached) {
-      const parsedCache = JSON.parse(cached);
-      // If cache is outdated, update it with static excerpts
-      if (JSON.stringify(parsedCache) !== JSON.stringify(staticExcerpts)) {
-        console.log("Updating cache from static excerpts");
-        flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
-      } else {
-        console.log("Using cached flattened excerpts");
-        flattenedExcerpts = parsedCache;
-      }
-    } else {
-      // If no cache exists, use static excerpts and create cache
-      console.log("Using static excerpts and creating cache");
+    // Check if files have changed or if cache is empty
+    if (filesChanged) {
+      console.log("Files have changed or first load - using static excerpts");
       flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
+    } else {
+      // Try to get from cache
+      const cached = localStorage.getItem(EXCERPTS_CACHE_KEY);
+      if (cached) {
+        console.log("Using cached excerpts");
+        flattenedExcerpts = JSON.parse(cached);
+      } else {
+        console.log("Cache missing - using static excerpts");
+        flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
+      }
     }
 
     const randomExcerpt = getRandomExcerptFromFlattened(flattenedExcerpts);

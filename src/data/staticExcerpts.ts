@@ -1,4 +1,3 @@
-
 import { FlattenedExcerpt } from "@/types/excerpt";
 import { Book } from "@/types/excerpt";
 import { transformBookToFlatExcerpts } from "@/utils/excerptTransformer";
@@ -54,6 +53,9 @@ export const staticExcerpts: FlattenedExcerpt[] = allBooks.flatMap(book =>
   transformBookToFlatExcerpts(book)
 );
 
+// Log count of excerpts for debugging
+console.log('Total number of static excerpts:', staticExcerpts.length);
+
 // Create array of unique languages from books
 export const staticLanguages: string[] = Array.from(
   new Set(allBooks.map(book => book.metadata.language))
@@ -72,4 +74,3 @@ export const staticBooks = allBooks.map(book => ({
 console.log('All Static Excerpts:', staticExcerpts);
 console.log('All Languages:', staticLanguages);
 console.log('All Books:', staticBooks);
-
