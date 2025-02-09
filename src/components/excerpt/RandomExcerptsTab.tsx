@@ -43,19 +43,22 @@ export const RandomExcerptsTab = ({
   return (
     <div className="space-y-4">
       <div className="w-full max-w-xs">
+        <label className="block text-sm font-medium mb-2">
+          Select Language
+        </label>
         <Select
           value={selectedLanguage}
           onValueChange={setSelectedLanguage}
         >
-          <SelectTrigger className="w-full bg-background text-foreground border border-input">
-            <SelectValue placeholder="Select Language" />
+          <SelectTrigger className="w-[200px] bg-white dark:bg-gray-800 text-black dark:text-white border-gray-300 dark:border-gray-600">
+            <SelectValue placeholder="Choose language" />
           </SelectTrigger>
-          <SelectContent className="bg-background border border-input">
+          <SelectContent className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600">
             {languages.map((language) => (
               <SelectItem 
                 key={language} 
                 value={language}
-                className="cursor-pointer hover:bg-accent"
+                className="text-black dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 {language}
               </SelectItem>
