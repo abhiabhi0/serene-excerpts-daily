@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -7,14 +8,15 @@ import { LocalExcerpts } from "@/components/LocalExcerpts";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { TabsContainer } from "@/components/excerpt/TabsContainer";
+import { RandomExcerptsTab } from "@/components/excerpt/RandomExcerptsTab";
 import { BackgroundSlideshow } from "@/components/background/BackgroundSlideshow";
 import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { BookFilter } from "@/components/excerpt/BookFilter";
 
 const Index = () => {
+  // Initialize all hooks first
   const { toast } = useToast();
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
   const { activeTab, setActiveTab, setSearchParams } = useTabNavigation();
@@ -22,22 +24,22 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
-  const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
 
-  const { data: availableBooks = [], isLoading: isBooksLoading } = useQuery({
-    queryKey: ["transformed-excerpts"],
-    queryFn: async () => {
-      const response = await fetch("/data/files.json");
-      const files: string[] = await response.json();
-      const uniqueBooks = new Set<string>();
-      
-      for (const file of files) {
-        const bookResponse = await fetch(`/data/${file}`);
-        const book = await bookResponse.json();
-        uniqueBooks.add(book.metadata.title);
+  const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
+    queryKey: ["excerpt"],
+    queryFn: getRandomExcerpt,
+    enabled: false, // This prevents automatic fetching
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+    meta: {
+      onError: () => {
+        console.error("Failed to fetch excerpt");
+        toast({
+          variant: "destructive",
+          title: "Connection Error",
+          description: "Please check your internet connection and try again.",
+        });
       }
-      
-      return Array.from(uniqueBooks);
     }
   });
 
@@ -72,30 +74,7 @@ const Index = () => {
     setSearchParams({ tab: 'random' });
   };
 
-  const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
-    queryKey: ["excerpt", selectedBooks],
-    queryFn: async () => getRandomExcerpt(selectedBooks),
-    enabled: false,
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-    meta: {
-      onError: () => {
-        console.error("Failed to fetch excerpt");
-        toast({
-          variant: "destructive",
-          title: "Connection Error",
-          description: "Please check your internet connection and try again.",
-        });
-      }
-    }
-  });
-
-  useEffect(() => {
-    if (availableBooks.length > 0) {
-      setSelectedBooks(availableBooks);
-    }
-  }, [availableBooks]);
-
+  // Effect hooks
   useEffect(() => {
     if (remoteExcerpt) {
       setCurrentExcerpt(remoteExcerpt);
@@ -103,6 +82,7 @@ const Index = () => {
   }, [remoteExcerpt]);
 
   useEffect(() => {
+    // Initial load - only fetch once when component mounts
     if (!currentExcerpt && !isLoading && !isError) {
       handleNewExcerpt();
     }
@@ -119,6 +99,7 @@ const Index = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
+  // Render content based on screen size
   const renderContent = () => {
     if (isScreenTooSmall && !isMobile) {
       return (
@@ -143,18 +124,11 @@ const Index = () => {
             <TabsContainer activeTab={activeTab} />
             <TabsContent value="random">
               {currentExcerpt && (
-                <>
-                  <BookFilter 
-                    availableBooks={availableBooks}
-                    selectedBooks={selectedBooks}
-                    onSelectedBooksChange={setSelectedBooks}
-                  />
-                  <ExcerptCard 
-                    excerpt={currentExcerpt}
-                    onNewExcerpt={handleNewExcerpt}
-                    onScreenshotModeChange={setIsScreenshotMode}
-                  />
-                </>
+                <ExcerptCard 
+                  excerpt={currentExcerpt}
+                  onNewExcerpt={handleNewExcerpt}
+                  onScreenshotModeChange={setIsScreenshotMode}
+                />
               )}
               {isLoading && (
                 <div className="animate-pulse space-y-4">
