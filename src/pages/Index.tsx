@@ -8,14 +8,15 @@ import { LocalExcerpts } from "@/components/LocalExcerpts";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { TabsContainer } from "@/components/excerpt/TabsContainer";
+import { RandomExcerptsTab } from "@/components/excerpt/RandomExcerptsTab";
 import { BackgroundSlideshow } from "@/components/background/BackgroundSlideshow";
 import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { FilterControls } from "@/components/excerpt/FilterControls";
 
 const Index = () => {
+  // Initialize all hooks first
   const { toast } = useToast();
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
   const { activeTab, setActiveTab, setSearchParams } = useTabNavigation();
@@ -23,12 +24,10 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
-    queryKey: ["excerpt", selectedLanguages, selectedBooks],
-    queryFn: () => getRandomExcerpt(selectedLanguages, selectedBooks),
+    queryKey: ["excerpt"],
+    queryFn: getRandomExcerpt,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     meta: {
@@ -74,11 +73,19 @@ const Index = () => {
     setSearchParams({ tab: 'random' });
   };
 
+  // Effect hooks
   useEffect(() => {
     if (remoteExcerpt) {
       setCurrentExcerpt(remoteExcerpt);
     }
   }, [remoteExcerpt]);
+
+  useEffect(() => {
+    // Initial load
+    if (!currentExcerpt && !isLoading && !isError) {
+      handleNewExcerpt();
+    }
+  }, []);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -91,6 +98,7 @@ const Index = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
+  // Render content based on screen size
   const renderContent = () => {
     if (isScreenTooSmall && !isMobile) {
       return (
@@ -108,13 +116,6 @@ const Index = () => {
         <BackgroundSlideshow />
         
         <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8 relative z-10">
-          <FilterControls 
-            selectedLanguages={selectedLanguages}
-            setSelectedLanguages={setSelectedLanguages}
-            selectedBooks={selectedBooks}
-            setSelectedBooks={setSelectedBooks}
-          />
-
           <Tabs value={activeTab} onValueChange={(value) => {
             setActiveTab(value);
             setSearchParams({ tab: value });
