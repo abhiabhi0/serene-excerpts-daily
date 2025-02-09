@@ -26,10 +26,11 @@ export const RandomExcerptsTab = ({
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
   useEffect(() => {
+    // Immediately call getAllLanguages and set the result
     const availableLanguages = getAllLanguages();
     console.log("Available languages in component:", availableLanguages);
     setLanguages(availableLanguages);
-  }, []);
+  }, []); // Empty dependency array means this runs once when component mounts
 
   if (isLoading) {
     return (
@@ -44,7 +45,7 @@ export const RandomExcerptsTab = ({
     <div className="space-y-4">
       <div className="w-full max-w-xs">
         <label className="block text-sm font-medium mb-2">
-          Select Language
+          Select Language ({languages.length} available)
         </label>
         <Select
           value={selectedLanguage}
