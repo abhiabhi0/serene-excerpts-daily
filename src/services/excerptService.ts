@@ -10,41 +10,45 @@ const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta =
   translator: flat.translator
 });
 
-const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
-  localStorage.setItem('flattenedExcerpts', JSON.stringify(excerpts));
-  return excerpts;
+// Add a version number to track cache freshness
+const CACHE_VERSION = '1';
+
+const isCacheValid = (): boolean => {
+  const version = localStorage.getItem('excerpts_version');
+  return version === CACHE_VERSION;
 };
 
-export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
+const getCachedExcerpts = (): FlattenedExcerpt[] | null => {
   try {
-    // Log the static excerpts to see the array
-    console.log("Static Excerpts Array:", staticExcerpts);
-    
-    // Try to get from localStorage first
+    if (!isCacheValid()) return null;
     const cached = localStorage.getItem('flattenedExcerpts');
-    let flattenedExcerpts: FlattenedExcerpt[];
-
-    if (cached) {
-      const parsedCache = JSON.parse(cached);
-      // If cache is outdated, update it with static excerpts
-      if (JSON.stringify(parsedCache) !== JSON.stringify(staticExcerpts)) {
-        console.log("Updating cache from static excerpts");
-        flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
-      } else {
-        console.log("Using cached flattened excerpts");
-        flattenedExcerpts = parsedCache;
-      }
-    } else {
-      // If no cache exists, use static excerpts and create cache
-      console.log("Using static excerpts and creating cache");
-      flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
-    }
-
-    const randomExcerpt = getRandomExcerptFromFlattened(flattenedExcerpts);
-    return convertFlatToExcerptWithMeta(randomExcerpt);
+    return cached ? JSON.parse(cached) : null;
   } catch (error) {
-    console.error("Error fetching excerpt:", error);
-    throw error;
+    console.error('Error reading cache:', error);
+    return null;
   }
 };
 
+const updateCache = (excerpts: FlattenedExcerpt[]) => {
+  try {
+    localStorage.setItem('flattenedExcerpts', JSON.stringify(excerpts));
+    localStorage.setItem('excerpts_version', CACHE_VERSION);
+  } catch (error) {
+    console.error('Error updating cache:', error);
+  }
+};
+
+export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
+  // Use cached excerpts if available and valid
+  const cachedExcerpts = getCachedExcerpts();
+  
+  // If cache is invalid or doesn't exist, use static excerpts and update cache
+  const excerpts = cachedExcerpts || (() => {
+    console.log("Updating cache with static excerpts");
+    updateCache(staticExcerpts);
+    return staticExcerpts;
+  })();
+  
+  const randomExcerpt = getRandomExcerptFromFlattened(excerpts);
+  return convertFlatToExcerptWithMeta(randomExcerpt);
+};
