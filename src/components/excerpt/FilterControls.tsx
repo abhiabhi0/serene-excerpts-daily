@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -33,13 +34,13 @@ export function FilterControls({
   const [openLanguages, setOpenLanguages] = useState(false);
   const [openBooks, setOpenBooks] = useState(false);
 
-  const { data } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["languages-and-books"],
     queryFn: getLanguagesAndBooks,
   });
 
-  const languages = data?.languages || [];
-  const books = data?.books || [];
+  const languages = data?.languages ?? [];
+  const books = data?.books ?? [];
 
   const filteredBooks = selectedLanguages.length > 0
     ? books.filter(book => selectedLanguages.includes(book.language))
@@ -51,6 +52,10 @@ export function FilterControls({
         ? selectedLanguages.filter((l) => l !== language)
         : [...selectedLanguages, language]
     );
+    // Clear book selection when changing languages
+    if (selectedBooks.length > 0) {
+      setSelectedBooks([]);
+    }
   };
 
   const toggleBook = (bookTitle: string) => {
@@ -61,6 +66,14 @@ export function FilterControls({
     );
   };
 
+  if (isError) {
+    return (
+      <div className="text-red-500">
+        Error loading filters. Please try again later.
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col sm:flex-row gap-4">
       <Popover open={openLanguages} onOpenChange={setOpenLanguages}>
@@ -70,6 +83,7 @@ export function FilterControls({
             role="combobox"
             aria-expanded={openLanguages}
             className="justify-between w-full sm:w-[200px] bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm"
+            disabled={isLoading}
           >
             {selectedLanguages.length === 0
               ? "Select languages"
@@ -110,6 +124,7 @@ export function FilterControls({
             role="combobox"
             aria-expanded={openBooks}
             className="justify-between w-full sm:w-[200px] bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm"
+            disabled={isLoading}
           >
             {selectedBooks.length === 0
               ? "Select books"
