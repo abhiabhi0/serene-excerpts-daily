@@ -2,7 +2,7 @@
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getAvailableLanguages } from "@/services/excerptService";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
@@ -35,36 +35,37 @@ export const RandomExcerptsTab = ({
     handleNewExcerpt(newSelectedLanguages);
   };
 
+  // Simple test to verify the component is rendering
+  console.log("Available languages:", availableLanguages);
+
   return (
-    <div className="space-y-4">
-      <div className="p-4 rounded-lg bg-black/20 space-y-2">
-        <label className="block text-sm font-medium mb-2">Filter by Language</label>
-        <Select onValueChange={handleLanguageSelect}>
-          <SelectTrigger className="w-full bg-background border border-white/10">
-            <SelectValue placeholder="Select a language" />
-          </SelectTrigger>
-          <SelectContent className="bg-background border border-white/10">
-            {availableLanguages.map((language) => (
-              <SelectItem key={language} value={language} className="hover:bg-white/5">
-                {language}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {selectedLanguages.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2">
-            {selectedLanguages.map((language) => (
-              <Badge key={language} variant="outline" className="flex items-center gap-1">
-                {language}
-                <X
-                  className="h-3 w-3 cursor-pointer hover:text-destructive"
-                  onClick={() => handleRemoveLanguage(language)}
-                />
-              </Badge>
-            ))}
-          </div>
-        )}
-      </div>
+    <div>
+      <Select onValueChange={handleLanguageSelect}>
+        <SelectTrigger className="w-[200px] mb-4">
+          <SelectValue placeholder="Select a language" />
+        </SelectTrigger>
+        <SelectContent>
+          {availableLanguages.map((language) => (
+            <SelectItem key={language} value={language}>
+              {language}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {selectedLanguages.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {selectedLanguages.map((language) => (
+            <Badge key={language} variant="outline" className="flex items-center gap-1">
+              {language}
+              <X
+                className="h-3 w-3 cursor-pointer hover:text-destructive"
+                onClick={() => handleRemoveLanguage(language)}
+              />
+            </Badge>
+          ))}
+        </div>
+      )}
 
       {isLoading ? (
         <div className="animate-pulse space-y-4">
@@ -82,4 +83,3 @@ export const RandomExcerptsTab = ({
     </div>
   );
 };
-
