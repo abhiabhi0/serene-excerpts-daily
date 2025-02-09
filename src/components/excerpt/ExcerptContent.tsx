@@ -1,8 +1,8 @@
 
-import { TransformedExcerpt } from "@/utils/excerptTransformer";
+import { ExcerptWithMeta } from "@/types/excerpt";
 
 interface ExcerptContentProps {
-  excerpt: TransformedExcerpt;
+  excerpt: ExcerptWithMeta;
 }
 
 export const ExcerptContent = ({ excerpt }: ExcerptContentProps) => {
