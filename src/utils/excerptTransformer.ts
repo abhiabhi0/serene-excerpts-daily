@@ -50,4 +50,3 @@ export const createFlattenedExcerpts = async (): Promise<FlattenedExcerpt[]> => 
 export const getRandomExcerptFromFlattened = (excerpts: FlattenedExcerpt[]): FlattenedExcerpt => {
   return excerpts[Math.floor(Math.random() * excerpts.length)];
 };
-
