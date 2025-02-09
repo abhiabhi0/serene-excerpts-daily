@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -195,4 +194,3 @@ const Index = () => {
 };
 
 export default Index;
-
