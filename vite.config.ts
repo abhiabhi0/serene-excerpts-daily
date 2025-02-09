@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import { generateStaticExcerptsPlugin } from "./src/utils/buildUtils";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -13,8 +14,8 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === 'development' && componentTagger(),
+    mode === 'production' && generateStaticExcerptsPlugin(),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -22,8 +23,8 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    outDir: "dist", // Specify the output directory
-    emptyOutDir: true, // Clean the output directory before building
-    chunkSizeWarningLimit: 600, // Increased from default 500
+    outDir: "dist",
+    emptyOutDir: true,
+    chunkSizeWarningLimit: 600,
   },
 }));
