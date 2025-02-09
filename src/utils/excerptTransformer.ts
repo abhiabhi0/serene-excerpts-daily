@@ -1,6 +1,6 @@
 
 import { v4 as uuidv4 } from 'uuid';
-import type { Book, FlattenedExcerpt } from '../types/excerpt';
+import { Book, FlattenedExcerpt } from '@/types/excerpt';
 
 export const transformBookToFlatExcerpts = (book: Book): FlattenedExcerpt[] => {
   return book.excerpts.map(excerpt => ({

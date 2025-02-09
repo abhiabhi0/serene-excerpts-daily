@@ -3,8 +3,6 @@ import { ExcerptWithMeta, FlattenedExcerpt } from "@/types/excerpt";
 import { getRandomExcerptFromFlattened } from "@/utils/excerptTransformer";
 import { staticExcerpts } from "@/data/staticExcerpts";
 
-const EXCERPTS_CACHE_KEY = 'flattenedExcerpts';
-
 const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta => ({
   text: flat.text,
   bookTitle: flat.bookTitle,
@@ -13,21 +11,32 @@ const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta =
 });
 
 const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
-  localStorage.setItem(EXCERPTS_CACHE_KEY, JSON.stringify(excerpts));
+  localStorage.setItem('flattenedExcerpts', JSON.stringify(excerpts));
   return excerpts;
 };
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
-    // Try to get from cache first
-    const cached = localStorage.getItem(EXCERPTS_CACHE_KEY);
+    // Log the static excerpts to see the array
+    console.log("Static Excerpts Array:", staticExcerpts);
+    
+    // Try to get from localStorage first
+    const cached = localStorage.getItem('flattenedExcerpts');
     let flattenedExcerpts: FlattenedExcerpt[];
 
     if (cached) {
-      console.log("Using cached excerpts");
-      flattenedExcerpts = JSON.parse(cached);
+      const parsedCache = JSON.parse(cached);
+      // If cache is outdated, update it with static excerpts
+      if (JSON.stringify(parsedCache) !== JSON.stringify(staticExcerpts)) {
+        console.log("Updating cache from static excerpts");
+        flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
+      } else {
+        console.log("Using cached flattened excerpts");
+        flattenedExcerpts = parsedCache;
+      }
     } else {
-      console.log("Cache missing - using static excerpts");
+      // If no cache exists, use static excerpts and create cache
+      console.log("Using static excerpts and creating cache");
       flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
     }
 
