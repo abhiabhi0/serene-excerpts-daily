@@ -44,34 +44,31 @@ export function FilterControls({
     }
   });
 
+  // Ensure we always have arrays, even if empty
   const languages = data?.languages ?? [];
   const books = data?.books ?? [];
-  console.log("Languages:", languages);
-  console.log("Books:", books);
 
   const filteredBooks = selectedLanguages.length > 0
     ? books.filter(book => selectedLanguages.includes(book.language))
     : books;
 
-  const toggleLanguage = useCallback((value: string) => {
-    console.log("Toggling language:", value);
-    if (!value) return;
-    setSelectedLanguages(
-      selectedLanguages.includes(value)
-        ? selectedLanguages.filter((l) => l !== value)
-        : [...selectedLanguages, value]
+  const toggleLanguage = useCallback((language: string) => {
+    if (!language) return;
+    setSelectedLanguages(current => 
+      current.includes(language)
+        ? current.filter((l) => l !== language)
+        : [...current, language]
     );
-  }, [selectedLanguages, setSelectedLanguages]);
+  }, [setSelectedLanguages]);
 
-  const toggleBook = useCallback((value: string) => {
-    console.log("Toggling book:", value);
-    if (!value) return;
-    setSelectedBooks(
-      selectedBooks.includes(value)
-        ? selectedBooks.filter((b) => b !== value)
-        : [...selectedBooks, value]
+  const toggleBook = useCallback((bookTitle: string) => {
+    if (!bookTitle) return;
+    setSelectedBooks(current =>
+      current.includes(bookTitle)
+        ? current.filter((b) => b !== bookTitle)
+        : [...current, bookTitle]
     );
-  }, [selectedBooks, setSelectedBooks]);
+  }, [setSelectedBooks]);
 
   return (
     <div className="flex flex-col sm:flex-row gap-4">
@@ -91,32 +88,38 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          <Command>
-            <CommandInput placeholder="Search languages..." />
-            <CommandEmpty>No language found.</CommandEmpty>
-            <CommandGroup>
-              {languages.map((language) => (
-                <CommandItem
-                  key={language}
-                  value={language}
-                  onSelect={() => {
-                    toggleLanguage(language);
-                    setOpenLanguages(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selectedLanguages.includes(language)
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
-                  {language}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </Command>
+          {languages.length > 0 ? (
+            <Command>
+              <CommandInput placeholder="Search languages..." />
+              <CommandEmpty>No language found.</CommandEmpty>
+              <CommandGroup>
+                {languages.map((language) => (
+                  <CommandItem
+                    key={language}
+                    value={language}
+                    onSelect={() => {
+                      toggleLanguage(language);
+                      setOpenLanguages(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        selectedLanguages.includes(language)
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                    {language}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </Command>
+          ) : (
+            <div className="p-4 text-sm text-center">
+              {isLoading ? "Loading..." : "No languages available"}
+            </div>
+          )}
         </PopoverContent>
       </Popover>
 
@@ -136,32 +139,38 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          <Command>
-            <CommandInput placeholder="Search books..." />
-            <CommandEmpty>No book found.</CommandEmpty>
-            <CommandGroup>
-              {filteredBooks.map((book) => (
-                <CommandItem
-                  key={book.title}
-                  value={book.title}
-                  onSelect={() => {
-                    toggleBook(book.title);
-                    setOpenBooks(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selectedBooks.includes(book.title)
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
-                  {book.title}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </Command>
+          {filteredBooks.length > 0 ? (
+            <Command>
+              <CommandInput placeholder="Search books..." />
+              <CommandEmpty>No book found.</CommandEmpty>
+              <CommandGroup>
+                {filteredBooks.map((book) => (
+                  <CommandItem
+                    key={book.title}
+                    value={book.title}
+                    onSelect={() => {
+                      toggleBook(book.title);
+                      setOpenBooks(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        selectedBooks.includes(book.title)
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                    {book.title}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </Command>
+          ) : (
+            <div className="p-4 text-sm text-center">
+              {isLoading ? "Loading..." : "No books available"}
+            </div>
+          )}
         </PopoverContent>
       </Popover>
     </div>
