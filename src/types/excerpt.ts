@@ -30,3 +30,15 @@ export interface ExcerptCardProps {
   onNewExcerpt: () => void;
   onScreenshotModeChange?: (mode: boolean) => void;
 }
+
+export interface FlattenedExcerpt {
+  id: string;
+  bookTitle: string;
+  bookAuthor?: string;
+  translator?: string;
+  category: string;
+  otherCategory?: string;
+  language: string;
+  text: string;
+  createdAt: string;
+}

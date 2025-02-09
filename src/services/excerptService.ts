@@ -1,37 +1,31 @@
 
-import { Book, ExcerptWithMeta } from "@/types/excerpt";
+import { ExcerptWithMeta, FlattenedExcerpt } from "@/types/excerpt";
+import { createFlattenedExcerpts, getRandomExcerptFromFlattened } from "@/utils/excerptTransformer";
+
+const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta => ({
+  text: flat.text,
+  bookTitle: flat.bookTitle,
+  bookAuthor: flat.bookAuthor,
+  translator: flat.translator
+});
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   try {
-    console.log("Fetching files list...");
-    const filesResponse = await fetch("/data/files.json");
-    if (!filesResponse.ok) {
-      throw new Error(`Failed to fetch files list: ${filesResponse.statusText}`);
+    // Try to get from localStorage first
+    const cached = localStorage.getItem('flattenedExcerpts');
+    let flattenedExcerpts: FlattenedExcerpt[];
+
+    if (cached) {
+      flattenedExcerpts = JSON.parse(cached);
+      console.log("Using cached flattened excerpts");
+    } else {
+      // If not in cache, create and store them
+      console.log("Creating new flattened excerpts");
+      flattenedExcerpts = await createFlattenedExcerpts();
     }
-    
-    const files: string[] = await filesResponse.json();
-    if (!files.length) {
-      throw new Error("No excerpt files available");
-    }
-    
-    const randomBookFile = files[Math.floor(Math.random() * files.length)];
-    console.log("Selected book file:", randomBookFile);
-    
-    const bookResponse = await fetch(`/data/${randomBookFile}`);
-    if (!bookResponse.ok) {
-      throw new Error(`Failed to fetch book data: ${bookResponse.statusText}`);
-    }
-    
-    const book: Book = await bookResponse.json();
-    const randomExcerpt = book.excerpts[Math.floor(Math.random() * book.excerpts.length)];
-    
-    return {
-      ...randomExcerpt,
-      bookTitle: book.metadata.title,
-      bookAuthor: book.metadata.author,
-      translator: book.metadata.translator,
-      amazonLink: book.metadata.amazonLink,
-    };
+
+    const randomExcerpt = getRandomExcerptFromFlattened(flattenedExcerpts);
+    return convertFlatToExcerptWithMeta(randomExcerpt);
   } catch (error) {
     console.error("Error fetching excerpt:", error);
     throw error;
