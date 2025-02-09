@@ -22,12 +22,12 @@ export const getLanguagesAndBooks = async (): Promise<LanguagesAndBooks> => {
     const books: Array<{title: string; language: string}> = [];
     const languagesSet = new Set<string>();
 
-    for (const file of files) {
+    const fetchPromises = files.map(async (file) => {
       try {
         const bookResponse = await fetch(`/data/${file}`);
         if (!bookResponse.ok) {
           console.error(`Failed to fetch book data for ${file}: ${bookResponse.statusText}`);
-          continue;
+          return;
         }
         const book: Book = await bookResponse.json();
         if (book.metadata.language) {
@@ -39,9 +39,10 @@ export const getLanguagesAndBooks = async (): Promise<LanguagesAndBooks> => {
         }
       } catch (error) {
         console.error(`Error processing book ${file}:`, error);
-        continue;
       }
-    }
+    });
+
+    await Promise.allSettled(fetchPromises);
 
     return {
       languages: Array.from(languagesSet),

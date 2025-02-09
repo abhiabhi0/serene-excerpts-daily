@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -51,25 +51,24 @@ export function FilterControls({
     ? books.filter(book => selectedLanguages.includes(book.language))
     : books;
 
-  const toggleLanguage = (language: string) => {
+  const toggleLanguage = useCallback((language: string) => {
     if (!language) return;
     setSelectedLanguages(
       selectedLanguages.includes(language)
         ? selectedLanguages.filter((l) => l !== language)
         : [...selectedLanguages, language]
     );
-    // Clear book selection when changing languages
     setSelectedBooks([]);
-  };
+  }, [selectedLanguages, setSelectedLanguages, setSelectedBooks]);
 
-  const toggleBook = (bookTitle: string) => {
+  const toggleBook = useCallback((bookTitle: string) => {
     if (!bookTitle) return;
     setSelectedBooks(
       selectedBooks.includes(bookTitle)
         ? selectedBooks.filter((b) => b !== bookTitle)
         : [...selectedBooks, bookTitle]
     );
-  };
+  }, [selectedBooks, setSelectedBooks]);
 
   if (isError) {
     return (
