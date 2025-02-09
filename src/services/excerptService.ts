@@ -15,7 +15,13 @@ const syncExcerptsWithCache = (excerpts: FlattenedExcerpt[]) => {
   return excerpts;
 };
 
-export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
+// Get unique languages from excerpts
+const getAvailableLanguages = (excerpts: FlattenedExcerpt[]): string[] => {
+  const uniqueLanguages = new Set(excerpts.map(excerpt => excerpt.language));
+  return Array.from(uniqueLanguages).sort();
+};
+
+export const getRandomExcerpt = async (selectedLanguages?: string[]): Promise<ExcerptWithMeta> => {
   try {
     // Log the static excerpts to see the array
     console.log("Static Excerpts Array:", staticExcerpts);
@@ -40,10 +46,22 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
       flattenedExcerpts = syncExcerptsWithCache(staticExcerpts);
     }
 
-    const randomExcerpt = getRandomExcerptFromFlattened(flattenedExcerpts);
+    // Filter excerpts by selected languages if provided
+    const filteredExcerpts = selectedLanguages?.length 
+      ? flattenedExcerpts.filter(excerpt => selectedLanguages.includes(excerpt.language))
+      : flattenedExcerpts;
+
+    console.log("Selected Languages:", selectedLanguages);
+    console.log("Filtered Excerpts Count:", filteredExcerpts.length);
+
+    const randomExcerpt = getRandomExcerptFromFlattened(filteredExcerpts);
     return convertFlatToExcerptWithMeta(randomExcerpt);
   } catch (error) {
     console.error("Error fetching excerpt:", error);
     throw error;
   }
+};
+
+export const getAllLanguages = (): string[] => {
+  return getAvailableLanguages(staticExcerpts);
 };
