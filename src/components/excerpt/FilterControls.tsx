@@ -34,7 +34,7 @@ export function FilterControls({
   const [openLanguages, setOpenLanguages] = useState(false);
   const [openBooks, setOpenBooks] = useState(false);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["languages-and-books"],
     queryFn: getLanguagesAndBooks,
     meta: {
@@ -58,9 +58,8 @@ export function FilterControls({
         ? selectedLanguages.filter((l) => l !== value)
         : [...selectedLanguages, value]
     );
-    setSelectedBooks([]);
     setOpenLanguages(false);
-  }, [selectedLanguages, setSelectedLanguages, setSelectedBooks]);
+  }, [selectedLanguages, setSelectedLanguages]);
 
   const toggleBook = useCallback((value: string) => {
     if (!value) return;
@@ -71,14 +70,6 @@ export function FilterControls({
     );
     setOpenBooks(false);
   }, [selectedBooks, setSelectedBooks]);
-
-  if (isError) {
-    return (
-      <div className="text-red-500">
-        Error loading filters. Please try again later.
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col sm:flex-row gap-4">
@@ -170,3 +161,4 @@ export function FilterControls({
     </div>
   );
 }
+

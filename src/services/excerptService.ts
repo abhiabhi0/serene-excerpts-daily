@@ -1,5 +1,5 @@
-
 import { Book, ExcerptWithMeta } from "@/types/excerpt";
+import { getLanguageLabel } from "@/config/languages";
 
 interface LanguagesAndBooks {
   languages: string[];
@@ -32,10 +32,11 @@ export const getLanguagesAndBooks = async (): Promise<LanguagesAndBooks> => {
         }
         const book: Book = await bookResponse.json();
         if (book.metadata?.language) {
-          languagesSet.add(book.metadata.language);
+          const languageLabel = getLanguageLabel(book.metadata.language);
+          languagesSet.add(languageLabel);
           books.push({
             title: book.metadata.title,
-            language: book.metadata.language
+            language: languageLabel
           });
         }
       } catch (error) {
