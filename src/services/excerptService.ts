@@ -6,12 +6,10 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     console.log("Fetching files list...");
     const filesResponse = await fetch("/data/files.json");
     if (!filesResponse.ok) {
-      throw new Error(`Failed to fetch files.json: ${filesResponse.statusText}`);
+      throw new Error(`Failed to fetch files list: ${filesResponse.statusText}`);
     }
     
-    const files = await filesResponse.json();
-    console.log("Available files:", files);
-    
+    const files: string[] = await filesResponse.json();
     if (!files.length) {
       throw new Error("No excerpt files available");
     }
@@ -25,10 +23,6 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     }
     
     const book: Book = await bookResponse.json();
-    if (!book.excerpts || !book.excerpts.length) {
-      throw new Error("No excerpts found in book");
-    }
-    
     const randomExcerpt = book.excerpts[Math.floor(Math.random() * book.excerpts.length)];
     
     return {
