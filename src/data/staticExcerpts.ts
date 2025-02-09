@@ -16,6 +16,7 @@ class ExcerptStore {
     excerptCount: number;
   }[] = [];
   private _isInitialized = false;
+  private _initializationPromise: Promise<void> | null = null;
 
   private constructor() {}
 
@@ -27,14 +28,32 @@ class ExcerptStore {
   }
 
   async initialize() {
-    if (this._isInitialized) return;
+    // If already initialized, return immediately
+    if (this._isInitialized) {
+      console.log("ExcerptStore already initialized");
+      return;
+    }
 
+    // If initialization is in progress, wait for it
+    if (this._initializationPromise) {
+      console.log("ExcerptStore initialization in progress, waiting...");
+      return this._initializationPromise;
+    }
+
+    console.log("Starting ExcerptStore initialization");
+    this._initializationPromise = this._initialize();
+    await this._initializationPromise;
+    this._initializationPromise = null;
+  }
+
+  private async _initialize() {
     try {
+      console.log("Loading books from files.json:", files);
       const books: Book[] = [];
       
       for (const file of files) {
         try {
-          console.log(`Attempting to import ${file}...`);
+          console.log(`Importing ${file}...`);
           const bookModule = await import(`../../public/data/${file}`);
           if (bookModule && bookModule.default) {
             books.push(bookModule.default);
@@ -51,7 +70,7 @@ class ExcerptStore {
       
       if (books.length === 0) {
         console.error("No books were imported successfully");
-        return;
+        throw new Error("Failed to import any books");
       }
 
       this._excerpts = books.flatMap(book => transformBookToFlatExcerpts(book));
@@ -64,22 +83,31 @@ class ExcerptStore {
         excerptCount: book.excerpts.length
       }));
 
-      console.log('All Static Excerpts:', this._excerpts);
-      console.log('All Languages:', this._languages);
-      console.log('All Books:', this._books);
+      console.log(`Processed ${this._excerpts.length} excerpts`);
+      console.log(`Found ${this._languages.length} languages`);
+      console.log(`Processed ${this._books.length} books`);
 
       this._isInitialized = true;
     } catch (error) {
-      console.error("Error initializing excerpt store:", error);
+      console.error("Error in ExcerptStore initialization:", error);
+      this._isInitialized = false;
       throw error;
     }
   }
 
   get excerpts(): FlattenedExcerpt[] {
+    if (!this._isInitialized) {
+      console.warn("Attempting to access excerpts before initialization");
+      return [];
+    }
     return this._excerpts;
   }
 
   get languages(): string[] {
+    if (!this._isInitialized) {
+      console.warn("Attempting to access languages before initialization");
+      return [];
+    }
     return this._languages;
   }
 
@@ -90,9 +118,12 @@ class ExcerptStore {
     language: string;
     excerptCount: number;
   }[] {
+    if (!this._isInitialized) {
+      console.warn("Attempting to access books before initialization");
+      return [];
+    }
     return this._books;
   }
 }
 
 export const excerptStore = ExcerptStore.getInstance();
-
