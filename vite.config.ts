@@ -8,7 +8,7 @@ import type { Plugin } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "./", // This ensures assets are loaded correctly on GitHub Pages
+  base: "/", // Changed from "./" to "/" for correct path resolution
   server: {
     host: "::",
     port: 8080,
@@ -38,8 +38,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    outDir: "dist", // Specify the output directory
-    emptyOutDir: true, // Clean the output directory before building
+    outDir: "dist",
+    emptyOutDir: true,
   },
 }));
-
