@@ -98,17 +98,15 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          <Command className="w-full">
+          <Command className="w-full" shouldFilter>
             <CommandInput placeholder="Search languages..." className="h-9" />
             <CommandEmpty>No language found.</CommandEmpty>
-            <CommandGroup>
+            <CommandGroup heading="Languages">
               {languages.map((language) => (
                 <CommandItem
                   key={language}
                   value={language}
-                  onSelect={(currentValue) => {
-                    toggleLanguage(currentValue);
-                  }}
+                  onSelect={toggleLanguage}
                   className="cursor-pointer"
                 >
                   <Check
@@ -143,17 +141,15 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          <Command className="w-full">
+          <Command className="w-full" shouldFilter>
             <CommandInput placeholder="Search books..." className="h-9" />
             <CommandEmpty>No book found.</CommandEmpty>
-            <CommandGroup>
+            <CommandGroup heading="Books">
               {filteredBooks.map((book) => (
                 <CommandItem
                   key={book.title}
                   value={book.title}
-                  onSelect={(currentValue) => {
-                    toggleBook(currentValue);
-                  }}
+                  onSelect={toggleBook}
                   className="cursor-pointer"
                 >
                   <Check
