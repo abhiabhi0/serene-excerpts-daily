@@ -15,3 +15,4 @@ fs.writeFileSync(
 );
 
 console.log('Updated files.json with current data directory contents');
+

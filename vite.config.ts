@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { exec } from 'child_process';
+import type { Plugin } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -17,8 +18,8 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' && componentTagger(),
     {
       name: 'update-files-json',
-      buildStart() {
-        return new Promise((resolve, reject) => {
+      buildStart(options) {
+        return new Promise<void>((resolve, reject) => {
           exec('node scripts/updateFiles.js', (error) => {
             if (error) {
               console.error('Error updating files.json:', error);
@@ -29,7 +30,7 @@ export default defineConfig(({ mode }) => ({
           });
         });
       },
-    }
+    } as Plugin
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -41,3 +42,4 @@ export default defineConfig(({ mode }) => ({
     emptyOutDir: true, // Clean the output directory before building
   },
 }));
+
