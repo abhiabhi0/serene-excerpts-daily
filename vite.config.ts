@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   json: {
-    stringify: true, // This enables importing JSON as string
+    stringify: true,
   },
   build: {
     outDir: "dist",

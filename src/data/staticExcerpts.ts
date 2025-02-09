@@ -1,9 +1,25 @@
 
 import type { FlattenedExcerpt } from "../types/excerpt";
 
-// Use dynamic import for JSON
-const generatedData = await import('./generatedExcerpts.json').then(module => module.default);
+// Initialize with empty defaults
+export const staticExcerpts: FlattenedExcerpt[] = [];
+export const staticLanguages: string[] = [];
+export const staticBooks: any[] = [];
 
-export const staticExcerpts: FlattenedExcerpt[] = generatedData.excerpts;
-export const staticLanguages: string[] = generatedData.languages;
-export const staticBooks = generatedData.books;
+// Load data asynchronously
+const loadData = async () => {
+  try {
+    const response = await fetch('/data/generatedExcerpts.json');
+    const data = await response.json();
+    
+    // Update the exported values
+    Object.assign(staticExcerpts, data.excerpts || []);
+    Object.assign(staticLanguages, data.languages || []);
+    Object.assign(staticBooks, data.books || []);
+  } catch (error) {
+    console.error('Failed to load excerpts data:', error);
+  }
+};
+
+// Load data immediately
+loadData();
