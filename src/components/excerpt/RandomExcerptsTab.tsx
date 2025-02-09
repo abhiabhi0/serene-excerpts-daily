@@ -46,10 +46,16 @@ export const RandomExcerptsTab = ({
 
   return (
     <div className="space-y-4">
+      {currentExcerpt && (
+        <ExcerptCard 
+          excerpt={currentExcerpt} 
+          onNewExcerpt={() => handleNewExcerpt(selectedLanguages)} 
+        />
+      )}
       <div className="space-y-2">
         <div className="flex flex-col gap-2">
           <Select onValueChange={handleLanguageSelect}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full bg-background">
               <SelectValue placeholder="Filter by language" />
             </SelectTrigger>
             <SelectContent>
@@ -75,12 +81,6 @@ export const RandomExcerptsTab = ({
           )}
         </div>
       </div>
-      {currentExcerpt && (
-        <ExcerptCard 
-          excerpt={currentExcerpt} 
-          onNewExcerpt={() => handleNewExcerpt(selectedLanguages)} 
-        />
-      )}
     </div>
   );
 };
