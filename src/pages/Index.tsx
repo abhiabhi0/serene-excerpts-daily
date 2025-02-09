@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -16,7 +15,6 @@ import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
-  // Initialize all hooks first
   const { toast } = useToast();
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
   const { activeTab, setActiveTab, setSearchParams } = useTabNavigation();
@@ -27,8 +25,8 @@ const Index = () => {
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
-    queryFn: getRandomExcerpt,
-    enabled: false, // This prevents automatic fetching
+    queryFn: () => getRandomExcerpt(['en']), // Default to English
+    enabled: false,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     meta: {
@@ -43,10 +41,14 @@ const Index = () => {
     }
   });
 
-  const getRandomLocalExcerpt = (): ExcerptWithMeta | null => {
+  const getRandomLocalExcerpt = (selectedLanguages: string[]): ExcerptWithMeta | null => {
     if (localExcerpts.length === 0) return null;
-    const randomIndex = Math.floor(Math.random() * localExcerpts.length);
-    const localExcerpt = localExcerpts[randomIndex];
+    const filteredExcerpts = localExcerpts.filter(excerpt => 
+      selectedLanguages.includes(excerpt.language)
+    );
+    if (filteredExcerpts.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * filteredExcerpts.length);
+    const localExcerpt = filteredExcerpts[randomIndex];
     return convertLocalToExcerptWithMeta(localExcerpt);
   };
 
@@ -58,9 +60,9 @@ const Index = () => {
     isLocal: true
   });
 
-  const handleNewExcerpt = () => {
+  const handleNewExcerpt = (selectedLanguages: string[] = ['en']) => {
     if (Math.random() > 0.7 && localExcerpts.length > 0) {
-      const localExcerpt = getRandomLocalExcerpt();
+      const localExcerpt = getRandomLocalExcerpt(selectedLanguages);
       if (localExcerpt) {
         setCurrentExcerpt(localExcerpt);
         return;
@@ -74,7 +76,6 @@ const Index = () => {
     setSearchParams({ tab: 'random' });
   };
 
-  // Effect hooks
   useEffect(() => {
     if (remoteExcerpt) {
       setCurrentExcerpt(remoteExcerpt);
@@ -82,7 +83,6 @@ const Index = () => {
   }, [remoteExcerpt]);
 
   useEffect(() => {
-    // Initial load - only fetch once when component mounts
     if (!currentExcerpt && !isLoading && !isError) {
       handleNewExcerpt();
     }
@@ -99,7 +99,6 @@ const Index = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Render content based on screen size
   const renderContent = () => {
     if (isScreenTooSmall && !isMobile) {
       return (
@@ -123,30 +122,11 @@ const Index = () => {
           }} className="w-full">
             <TabsContainer activeTab={activeTab} />
             <TabsContent value="random">
-              {currentExcerpt && (
-                <ExcerptCard 
-                  excerpt={currentExcerpt}
-                  onNewExcerpt={handleNewExcerpt}
-                  onScreenshotModeChange={setIsScreenshotMode}
-                />
-              )}
-              {isLoading && (
-                <div className="animate-pulse space-y-4">
-                  <div className="h-40 bg-white/5 rounded-lg"></div>
-                  <div className="h-20 bg-white/5 rounded-lg"></div>
-                </div>
-              )}
-              {isError && !currentExcerpt && (
-                <div className="text-center p-4 bg-white/5 rounded-lg">
-                  <p className="text-red-400 mb-2">Unable to load excerpt</p>
-                  <button 
-                    onClick={() => refetchRemote()} 
-                    className="text-blue-400 hover:text-blue-300"
-                  >
-                    Try Again
-                  </button>
-                </div>
-              )}
+              <RandomExcerptsTab 
+                currentExcerpt={currentExcerpt}
+                isLoading={isLoading}
+                handleNewExcerpt={handleNewExcerpt}
+              />
             </TabsContent>
             <TabsContent value="local">
               <LocalExcerpts 
