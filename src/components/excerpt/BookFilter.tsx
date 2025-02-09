@@ -22,7 +22,11 @@ interface BookFilterProps {
   onSelectedBooksChange: (books: string[]) => void;
 }
 
-export function BookFilter({ availableBooks, selectedBooks, onSelectedBooksChange }: BookFilterProps) {
+export function BookFilter({ 
+  availableBooks = [], 
+  selectedBooks = [], 
+  onSelectedBooksChange 
+}: BookFilterProps) {
   const toggleBook = (bookTitle: string) => {
     if (selectedBooks.includes(bookTitle)) {
       onSelectedBooksChange(selectedBooks.filter((b) => b !== bookTitle));

@@ -17,7 +17,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { BookFilter } from "@/components/excerpt/BookFilter";
 
 const Index = () => {
-  // Initialize all hooks first
   const { toast } = useToast();
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
   const { activeTab, setActiveTab, setSearchParams } = useTabNavigation();
@@ -27,21 +26,19 @@ const Index = () => {
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
   const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
 
-  // Query to get list of all available books
-  const { data: availableBooks } = useQuery({
+  const { data: availableBooks = [] } = useQuery({
     queryKey: ["books"],
     queryFn: async () => {
       const response = await fetch("/data/files.json");
       const files: string[] = await response.json();
       return files.map(file => file.replace(".json", "").split("-").join(" "));
-    },
-    initialData: []
+    }
   });
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
-    queryKey: ["excerpt"],
-    queryFn: getRandomExcerpt,
-    enabled: false, // This prevents automatic fetching
+    queryKey: ["excerpt", selectedBooks],
+    queryFn: async () => getRandomExcerpt(selectedBooks),
+    enabled: false,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     meta: {
@@ -56,7 +53,6 @@ const Index = () => {
     }
   });
 
-  // Set initial selected books on mount
   useEffect(() => {
     if (availableBooks.length > 0) {
       setSelectedBooks(availableBooks);
@@ -94,7 +90,6 @@ const Index = () => {
     setSearchParams({ tab: 'random' });
   };
 
-  // Effect hooks
   useEffect(() => {
     if (remoteExcerpt) {
       setCurrentExcerpt(remoteExcerpt);
@@ -102,7 +97,6 @@ const Index = () => {
   }, [remoteExcerpt]);
 
   useEffect(() => {
-    // Initial load - only fetch once when component mounts
     if (!currentExcerpt && !isLoading && !isError) {
       handleNewExcerpt();
     }
@@ -119,7 +113,6 @@ const Index = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Render content based on screen size
   const renderContent = () => {
     if (isScreenTooSmall && !isMobile) {
       return (
@@ -202,3 +195,4 @@ const Index = () => {
 };
 
 export default Index;
+
