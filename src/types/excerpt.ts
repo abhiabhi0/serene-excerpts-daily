@@ -16,6 +16,7 @@ export interface Book {
     amazonLink?: string;
     category?: string;
     tags?: string[];
+    language?: string;  // Added language property
   };
   excerpts: {
     text: string;
