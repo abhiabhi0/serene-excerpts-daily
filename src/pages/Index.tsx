@@ -27,8 +27,8 @@ const Index = () => {
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
-    queryFn: () => getRandomExcerpt(),
-    enabled: false,
+    queryFn: getRandomExcerpt,
+    enabled: false, // This prevents automatic fetching
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     meta: {
@@ -58,7 +58,7 @@ const Index = () => {
     isLocal: true
   });
 
-  const handleNewExcerpt = (selectedLanguages?: string[]) => {
+  const handleNewExcerpt = () => {
     if (Math.random() > 0.7 && localExcerpts.length > 0) {
       const localExcerpt = getRandomLocalExcerpt();
       if (localExcerpt) {
