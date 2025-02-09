@@ -1,16 +1,6 @@
 
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { ExcerptWithMeta } from "@/types/excerpt";
-import { 
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { getAllLanguages } from "@/services/excerptService";
-import { useEffect, useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -27,6 +17,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
+import { getAllLanguages } from "@/services/excerptService";
+import { useEffect, useState } from "react";
 
 interface RandomExcerptsTabProps {
   currentExcerpt: ExcerptWithMeta | null;
@@ -41,7 +33,13 @@ export const RandomExcerptsTab = ({
 }: RandomExcerptsTabProps) => {
   const [open, setOpen] = useState(false);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const languages = getAllLanguages();
+  const [languages, setLanguages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const availableLanguages = getAllLanguages();
+    console.log("Available languages:", availableLanguages);
+    setLanguages(availableLanguages);
+  }, []);
 
   const toggleLanguage = (language: string) => {
     setSelectedLanguages(current => {
@@ -84,7 +82,7 @@ export const RandomExcerptsTab = ({
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-full p-0">
+          <PopoverContent className="w-full p-0 bg-popover border rounded-md shadow-md">
             <Command>
               <CommandInput placeholder="Search languages..." />
               <CommandEmpty>No language found.</CommandEmpty>
