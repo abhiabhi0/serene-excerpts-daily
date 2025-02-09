@@ -89,7 +89,7 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          <Command className="w-full" shouldFilter>
+          <Command className="w-full">
             <CommandInput placeholder="Search languages..." className="h-9" />
             <CommandEmpty>No language found.</CommandEmpty>
             <CommandGroup heading="Languages">
@@ -132,7 +132,7 @@ export function FilterControls({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full sm:w-[200px] p-0 bg-[#0A1929]/90 border-[#1A4067]/30 backdrop-blur-sm">
-          <Command className="w-full" shouldFilter>
+          <Command className="w-full">
             <CommandInput placeholder="Search books..." className="h-9" />
             <CommandEmpty>No book found.</CommandEmpty>
             <CommandGroup heading="Books">
@@ -161,4 +161,3 @@ export function FilterControls({
     </div>
   );
 }
-
