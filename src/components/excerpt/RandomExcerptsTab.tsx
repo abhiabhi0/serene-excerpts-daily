@@ -35,53 +35,51 @@ export const RandomExcerptsTab = ({
     handleNewExcerpt(newSelectedLanguages);
   };
 
-  if (isLoading) {
-    return (
-      <div className="animate-pulse space-y-4">
-        <div className="h-40 bg-white/5 rounded-lg"></div>
-        <div className="h-20 bg-white/5 rounded-lg"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
-      {currentExcerpt && (
-        <ExcerptCard 
-          excerpt={currentExcerpt} 
-          onNewExcerpt={() => handleNewExcerpt(selectedLanguages)} 
-        />
-      )}
-      <div className="p-4 rounded-lg bg-white/5 space-y-2">
+      <div className="p-4 rounded-lg bg-black/20 space-y-2">
         <label className="block text-sm font-medium mb-2">Filter by Language</label>
-        <div className="flex flex-col gap-2">
-          <Select onValueChange={handleLanguageSelect}>
-            <SelectTrigger className="w-full bg-background border border-white/10">
-              <SelectValue placeholder="Select a language" />
-            </SelectTrigger>
-            <SelectContent className="bg-background border border-white/10">
-              {availableLanguages.map((language) => (
-                <SelectItem key={language} value={language} className="hover:bg-white/5">
-                  {language}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {selectedLanguages.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2">
-              {selectedLanguages.map((language) => (
-                <Badge key={language} variant="outline" className="flex items-center gap-1">
-                  {language}
-                  <X
-                    className="h-3 w-3 cursor-pointer hover:text-destructive"
-                    onClick={() => handleRemoveLanguage(language)}
-                  />
-                </Badge>
-              ))}
-            </div>
-          )}
-        </div>
+        <Select onValueChange={handleLanguageSelect}>
+          <SelectTrigger className="w-full bg-background border border-white/10">
+            <SelectValue placeholder="Select a language" />
+          </SelectTrigger>
+          <SelectContent className="bg-background border border-white/10">
+            {availableLanguages.map((language) => (
+              <SelectItem key={language} value={language} className="hover:bg-white/5">
+                {language}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {selectedLanguages.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {selectedLanguages.map((language) => (
+              <Badge key={language} variant="outline" className="flex items-center gap-1">
+                {language}
+                <X
+                  className="h-3 w-3 cursor-pointer hover:text-destructive"
+                  onClick={() => handleRemoveLanguage(language)}
+                />
+              </Badge>
+            ))}
+          </div>
+        )}
       </div>
+
+      {isLoading ? (
+        <div className="animate-pulse space-y-4">
+          <div className="h-40 bg-white/5 rounded-lg"></div>
+          <div className="h-20 bg-white/5 rounded-lg"></div>
+        </div>
+      ) : (
+        currentExcerpt && (
+          <ExcerptCard 
+            excerpt={currentExcerpt} 
+            onNewExcerpt={() => handleNewExcerpt(selectedLanguages)} 
+          />
+        )
+      )}
     </div>
   );
 };
+
