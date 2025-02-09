@@ -17,6 +17,8 @@ import lallaVakyani from "../../public/data/lalla-vakyani.json";
 import paramarthasara from "../../public/data/paramarthasara-abhinavagupta.json";
 import patanjaliYogaSutras from "../../public/data/patanjali-yoga-sutras-sv.json";
 import pratyabhijandiram from "../../public/data/pratyabhijandiram.json";
+import shivDrasti from "../../public/data/shiv-drasti.json";
+import shivastotravali from "../../public/data/shivastotravali.json";
 import shriShivaRahasya from "../../public/data/shri-shiva-rahasya.json";
 import spandaKarikas from "../../public/data/spanda-karikas.json";
 import sriDevikallotara from "../../public/data/sri-devikallotara.json";
@@ -40,6 +42,8 @@ const allBooks: Book[] = [
   paramarthasara,
   patanjaliYogaSutras,
   pratyabhijandiram,
+  shivDrasti,
+  shivastotravali,
   shriShivaRahasya,
   spandaKarikas,
   sriDevikallotara,

@@ -47,3 +47,4 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     throw error;
   }
 };
+
