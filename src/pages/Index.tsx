@@ -51,8 +51,6 @@ const Index = () => {
   const convertLocalToExcerptWithMeta = (local: LocalExcerpt): ExcerptWithMeta => ({
     text: local.text,
     bookTitle: local.bookTitle,
-    bookAuthor: local.bookAuthor,
-    translator: local.translator,
     isLocal: true
   });
 
