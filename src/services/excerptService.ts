@@ -1,28 +1,30 @@
 
 import { ExcerptWithMeta, FlattenedExcerpt } from "@/types/excerpt";
-import { getRandomExcerptFromFlattened } from "@/utils/excerptTransformer";
 import { staticExcerpts } from "@/data/staticExcerpts";
 
-const convertFlatToExcerptWithMeta = (flat: FlattenedExcerpt): ExcerptWithMeta => ({
-  text: flat.text,
-  bookTitle: flat.bookTitle,
-  bookAuthor: flat.bookAuthor,
-  translator: flat.translator
-});
+const CACHE_VERSION = '2';
+const CACHE_SIZE = 20;
 
-// Add a version number to track cache freshness
-const CACHE_VERSION = '1';
+interface ExcerptCache {
+  version: string;
+  excerpts: FlattenedExcerpt[];
+  lastUpdated: number;
+}
 
-const isCacheValid = (): boolean => {
-  const version = localStorage.getItem('excerpts_version');
-  return version === CACHE_VERSION;
+const getRandomExcerptsSubset = (excerpts: FlattenedExcerpt[], size: number = CACHE_SIZE): FlattenedExcerpt[] => {
+  const shuffled = [...excerpts].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, size);
 };
 
-const getCachedExcerpts = (): FlattenedExcerpt[] | null => {
+const getCachedExcerpts = (): ExcerptCache | null => {
   try {
-    if (!isCacheValid()) return null;
-    const cached = localStorage.getItem('flattenedExcerpts');
-    return cached ? JSON.parse(cached) : null;
+    const cached = localStorage.getItem('excerptCache');
+    if (!cached) return null;
+    
+    const parsedCache: ExcerptCache = JSON.parse(cached);
+    if (parsedCache.version !== CACHE_VERSION) return null;
+    
+    return parsedCache;
   } catch (error) {
     console.error('Error reading cache:', error);
     return null;
@@ -30,28 +32,88 @@ const getCachedExcerpts = (): FlattenedExcerpt[] | null => {
 };
 
 const updateCache = async (excerpts: FlattenedExcerpt[]) => {
-  // Update cache asynchronously to not block the main thread
-  setTimeout(() => {
-    try {
-      localStorage.setItem('flattenedExcerpts', JSON.stringify(excerpts));
-      localStorage.setItem('excerpts_version', CACHE_VERSION);
-      console.log("Cache updated successfully in background");
-    } catch (error) {
-      console.error('Error updating cache:', error);
+  const newCache: ExcerptCache = {
+    version: CACHE_VERSION,
+    excerpts: getRandomExcerptsSubset(excerpts),
+    lastUpdated: Date.now()
+  };
+
+  try {
+    localStorage.setItem('excerptCache', JSON.stringify(newCache));
+    console.log("Cache updated with new excerpts");
+  } catch (error) {
+    console.error('Error updating cache:', error);
+  }
+};
+
+const removeFromCache = (excerptId: string) => {
+  const cache = getCachedExcerpts();
+  if (!cache) return;
+
+  const updatedExcerpts = cache.excerpts.filter(e => e.id !== excerptId);
+  const newCache: ExcerptCache = {
+    ...cache,
+    excerpts: updatedExcerpts
+  };
+
+  localStorage.setItem('excerptCache', JSON.stringify(newCache));
+  
+  // If cache is running low, update it asynchronously
+  if (updatedExcerpts.length <= 1) {
+    console.log("Cache running low, updating in background...");
+    setTimeout(() => updateCache(staticExcerpts), 0);
+  }
+};
+
+const getRandomExcerptFromCache = async (
+  languageFilter?: string[],
+  bookFilter?: string[]
+): Promise<FlattenedExcerpt> => {
+  let cache = getCachedExcerpts();
+  
+  // If no cache exists or it's empty, create initial cache
+  if (!cache || cache.excerpts.length === 0) {
+    await updateCache(staticExcerpts);
+    cache = getCachedExcerpts();
+  }
+
+  let availableExcerpts = cache?.excerpts || [];
+
+  // Apply filters if provided
+  if (languageFilter?.length || bookFilter?.length) {
+    availableExcerpts = availableExcerpts.filter(excerpt => {
+      const languageMatch = !languageFilter?.length || languageFilter.includes(excerpt.language);
+      const bookMatch = !bookFilter?.length || bookFilter.includes(excerpt.bookTitle);
+      return languageMatch && bookMatch;
+    });
+
+    // If no excerpts match filters, get new filtered set from static excerpts
+    if (availableExcerpts.length === 0) {
+      const filteredStaticExcerpts = staticExcerpts.filter(excerpt => {
+        const languageMatch = !languageFilter?.length || languageFilter.includes(excerpt.language);
+        const bookMatch = !bookFilter?.length || bookFilter.includes(excerpt.bookTitle);
+        return languageMatch && bookMatch;
+      });
+      availableExcerpts = getRandomExcerptsSubset(filteredStaticExcerpts);
+      await updateCache(filteredStaticExcerpts);
     }
-  }, 0);
+  }
+
+  const randomIndex = Math.floor(Math.random() * availableExcerpts.length);
+  const selectedExcerpt = availableExcerpts[randomIndex];
+  
+  // Remove used excerpt from cache
+  removeFromCache(selectedExcerpt.id);
+  
+  return selectedExcerpt;
 };
 
 export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
-  // Always get a random excerpt from static array first for immediate response
-  const randomExcerpt = getRandomExcerptFromFlattened(staticExcerpts);
-  
-  // Check cache validity and update if needed in the background
-  const cachedExcerpts = getCachedExcerpts();
-  if (!cachedExcerpts) {
-    updateCache(staticExcerpts);
-  }
-  
-  return convertFlatToExcerptWithMeta(randomExcerpt);
+  const excerpt = await getRandomExcerptFromCache();
+  return {
+    text: excerpt.text,
+    bookTitle: excerpt.bookTitle,
+    bookAuthor: excerpt.bookAuthor,
+    translator: excerpt.translator
+  };
 };
-

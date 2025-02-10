@@ -8,14 +8,11 @@ import { LocalExcerpts } from "@/components/LocalExcerpts";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { TabsContainer } from "@/components/excerpt/TabsContainer";
-import { RandomExcerptsTab } from "@/components/excerpt/RandomExcerptsTab";
 import { BackgroundSlideshow } from "@/components/background/BackgroundSlideshow";
 import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { FilterDropdowns } from "@/components/excerpt/FilterDropdowns";
-import { staticExcerpts } from "@/data/staticExcerpts";
 
 const Index = () => {
   const { toast } = useToast();
@@ -25,8 +22,6 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
@@ -62,24 +57,7 @@ const Index = () => {
   });
 
   const handleNewExcerpt = () => {
-    const filteredStaticExcerpts = staticExcerpts.filter(excerpt => {
-      const languageMatch = selectedLanguages.length === 0 || 
-        selectedLanguages.includes(excerpt.language);
-      const bookMatch = selectedBooks.length === 0 || 
-        selectedBooks.includes(excerpt.bookTitle);
-      return languageMatch && bookMatch;
-    });
-
-    if (filteredStaticExcerpts.length > 0) {
-      const randomIndex = Math.floor(Math.random() * filteredStaticExcerpts.length);
-      setCurrentExcerpt(filteredStaticExcerpts[randomIndex]);
-    } else {
-      toast({
-        title: "No excerpts found",
-        description: "No excerpts match your selected filters. Please adjust your selection.",
-        variant: "destructive"
-      });
-    }
+    refetchRemote();
   };
 
   const handleSelectExcerpt = (excerpt: LocalExcerpt) => {
@@ -94,7 +72,6 @@ const Index = () => {
   }, [remoteExcerpt]);
 
   useEffect(() => {
-    // Get initial excerpt when component mounts
     if (!currentExcerpt) {
       handleNewExcerpt();
     }
@@ -134,12 +111,6 @@ const Index = () => {
           }} className="w-full">
             <TabsContainer activeTab={activeTab} />
             <TabsContent value="random">
-              <FilterDropdowns 
-                selectedLanguages={selectedLanguages}
-                selectedBooks={selectedBooks}
-                onLanguagesChange={setSelectedLanguages}
-                onBooksChange={setSelectedBooks}
-              />
               {currentExcerpt && (
                 <ExcerptCard 
                   excerpt={currentExcerpt}
