@@ -33,7 +33,7 @@ export const FilterDropdowns = ({
         <Select
           value={selectedLanguages.join(",")}
           onValueChange={(value) => {
-            const languages = value ? value.split(",") : [];
+            const languages = value === "all_languages" ? [] : value.split(",");
             onLanguagesChange(languages);
           }}
         >
@@ -41,7 +41,7 @@ export const FilterDropdowns = ({
             <SelectValue placeholder="All Languages" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Languages</SelectItem>
+            <SelectItem value="all_languages">All Languages</SelectItem>
             {staticLanguages.map((lang) => (
               <SelectItem key={lang} value={lang}>
                 {lang}
@@ -56,7 +56,7 @@ export const FilterDropdowns = ({
         <Select
           value={selectedBooks.join(",")}
           onValueChange={(value) => {
-            const books = value ? value.split(",") : [];
+            const books = value === "all_books" ? [] : value.split(",");
             onBooksChange(books);
           }}
         >
@@ -64,7 +64,7 @@ export const FilterDropdowns = ({
             <SelectValue placeholder="All Books" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Books</SelectItem>
+            <SelectItem value="all_books">All Books</SelectItem>
             {availableBooks.map((book) => (
               <SelectItem key={book.title} value={book.title}>
                 {book.title}
