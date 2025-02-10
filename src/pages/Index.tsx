@@ -14,6 +14,7 @@ import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FilterDropdowns } from "@/components/excerpt/FilterDropdowns";
+import { staticExcerpts } from "@/data/staticExcerpts";
 
 const Index = () => {
   const { toast } = useToast();
@@ -60,21 +61,24 @@ const Index = () => {
   });
 
   const handleNewExcerpt = () => {
-    if (Math.random() > 0.7 && localExcerpts.length > 0) {
-      const filteredExcerpts = localExcerpts.filter(excerpt => {
-        const languageMatch = selectedLanguages.length === 0 || selectedLanguages.includes(excerpt.language);
-        const bookMatch = selectedBooks.length === 0 || selectedBooks.includes(excerpt.bookTitle);
-        return languageMatch && bookMatch;
+    const filteredStaticExcerpts = staticExcerpts.filter(excerpt => {
+      const languageMatch = selectedLanguages.length === 0 || 
+        selectedLanguages.includes(excerpt.language);
+      const bookMatch = selectedBooks.length === 0 || 
+        selectedBooks.includes(excerpt.bookTitle);
+      return languageMatch && bookMatch;
+    });
+
+    if (filteredStaticExcerpts.length > 0) {
+      const randomIndex = Math.floor(Math.random() * filteredStaticExcerpts.length);
+      setCurrentExcerpt(filteredStaticExcerpts[randomIndex]);
+    } else {
+      toast({
+        title: "No excerpts found",
+        description: "No excerpts match your selected filters. Please adjust your selection.",
+        variant: "destructive"
       });
-      
-      if (filteredExcerpts.length > 0) {
-        const randomIndex = Math.floor(Math.random() * filteredExcerpts.length);
-        const localExcerpt = convertLocalToExcerptWithMeta(filteredExcerpts[randomIndex]);
-        setCurrentExcerpt(localExcerpt);
-        return;
-      }
     }
-    refetchRemote();
   };
 
   const handleSelectExcerpt = (excerpt: LocalExcerpt) => {
