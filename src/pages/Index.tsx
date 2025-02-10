@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -14,9 +13,9 @@ import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { FilterDropdowns } from "@/components/excerpt/FilterDropdowns";
 
 const Index = () => {
-  // Initialize all hooks first
   const { toast } = useToast();
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
   const { activeTab, setActiveTab, setSearchParams } = useTabNavigation();
@@ -24,6 +23,8 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
@@ -60,8 +61,15 @@ const Index = () => {
 
   const handleNewExcerpt = () => {
     if (Math.random() > 0.7 && localExcerpts.length > 0) {
-      const localExcerpt = getRandomLocalExcerpt();
-      if (localExcerpt) {
+      const filteredExcerpts = localExcerpts.filter(excerpt => {
+        const languageMatch = selectedLanguages.length === 0 || selectedLanguages.includes(excerpt.language);
+        const bookMatch = selectedBooks.length === 0 || selectedBooks.includes(excerpt.bookTitle);
+        return languageMatch && bookMatch;
+      });
+      
+      if (filteredExcerpts.length > 0) {
+        const randomIndex = Math.floor(Math.random() * filteredExcerpts.length);
+        const localExcerpt = convertLocalToExcerptWithMeta(filteredExcerpts[randomIndex]);
         setCurrentExcerpt(localExcerpt);
         return;
       }
@@ -74,7 +82,6 @@ const Index = () => {
     setSearchParams({ tab: 'random' });
   };
 
-  // Effect hooks
   useEffect(() => {
     if (remoteExcerpt) {
       setCurrentExcerpt(remoteExcerpt);
@@ -99,7 +106,6 @@ const Index = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Render content based on screen size
   const renderContent = () => {
     if (isScreenTooSmall && !isMobile) {
       return (
@@ -123,6 +129,12 @@ const Index = () => {
           }} className="w-full">
             <TabsContainer activeTab={activeTab} />
             <TabsContent value="random">
+              <FilterDropdowns 
+                selectedLanguages={selectedLanguages}
+                selectedBooks={selectedBooks}
+                onLanguagesChange={setSelectedLanguages}
+                onBooksChange={setSelectedBooks}
+              />
               {currentExcerpt && (
                 <ExcerptCard 
                   excerpt={currentExcerpt}
