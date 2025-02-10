@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -30,7 +31,7 @@ const Index = () => {
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
     queryFn: getRandomExcerpt,
-    enabled: false, // This prevents automatic fetching
+    enabled: false,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     meta: {
@@ -93,8 +94,8 @@ const Index = () => {
   }, [remoteExcerpt]);
 
   useEffect(() => {
-    // Initial load - only fetch once when component mounts
-    if (!currentExcerpt && !isLoading && !isError) {
+    // Get initial excerpt when component mounts
+    if (!currentExcerpt) {
       handleNewExcerpt();
     }
   }, []);
