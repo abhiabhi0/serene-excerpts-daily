@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Share as ShareIcon, ShoppingCart } from "lucide-react";
 import { ExcerptWithMeta } from "@/types/excerpt";
@@ -37,7 +38,7 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
         <ShareIcon className="w-4 h-4 mr-2" />
         Share
       </Button>
-      {excerpt.amazonLink && (
+      {excerpt.amazonLink && excerpt.amazonLink.length > 0 && (
         <Button 
           variant="default"
           className="flex-1 min-w-[140px]"
