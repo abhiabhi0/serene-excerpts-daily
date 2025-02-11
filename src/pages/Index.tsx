@@ -41,13 +41,6 @@ const Index = () => {
     }
   });
 
-  const getRandomLocalExcerpt = (): ExcerptWithMeta | null => {
-    if (localExcerpts.length === 0) return null;
-    const randomIndex = Math.floor(Math.random() * localExcerpts.length);
-    const localExcerpt = localExcerpts[randomIndex];
-    return convertLocalToExcerptWithMeta(localExcerpt);
-  };
-
   const convertLocalToExcerptWithMeta = (local: LocalExcerpt): ExcerptWithMeta => ({
     text: local.text,
     bookTitle: local.bookTitle,
@@ -65,6 +58,7 @@ const Index = () => {
 
   useEffect(() => {
     if (remoteExcerpt) {
+      console.log("Fetched remote excerpt:", remoteExcerpt); // Add this line
       setCurrentExcerpt(remoteExcerpt);
     }
   }, [remoteExcerpt]);

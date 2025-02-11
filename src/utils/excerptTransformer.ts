@@ -7,6 +7,7 @@ export const transformBookToFlatExcerpts = (book: Book): FlattenedExcerpt[] => {
     bookTitle: book.metadata.title,
     bookAuthor:  '',
     translator:  '',
+    amazonLink: book.metadata.amazonLink || '',
     category: book.metadata.category || 'Spirituality',
     language: book.metadata.language || 'en',
     text: excerpt.text,

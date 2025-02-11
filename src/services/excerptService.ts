@@ -126,7 +126,8 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     text: excerpt.text,
     bookTitle: excerpt.bookTitle,
     bookAuthor: excerpt.bookAuthor,
-    translator: excerpt.translator
+    translator: excerpt.translator,
+    amazonLink: excerpt.amazonLink
   };
 };
 

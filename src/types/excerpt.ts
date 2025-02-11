@@ -42,4 +42,5 @@ export interface FlattenedExcerpt {
   language: string;
   text: string;
   createdAt: string;
+  amazonLink?: string;
 }
