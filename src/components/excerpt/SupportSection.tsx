@@ -28,13 +28,13 @@ export const SupportSection = () => {
 
   return (
     <>
-      <div className="p-4 sm:p-6 text-center bg-background/50 backdrop-blur-sm rounded-lg">
-        <h2 className="text-lg font-semibold mb-4 text-white">Support Atmanam Viddhi</h2>
+      <div className="p-4 sm:p-6 text-center">
+        <h2 className="text-lg font-semibold mb-4 text-foreground">Support Atmanam Viddhi</h2>
         <div className="flex flex-col items-center gap-4">
           <div id="ko-fi-btn"></div>
           
-          <div className="mt-4 p-4 bg-white/10 rounded-lg w-full max-w-sm">
-            <h3 className="text-sm font-medium mb-2 text-white">UPI Payment (India)</h3>
+          <div className="mt-4 p-4 bg-card rounded-lg w-full max-w-sm border border-border">
+            <h3 className="text-sm font-medium mb-2 text-foreground">UPI Payment (India)</h3>
             <img 
               src="/lovable-uploads/69c6ec32-0e65-419e-8e34-40a2a63b2ebc.png" 
               alt="UPI QR Code" 
@@ -42,7 +42,7 @@ export const SupportSection = () => {
             />
             <button
               onClick={handleCopyUPI}
-              className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-[#1A4067] hover:bg-[#1A4067]/80 text-white rounded-md transition-colors"
+              className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors"
             >
               <IndianRupee className="w-4 h-4" />
               <span>atmanamviddhi@axl</span>
@@ -55,7 +55,7 @@ export const SupportSection = () => {
           href="https://instagram.com/atmanam.viddhi" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-pink-400 hover:text-pink-300"
+          className="text-pink-500 hover:text-pink-600"
         >
           <Instagram className="w-6 h-6" />
         </a>
@@ -63,7 +63,7 @@ export const SupportSection = () => {
           href="https://facebook.com/atmanam.viddhi" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-blue-400 hover:text-blue-300"
+          className="text-blue-500 hover:text-blue-600"
         >
           <Facebook className="w-6 h-6" />
         </a>
@@ -71,7 +71,7 @@ export const SupportSection = () => {
           href="https://t.me/atmanam_viddhi" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-blue-400 hover:text-blue-300"
+          className="text-blue-500 hover:text-blue-600"
         >
           <svg 
             viewBox="0 0 24 24" 
