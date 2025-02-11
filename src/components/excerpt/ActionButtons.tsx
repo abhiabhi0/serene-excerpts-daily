@@ -16,6 +16,8 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
     }
   };
 
+  console.log("Amazon link:", excerpt.amazonLink); // Adding this to debug
+
   return (
     <div className="flex flex-wrap gap-4">
       <Button 
@@ -38,7 +40,7 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
         <ShareIcon className="w-4 h-4 mr-2" />
         Share
       </Button>
-      {excerpt.amazonLink && excerpt.amazonLink.length > 0 && (
+      {excerpt.amazonLink && (
         <Button 
           variant="default"
           className="flex-1 min-w-[140px]"
