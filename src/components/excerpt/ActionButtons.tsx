@@ -16,7 +16,7 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
     }
   };
 
-  console.log("Amazon link:", excerpt.amazonLink); // Adding this to debug
+  console.log("Amazon link:", excerpt.amazonLink, "Type:", typeof excerpt.amazonLink); // Enhanced debugging
 
   return (
     <div className="flex flex-wrap gap-4">
@@ -40,7 +40,7 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
         <ShareIcon className="w-4 h-4 mr-2" />
         Share
       </Button>
-      {excerpt.amazonLink && (
+      {excerpt.amazonLink && excerpt.amazonLink !== "" && (
         <Button 
           variant="default"
           className="flex-1 min-w-[140px]"
@@ -53,3 +53,4 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
     </div>
   );
 };
+
