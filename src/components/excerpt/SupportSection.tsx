@@ -1,10 +1,19 @@
 
 import { Instagram, Facebook, IndianRupee } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useEffect } from "react";
 
 export const SupportSection = () => {
   const { toast } = useToast();
   
+  useEffect(() => {
+    // Initialize Ko-fi button after component mounts
+    if ((window as any).kofiwidget2) {
+      (window as any).kofiwidget2.init('Support me on Ko-fi', '#72a4f2', 'A0A01ACWVK');
+      (window as any).kofiwidget2.draw();
+    }
+  }, []);
+
   const handleCopyUPI = async () => {
     try {
       await navigator.clipboard.writeText("atmanamviddhi@axl");
@@ -22,9 +31,7 @@ export const SupportSection = () => {
       <div className="p-4 sm:p-6 text-center">
         <h2 className="text-lg font-semibold mb-4">Support Atmanam Viddhi</h2>
         <div className="flex flex-col items-center gap-4">
-          <a href="https://www.buymeacoffee.com/botman1001">
-            <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a book&emoji=📖&slug=botman1001&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" />
-          </a>
+          <div id="ko-fi-btn"></div>
           
           <div className="mt-4 p-4 bg-white/5 rounded-lg w-full max-w-sm">
             <h3 className="text-sm font-medium mb-2">UPI Payment (India)</h3>
@@ -78,3 +85,4 @@ export const SupportSection = () => {
     </>
   );
 };
+
