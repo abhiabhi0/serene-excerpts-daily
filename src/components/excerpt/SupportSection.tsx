@@ -22,18 +22,8 @@ export const SupportSection = () => {
       <div className="p-4 sm:p-6 text-center">
         <h2 className="text-lg font-semibold mb-4">Support Atmanam Viddhi</h2>
         <div className="flex flex-col items-center gap-4">
-        <a 
-            href="https://ko-fi.com/A0A01ACWVK" 
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-2 bg-[#72a4f2] hover:bg-[#5d8ed9] text-white font-semibold rounded-lg transition-colors duration-200"
-          >
-            <img 
-              src="https://storage.ko-fi.com/cdn/cup-border.png"
-              alt="Ko-fi donations"
-              className="w-6 h-6"
-            />
-            Support me on Ko-fi
+          <a href="https://www.buymeacoffee.com/botman1001">
+            <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a book&emoji=📖&slug=botman1001&button_colour=BD5FFF&font_colour=ffffff&font_family=Comic&outline_colour=000000&coffee_colour=FFDD00" />
           </a>
           
           <div className="mt-4 p-4 bg-white/5 rounded-lg w-full max-w-sm">
