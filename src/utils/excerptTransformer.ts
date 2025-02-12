@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { Book, FlattenedExcerpt } from '@/types/excerpt';
 
@@ -5,8 +6,8 @@ export const transformBookToFlatExcerpts = (book: Book): FlattenedExcerpt[] => {
   return book.excerpts.map(excerpt => ({
     id: uuidv4(),
     bookTitle: book.metadata.title,
-    bookAuthor:  '',
-    translator:  '',
+    bookAuthor: book.metadata.author || '',
+    translator: book.metadata.translator || '',
     amazonLink: book.metadata.amazonLink || '',
     category: book.metadata.category || 'Spirituality',
     language: book.metadata.language || 'en',

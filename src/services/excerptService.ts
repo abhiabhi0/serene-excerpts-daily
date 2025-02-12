@@ -1,6 +1,6 @@
 
 import { ExcerptWithMeta, FlattenedExcerpt } from "@/types/excerpt";
-import { staticExcerpts } from "@/data/staticExcerpts";
+import { staticExcerpts } from "@/data/staticData";
 
 const CACHE_VERSION = '2';
 const CACHE_SIZE = 20;
@@ -130,4 +130,3 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
     amazonLink: excerpt.amazonLink
   };
 };
-
