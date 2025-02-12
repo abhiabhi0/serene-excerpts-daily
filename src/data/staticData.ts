@@ -16,3 +16,7 @@ export const availableBooks: string[] = [...new Set(staticExcerpts.map(e => e.bo
 
 // Generate unique languages
 export const availableLanguages: string[] = [...new Set(staticExcerpts.map(e => e.language))];
+
+console.log('All Static Excerpts:', staticExcerpts);
+console.log('All Books:', availableBooks);
+console.log('All Languages:', availableLanguages);

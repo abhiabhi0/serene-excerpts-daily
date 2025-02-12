@@ -53,10 +53,6 @@ async function fetchFiles() {
       excerptCount: book.excerpts.length
     }));
 
-    // Log all static data
-  console.log('All Static Excerpts:', staticExcerpts);
-  console.log('All Languages:', staticLanguages);
-  console.log('All Books:', staticBooks);
   } catch (error) {
     console.error('Error fetching files:', error);
   }
