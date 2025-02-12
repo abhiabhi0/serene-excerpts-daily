@@ -12,6 +12,7 @@ import { useState } from "react";
 export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: ExcerptCardProps) => {
   const { toast } = useToast();
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
+  const isHindi = excerpt.text.match(/[\u0900-\u097F]/); // Check for Devanagari characters
 
   const handleShare = async () => {
     const websiteUrl = "https://atmanamviddhi.in";
@@ -83,7 +84,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
         onClick={toggleScreenshotMode}
       >
         <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
-          <CardContent>
+          <CardContent className={isHindi ? 'font-hindi' : ''}>
             <ExcerptContent excerpt={excerpt} />
           </CardContent>
         </Card>
