@@ -7,7 +7,7 @@
     "generate-sitemap": "node generate-sitemap.js",
     "generate-articles-json": "node generate-articles-json.js",
     "dev": "vite",
-    "build": " npm run generate-articles-json && npm run generate-sitemap && vite build",
+    "build": "npm run generate-sitemap && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -91,6 +91,7 @@
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "vite-plugin-html-config": "^2.0.2"
   }
 }
