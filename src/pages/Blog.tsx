@@ -64,6 +64,10 @@ const Blog = () => {
       url: "/articles/excerpts_from_spanda-kārikās_the_divine_creative_pulsation.html"
     },
     {
+      title: "Excerpts from Sri Devikalottara",
+      url: "/articles/excerpts_from_sri_devikalottara.html"
+    },
+    {
       title: "Excerpts from Sri Maharshi's Way",
       url: "/articles/excerpts_from_sri_maharshi's_way,_translation_of_upadesa_saram.html"
     },
@@ -78,6 +82,22 @@ const Blog = () => {
     {
       title: "Excerpts from Tantrasāra",
       url: "/articles/excerpts_from_tantrasāra_of_abhinavagupta.html"
+    },
+    {
+      title: "Excerpts from The Book of Secrets",
+      url: "/articles/excerpts_from_the_book_of_secrets_-_112_meditations_to_discover_the_mystery_within_.html"
+    },
+    {
+      title: "Excerpts from The Collected Works of Sri Ramana Maharshi",
+      url: "/articles/excerpts_from_the_collected_works_of_sri_ramana_maharshi.html"
+    },
+    {
+      title: "Excerpts from The Vedanta Philosophy",
+      url: "/articles/excerpts_from_the_vedanta_philosophy.html"
+    },
+    {
+      title: "Excerpts from Shri Shiva Rahasya",
+      url: "/articles/excerpts_from_shri_shiva_rahasya.html"
     }
   ].sort((a, b) => a.title.localeCompare(b.title));
 
