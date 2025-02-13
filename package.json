@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "generate-sitemap": "node generate-sitemap.js",
+    "generate-articles-json": "node generate-articles-json.js",
     "dev": "vite",
-    "build": "npm run generate-sitemap && vite build",
+    "build": " npm run generate-articles-json && npm run generate-sitemap && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -47,6 +48,7 @@
     "@tanstack/react-query": "^5.56.2",
     "@types/uuid": "^10.0.0",
     "@use-gesture/react": "^10.3.1",
+    "cheerio": "^1.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -84,7 +86,7 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
-    "lovable-tagger": "^1.0.19",
+    "lovable-tagger": "^1.1.3",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
