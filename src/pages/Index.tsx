@@ -138,14 +138,28 @@ const Index = () => {
           </Tabs>
         </div>
         <footer className={`mt-8 pb-4 text-center relative z-10 transition-opacity duration-300 ${isScreenshotMode ? 'opacity-0' : 'opacity-100'}`}>
-          <a 
-            href="https://www.termsfeed.com/live/cecc03b1-3815-4a4e-b8f8-015d7679369d" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-xs text-muted-foreground hover:text-primary transition-colors"
-          >
-            Privacy Policy
-          </a>
+          <div className="flex justify-center gap-4 text-xs text-muted-foreground">
+            <a 
+              href="/about" 
+              className="hover:text-primary transition-colors"
+            >
+              About
+            </a>
+            <a 
+              href="/blog" 
+              className="hover:text-primary transition-colors"
+            >
+              Blog
+            </a>
+            <a 
+              href="https://www.termsfeed.com/live/cecc03b1-3815-4a4e-b8f8-015d7679369d" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hover:text-primary transition-colors"
+            >
+              Privacy Policy
+            </a>
+          </div>
         </footer>
       </div>
     );
