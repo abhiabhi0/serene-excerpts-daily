@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import Footer from '../components/Footer'; // Adjust the path as necessary
 
 const Blog = () => {
   const articles = 
@@ -138,12 +139,7 @@ const Blog = () => {
           ))}
         </div>
         <div className="mt-8 text-center">
-          <Link 
-            to="/"
-            className="text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            ← Back to Home
-          </Link>
+          <Footer />
         </div>
       </div>
     </div>
