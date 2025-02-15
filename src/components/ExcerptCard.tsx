@@ -79,17 +79,22 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
 
   return (
     <div className="w-[98%] mx-auto space-y-4">
-      <div 
-        className={`relative ${isScreenshotMode ? 'z-50' : ''}`}
-        onClick={toggleScreenshotMode}
-      >
-        <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
+      <div className="relative ${isScreenshotMode ? 'z-50' : ''}" onClick={toggleScreenshotMode}>
+        <style>
+          {`
+            @keyframes glowShadow {
+              0% { box-shadow: 0 0 10px 2px rgba(255,215,0,0.3); }
+              50% { box-shadow: 0 0 15px 4px rgba(255,215,0,0.5); }
+              100% { box-shadow: 0 0 10px 2px rgba(255,215,0,0.3); }
+            }
+          `}
+        </style>
+        <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm animate-[glowShadow_3s_ease-in-out_infinite]">
           <CardContent className={isHindi ? 'font-hindi' : ''}>
             <ExcerptContent excerpt={excerpt} />
           </CardContent>
         </Card>
       </div>
-
       <div className={`transition-opacity duration-300 ${isScreenshotMode ? 'opacity-0 pointer-events-none absolute' : 'opacity-100'}`}>
         {excerpt.isLocal && (
           <p className="text-center text-sm text-muted-foreground italic">
