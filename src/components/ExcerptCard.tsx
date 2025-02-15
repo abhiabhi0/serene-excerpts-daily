@@ -79,7 +79,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
 
   return (
     <div className="w-[98%] mx-auto space-y-4">
-      <div className="relative ${isScreenshotMode ? 'z-50' : ''}" onClick={toggleScreenshotMode}>
+      <div className="mt-4 relative ${isScreenshotMode ? 'z-50' : ''}" onClick={toggleScreenshotMode}>
         <style>
           {`
             @keyframes glowShadow {
