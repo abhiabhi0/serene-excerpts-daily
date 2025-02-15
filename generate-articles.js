@@ -56,15 +56,64 @@ function generateArticle(jsonData) {
         excerptCount++;
         if (excerptCount % 3 === 0) {
             html += `
-            <div class="my-8 p-6 bg-gradient-to-r from-[#1A4067] to-[#2B6CB0] rounded-lg text-center transform hover:scale-105 transition-transform">
-                <h3 class="text-xl font-bold mb-2" style="color: #FFD700;">Discover Daily Wisdom</h3>
-                <p class="text-white mb-4">Start your day with inspiring wisdom and cultivate gratitude through daily journaling</p>
-                <a href="/" class="inline-block px-6 py-2 bg-[#FFD700] text-[#1A4067] font-bold rounded-full hover:bg-opacity-90 transition-colors">
-                    Begin Your Journey
-                </a>
+            <style>
+                .ads-card {
+                    width: 90%;
+                    max-width: 600px;
+                    height: 200px;
+                    background: #07182E;
+                    position: relative;
+                    display: flex;
+                    place-content: center;
+                    place-items: center;
+                    overflow: hidden;
+                    border-radius: 20px;
+                    margin: 2rem auto;
+                }
+
+                .ads-card-content {
+                    z-index: 1;
+                    text-align: center;
+                    padding: 20px;
+                }
+
+                .ads-card::before {
+                    content: '';
+                    position: absolute;
+                    width: 150px;
+                    background-image: linear-gradient(180deg, rgb(0, 183, 255), rgb(255, 48, 255));
+                    height: 130%;
+                    animation: rotBGimg 3s linear infinite;
+                    transition: all 0.2s linear;
+                }
+
+                @keyframes rotBGimg {
+                    from {
+                        transform: rotate(0deg);
+                    }
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+
+                .ads-card::after {
+                    content: '';
+                    position: absolute;
+                    background: #07182E;
+                    inset: 5px;
+                    border-radius: 15px;
+                }
+            </style>
+            <div class="ads-card">
+                <div class="ads-card-content">
+                    <h3 class="text-xl font-bold mb-2" style="color: #FFD700;">Discover Daily Wisdom</h3>
+                    <p class="text-white mb-4">Start your day with inspiring wisdom and cultivate gratitude through daily journaling</p>
+                    <a href="/" class="inline-block px-6 py-2 bg-[#FFD700] text-[#1A4067] font-bold rounded-full hover:bg-opacity-90 transition-colors style="color: #87CEEB;">
+                        Begin Your Journey
+                    </a>
+                </div>
             </div>`;
-        }
-    });
+        }    });
     if (metadata.amazonLink) {
         html += `<p><a href="${metadata.amazonLink}" style="color: #FFD700;">Buy book on Amazon</a></p>\n`;
     }
