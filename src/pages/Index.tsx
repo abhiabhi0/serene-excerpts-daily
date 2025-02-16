@@ -109,54 +109,82 @@ const Index = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  return (
-    <div className="min-h-screen p-4 relative">
-      <BackgroundSlideshow />
-      
-      <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8 relative z-10">
-        <Tabs value={activeTab} onValueChange={(value) => {
-          setActiveTab(value);
-          setSearchParams({ tab: value });
-        }} className="w-full">
-          <TabsContainer activeTab={activeTab} />
-          <TabsContent value="random">
-            {currentExcerpt && (
-              <ExcerptCard 
-                excerpt={currentExcerpt}
-                onNewExcerpt={handleNewExcerpt}
-                onScreenshotModeChange={setIsScreenshotMode}
+  const renderContent = () => {
+    if (isScreenTooSmall && !isMobile) {
+      return (
+        <div className="min-h-screen flex items-center justify-center p-4">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold mb-2">Screen Too Small</h2>
+            <p>Please use a device with a larger screen for the best experience.</p>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="min-h-screen p-4 relative">
+        <BackgroundSlideshow />
+        
+        <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8 relative z-10">
+          {!notificationsEnabled && (
+            <div className="text-center mb-4">
+              <Button 
+                variant="outline" 
+                onClick={handleEnableNotifications}
+                className="bg-white/10 backdrop-blur-sm hover:bg-white/20"
+              >
+                <Bell className="w-4 h-4 mr-2" />
+                Enable Daily Wisdom Notifications
+              </Button>
+            </div>
+          )}
+          
+          <Tabs value={activeTab} onValueChange={(value) => {
+            setActiveTab(value);
+            setSearchParams({ tab: value });
+          }} className="w-full">
+            <TabsContainer activeTab={activeTab} />
+            <TabsContent value="random">
+              {currentExcerpt && (
+                <ExcerptCard 
+                  excerpt={currentExcerpt}
+                  onNewExcerpt={handleNewExcerpt}
+                  onScreenshotModeChange={setIsScreenshotMode}
+                />
+              )}
+              {isLoading && (
+                <div className="animate-pulse space-y-4">
+                  <div className="h-40 bg-white/5 rounded-lg"></div>
+                  <div className="h-20 bg-white/5 rounded-lg"></div>
+                </div>
+              )}
+              {isError && !currentExcerpt && (
+                <div className="text-center p-4 bg-white/5 rounded-lg">
+                  <p className="text-red-400 mb-2">Unable to load excerpt</p>
+                  <button 
+                    onClick={() => refetchRemote()} 
+                    className="text-blue-400 hover:text-blue-300"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent value="local">
+              <LocalExcerpts 
+                onSelectForDisplay={handleSelectExcerpt}
+                localExcerpts={localExcerpts}
+                setLocalExcerpts={setLocalExcerpts}
               />
-            )}
-            {isLoading && (
-              <div className="animate-pulse space-y-4">
-                <div className="h-40 bg-white/5 rounded-lg"></div>
-                <div className="h-20 bg-white/5 rounded-lg"></div>
-              </div>
-            )}
-            {isError && !currentExcerpt && (
-              <div className="text-center p-4 bg-white/5 rounded-lg">
-                <p className="text-red-400 mb-2">Unable to load excerpt</p>
-                <button 
-                  onClick={() => refetchRemote()} 
-                  className="text-blue-400 hover:text-blue-300"
-                >
-                  Try Again
-                </button>
-              </div>
-            )}
-          </TabsContent>
-          <TabsContent value="local">
-            <LocalExcerpts 
-              onSelectForDisplay={handleSelectExcerpt}
-              localExcerpts={localExcerpts}
-              setLocalExcerpts={setLocalExcerpts}
-            />
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
-  );
+    );
+  };
+
+  return renderContent();
 };
 
 export default Index;
