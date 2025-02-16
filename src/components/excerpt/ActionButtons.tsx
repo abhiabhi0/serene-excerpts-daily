@@ -32,31 +32,37 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
 
   const handleEnableNotifications = async () => {
     try {
+      // Track button click in Google Analytics
+      if (window.gtag) {
+        window.gtag('event', 'notification_button_click', {
+          'event_category': 'Engagement',
+          'event_label': 'Daily Reminder Button'
+        });
+      }
+
       const enabled = await initializeNotifications();
       if (enabled) {
         setNotificationsEnabled(true);
-        // Track subscription analytics
-        const analyticsData = {
-          event: 'notification_subscribe',
-          timestamp: new Date().toISOString(),
-          location: null as any
-        };
+        
+        // Track successful subscription in Google Analytics
+        if (window.gtag) {
+          window.gtag('event', 'notification_subscribe_success', {
+            'event_category': 'Engagement',
+            'event_label': 'Daily Reminder Enabled'
+          });
 
-        // Get user's location if they allow it
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              analyticsData.location = {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-              };
-              localStorage.setItem('notificationAnalytics', JSON.stringify(analyticsData));
-            },
-            () => {
-              // If location is denied, still save the subscription data
-              localStorage.setItem('notificationAnalytics', JSON.stringify(analyticsData));
-            }
-          );
+          // Get user's location if they allow it
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                window.gtag('event', 'notification_location', {
+                  'event_category': 'Analytics',
+                  'event_label': 'User Location',
+                  'value': `${position.coords.latitude},${position.coords.longitude}`
+                });
+              }
+            );
+          }
         }
 
         toast({
@@ -64,12 +70,13 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
           description: "You'll receive daily wisdom reminders at 11:11 AM",
         });
       } else {
-        // Track failed subscription attempt
-        const analyticsData = {
-          event: 'notification_subscribe_failed',
-          timestamp: new Date().toISOString()
-        };
-        localStorage.setItem('notificationAnalytics', JSON.stringify(analyticsData));
+        // Track failed subscription in Google Analytics
+        if (window.gtag) {
+          window.gtag('event', 'notification_subscribe_failed', {
+            'event_category': 'Engagement',
+            'event_label': 'Daily Reminder Failed'
+          });
+        }
 
         toast({
           variant: "destructive",
@@ -79,6 +86,14 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
       }
     } catch (error) {
       console.error('Error enabling notifications:', error);
+      
+      // Track error in Google Analytics
+      if (window.gtag) {
+        window.gtag('event', 'notification_error', {
+          'event_category': 'Error',
+          'event_label': error?.toString() || 'Unknown error'
+        });
+      }
     }
   };
 
