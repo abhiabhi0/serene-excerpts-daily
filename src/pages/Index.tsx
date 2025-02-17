@@ -46,6 +46,7 @@ const Index = () => {
   });
 
   const handleEnableNotifications = async () => {
+    console.log("[Index] Attempting to enable notifications...");
     const enabled = await initializeNotifications();
     if (enabled) {
       setNotificationsEnabled(true);
@@ -53,19 +54,23 @@ const Index = () => {
         title: "Notifications Enabled",
         description: "You'll receive daily wisdom reminders at 11:11 AM",
       });
+      console.log("[Index] Notifications enabled successfully");
     } else {
       toast({
         variant: "destructive",
         title: "Notifications Not Enabled",
         description: "Please allow notifications in your browser settings to receive daily reminders.",
       });
+      console.log("[Index] Failed to enable notifications");
     }
   };
 
   useEffect(() => {
     const checkNotifications = async () => {
+      console.log("[Index] Checking notification status...");
       const permission = await checkNotificationPermission();
       setNotificationsEnabled(permission);
+      console.log("[Index] Notification permission status:", permission);
     };
     checkNotifications();
   }, []);
