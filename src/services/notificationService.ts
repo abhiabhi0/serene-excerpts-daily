@@ -1,6 +1,8 @@
 
+// Extend the Window interface in the global namespace
 declare global {
-  interface Window {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface Window extends globalThis.Window {
     gtag?: (
       command: 'event',
       eventName: string,
