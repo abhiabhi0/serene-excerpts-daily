@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -12,10 +13,7 @@ import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
-import Footer from '../components/Footer';
-import { initializeNotifications, checkNotificationPermission, testNotification } from "@/services/notificationService";
-import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
+import Footer from '../components/Footer'; // Adjust the path as necessary
 
 const Index = () => {
   const { toast } = useToast();
@@ -25,7 +23,6 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
@@ -45,34 +42,6 @@ const Index = () => {
     }
   });
 
-  const handleEnableNotifications = async () => {
-    console.log("Testing notifications...");
-    const success = await testNotification();
-    if (success) {
-      setNotificationsEnabled(true);
-      toast({
-        title: "Notifications Enabled",
-        description: "You should see a test notification now",
-      });
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Notifications Not Enabled",
-        description: "Please allow notifications in your browser settings",
-      });
-    }
-  };
-
-  useEffect(() => {
-    const checkNotifications = async () => {
-      console.log("[Index] Checking notification status...");
-      const permission = await checkNotificationPermission();
-      setNotificationsEnabled(permission);
-      console.log("[Index] Notification permission status:", permission);
-    };
-    checkNotifications();
-  }, []);
-
   const convertLocalToExcerptWithMeta = (local: LocalExcerpt): ExcerptWithMeta => ({
     text: local.text,
     bookTitle: local.bookTitle,
@@ -90,7 +59,7 @@ const Index = () => {
 
   useEffect(() => {
     if (remoteExcerpt) {
-      console.log("Fetched remote excerpt:", remoteExcerpt);
+      console.log("Fetched remote excerpt:", remoteExcerpt); // Add this line
       setCurrentExcerpt(remoteExcerpt);
     }
   }, [remoteExcerpt]);
@@ -129,19 +98,6 @@ const Index = () => {
         <BackgroundSlideshow />
         
         <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8 relative z-10">
-          {!notificationsEnabled && (
-            <div className="text-center mb-4">
-              <Button 
-                variant="outline" 
-                onClick={handleEnableNotifications}
-                className="bg-white/10 backdrop-blur-sm hover:bg-white/20"
-              >
-                <Bell className="w-4 h-4 mr-2" />
-                Test Notifications
-              </Button>
-            </div>
-          )}
-          
           <Tabs value={activeTab} onValueChange={(value) => {
             setActiveTab(value);
             setSearchParams({ tab: value });
