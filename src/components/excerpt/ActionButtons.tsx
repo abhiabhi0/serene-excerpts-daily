@@ -16,8 +16,6 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
     }
   };
 
-  console.log("Amazon link:", excerpt.amazonLink, "Type:", typeof excerpt.amazonLink); // Enhanced debugging
-
   return (
     <div className="flex flex-wrap gap-4">
       <Button 
