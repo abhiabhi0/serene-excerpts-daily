@@ -13,7 +13,7 @@ import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from '../components/Footer';
-import { initializeNotifications, checkNotificationPermission } from "@/services/notificationService";
+import { initializeNotifications, checkNotificationPermission, testNotification } from "@/services/notificationService";
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
 
@@ -46,22 +46,20 @@ const Index = () => {
   });
 
   const handleEnableNotifications = async () => {
-    console.log("[Index] Attempting to enable notifications...");
-    const enabled = await initializeNotifications();
-    if (enabled) {
+    console.log("Testing notifications...");
+    const success = await testNotification();
+    if (success) {
       setNotificationsEnabled(true);
       toast({
         title: "Notifications Enabled",
-        description: "You'll receive daily wisdom reminders at 11:11 AM",
+        description: "You should see a test notification now",
       });
-      console.log("[Index] Notifications enabled successfully");
     } else {
       toast({
         variant: "destructive",
         title: "Notifications Not Enabled",
-        description: "Please allow notifications in your browser settings to receive daily reminders.",
+        description: "Please allow notifications in your browser settings",
       });
-      console.log("[Index] Failed to enable notifications");
     }
   };
 
@@ -139,7 +137,7 @@ const Index = () => {
                 className="bg-white/10 backdrop-blur-sm hover:bg-white/20"
               >
                 <Bell className="w-4 h-4 mr-2" />
-                Enable Daily Wisdom Notifications
+                Test Notifications
               </Button>
             </div>
           )}
