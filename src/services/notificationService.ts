@@ -1,32 +1,12 @@
 
-// Extend the Window interface in the global namespace
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface Window extends globalThis.Window {
-    gtag?: (
-      command: 'event',
-      eventName: string,
-      eventParams?: {
-        [key: string]: any;
-      }
-    ) => void;
-  }
-}
-
 export const checkNotificationPermission = async (): Promise<boolean> => {
   if (!("Notification" in window)) {
     console.log("This browser does not support notifications");
-    if (window.gtag) {
-      window.gtag('event', 'notification_not_supported');
-    }
     return false;
   }
 
   if (Notification.permission === "granted") {
     console.log("Notifications already granted");
-    if (window.gtag) {
-      window.gtag('event', 'notification_active_subscription');
-    }
     return true;
   }
 
@@ -34,27 +14,14 @@ export const checkNotificationPermission = async (): Promise<boolean> => {
     try {
       const permission = await Notification.requestPermission();
       console.log("Permission request response:", permission);
-      if (window.gtag) {
-        window.gtag('event', 'notification_permission_response', {
-          'permission_status': permission
-        });
-      }
       return permission === "granted";
     } catch (error) {
       console.error("Error requesting notification permission:", error);
-      if (window.gtag) {
-        window.gtag('event', 'notification_permission_error', {
-          error: error?.toString()
-        });
-      }
       return false;
     }
   }
 
   console.log("Notifications were previously denied");
-  if (window.gtag) {
-    window.gtag('event', 'notification_denied');
-  }
   return false;
 };
 
@@ -86,11 +53,6 @@ export const scheduleWisdomNotification = () => {
   }, timeUntilNotification);
 
   localStorage.setItem('lastNotificationScheduled', scheduledTime.toISOString());
-  if (window.gtag) {
-    window.gtag('event', 'notification_scheduled', {
-      'scheduled_time': scheduledTime.toISOString()
-    });
-  }
 };
 
 const sendWisdomNotification = () => {
@@ -105,27 +67,13 @@ const sendWisdomNotification = () => {
         requireInteraction: true,
       });
 
-      if (window.gtag) {
-        window.gtag('event', 'notification_sent', {
-          timestamp: new Date().toISOString()
-        });
-      }
-
       notification.onclick = () => {
         console.log("Notification clicked at:", new Date().toLocaleString());
-        if (window.gtag) {
-          window.gtag('event', 'notification_clicked');
-        }
         window.focus();
         notification.close();
       };
     } catch (error) {
       console.error("Error sending notification:", error);
-      if (window.gtag) {
-        window.gtag('event', 'notification_send_error', {
-          error: error?.toString()
-        });
-      }
     }
   }
 };
@@ -140,9 +88,6 @@ export const initializeNotifications = async () => {
       if (!lastScheduled || new Date(lastScheduled) < new Date()) {
         scheduleWisdomNotification();
       }
-      if (window.gtag) {
-        window.gtag('event', 'notifications_initialized');
-      }
       console.log("Notifications initialized successfully");
       return true;
     }
@@ -151,11 +96,6 @@ export const initializeNotifications = async () => {
     return false;
   } catch (error) {
     console.error("Error initializing notifications:", error);
-    if (window.gtag) {
-      window.gtag('event', 'notification_init_error', {
-        error: error?.toString()
-      });
-    }
     return false;
   }
 };
