@@ -13,8 +13,9 @@ import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
-import Footer from '../components/Footer'; // Adjust the path as necessary
+import Footer from '../components/Footer';
 import { Button } from '@/components/ui/button';
+
 const Index = () => {
   const { toast } = useToast();
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
@@ -89,7 +90,7 @@ const Index = () => {
         <div className="min-h-screen flex items-center justify-center p-4">
           <div className="text-center">
             <h2 className="text-xl font-semibold mb-2">Screen Too Small</h2>
-            <p>Please use a device with a larger screen for the best experience.</p>
+            <p className="text-base">Please use a device with a larger screen for the best experience.</p>
           </div>
         </div>
       );
@@ -99,13 +100,17 @@ const Index = () => {
       <div className="min-h-screen p-4 relative">
         <BackgroundSlideshow />
         
-        <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8 relative z-10">
-          <Tabs value={activeTab} onValueChange={(value) => {
-            setActiveTab(value);
-            setSearchParams({ tab: value });
-          }} className="w-full">
+        <div className="container max-w-[clamp(16rem,90vw,42rem)] mx-auto pt-8 flex flex-col gap-4 md:gap-8 relative z-10">
+          <Tabs 
+            value={activeTab} 
+            onValueChange={(value) => {
+              setActiveTab(value);
+              setSearchParams({ tab: value });
+            }} 
+            className="w-full"
+          >
             <TabsContainer activeTab={activeTab} />
-            <TabsContent value="random">
+            <TabsContent value="random" className="mt-4">
               {currentExcerpt && (
                 <ExcerptCard 
                   excerpt={currentExcerpt}
@@ -131,7 +136,7 @@ const Index = () => {
                 </div>
               )}
             </TabsContent>
-            <TabsContent value="local">
+            <TabsContent value="local" className="mt-4">
               <LocalExcerpts 
                 onSelectForDisplay={handleSelectExcerpt}
                 localExcerpts={localExcerpts}
