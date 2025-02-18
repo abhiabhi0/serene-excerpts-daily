@@ -29,16 +29,24 @@
 
   * {
     @apply border-border scroll-smooth;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   html {
-    font-size: clamp(12px, 2.5vw, 14px); /* Reduced from 14px-16px to 12px-14px */
+    font-size: 14px !important; /* Fixed base font size */
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     line-height: 1.75;
     text-rendering: optimizeLegibility;
+    font-size: 1rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -46,16 +54,23 @@
     line-height: 1.2;
   }
 
-  h1 { font-size: clamp(1.5rem, 4vw, 2rem); } /* Reduced from 1.75-2.25 to 1.5-2 */
-  h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); } /* Reduced from 1.5-2 to 1.25-1.75 */
-  h3 { font-size: clamp(1rem, 2.5vw, 1.5rem); } /* Reduced from 1.25-1.75 to 1-1.5 */
+  /* Using fixed rem values instead of clamp for more consistency */
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
 
   p, li {
-    font-size: clamp(0.75rem, 2vw, 0.875rem); /* Reduced from 0.875-1 to 0.75-0.875 */
+    font-size: 1rem;
+    min-height: 1.2em; /* Prevent text from becoming too small */
   }
 
   button, .button {
     @apply min-h-[2.5rem] min-w-[2.5rem];
+    font-size: 1rem;
+  }
+
+  input, textarea, select {
+    font-size: 16px !important; /* Prevent zoom on focus in iOS */
   }
 }
 
