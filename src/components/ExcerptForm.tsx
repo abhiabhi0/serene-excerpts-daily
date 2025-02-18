@@ -104,7 +104,7 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
   };
 
   return (
-    <Card className="w-full mx-auto bg-[#0A1929]/90 border-[#1A4067] backdrop-blur-sm shadow-lg">
+    <Card className="w-full mx-auto bg-[#0A1929] border-[#1A4067] shadow-lg">
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="w-full space-y-4">
           <div className="relative">
@@ -115,8 +115,7 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
                 value={formData.bookTitle}
                 onChange={(e) => handleBookTitleChange(e.target.value)}
                 placeholder="Search or enter book title"
-                className="flex h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                list="book-suggestions"
+                className="flex h-10 w-full rounded-md border border-input bg-background/80 pl-9 pr-3 py-2 text-sm font-medium text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
             {suggestions.length > 0 && (
@@ -124,7 +123,7 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
                 {suggestions.map((book, index) => (
                   <li
                     key={index}
-                    className="px-3 py-2 hover:bg-accent hover:text-accent-foreground cursor-pointer text-sm"
+                    className="px-3 py-2 hover:bg-accent hover:text-accent-foreground cursor-pointer text-sm font-medium"
                     onClick={() => handleBookTitleChange(book)}
                   >
                     {book}
@@ -144,7 +143,7 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
           <div className="flex gap-4">
             <Button 
               type="submit" 
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
             >
               Add Excerpt
             </Button>
