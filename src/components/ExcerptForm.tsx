@@ -1,10 +1,12 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { v4 as uuidv4 } from "uuid";
 import { FormFields } from "./excerpt/FormFields";
+import { Search } from "lucide-react";
 
 interface ExcerptFormProps {
   onSubmit: (excerpt: LocalExcerpt) => void;
@@ -22,6 +24,7 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
     language: "",
     text: "",
   });
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const findExistingBookMetadata = (bookTitle: string) => {
     console.log("Finding metadata for book:", bookTitle);
@@ -29,25 +32,39 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
     if (!savedExcerpts) return null;
     
     const excerpts: LocalExcerpt[] = JSON.parse(savedExcerpts);
-    return excerpts.find(e => e.bookTitle === bookTitle);
+    return excerpts.find(e => e.bookTitle.toLowerCase() === bookTitle.toLowerCase());
   };
 
   const handleBookTitleChange = (value: string) => {
     setFormData(prev => ({ ...prev, bookTitle: value }));
     
-    if (existingBooks.includes(value)) {
-      const existingBook = findExistingBookMetadata(value);
-      if (existingBook) {
-        console.log("Found existing book metadata:", existingBook);
-        setFormData(prev => ({
-          ...prev,
-          bookTitle: value,
-          bookAuthor: existingBook.bookAuthor || "",
-          translator: existingBook.translator || "",
-          category: existingBook.category || "",
-          language: existingBook.language || "",
-        }));
-      }
+    // Filter suggestions based on input
+    if (value.length > 0) {
+      const filtered = existingBooks.filter(book => 
+        book.toLowerCase().includes(value.toLowerCase())
+      );
+      setSuggestions(filtered);
+    } else {
+      setSuggestions([]);
+    }
+    
+    // Auto-fill if exact match found
+    const existingBook = findExistingBookMetadata(value);
+    if (existingBook) {
+      console.log("Found existing book metadata:", existingBook);
+      setFormData(prev => ({
+        ...prev,
+        bookTitle: value,
+        bookAuthor: existingBook.bookAuthor || "",
+        translator: existingBook.translator || "",
+        category: existingBook.category || "",
+        language: existingBook.language || "",
+      }));
+      
+      toast({
+        title: "Book Found",
+        description: "Book details have been automatically filled.",
+      });
     }
   };
 
@@ -83,25 +100,52 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
       language: "",
       text: "",
     });
-
-    toast({
-      title: "Success",
-      description: "Excerpt added successfully! Remember to backup your excerpts regularly.",
-    });
+    setSuggestions([]);
   };
 
   return (
-    <Card className="w-full mx-auto bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
+    <Card className="w-full mx-auto bg-[#0A1929]/90 border-[#1A4067] backdrop-blur-sm shadow-lg">
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="w-full space-y-4">
+          <div className="relative">
+            <div className="flex items-center">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={formData.bookTitle}
+                onChange={(e) => handleBookTitleChange(e.target.value)}
+                placeholder="Search or enter book title"
+                className="flex h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                list="book-suggestions"
+              />
+            </div>
+            {suggestions.length > 0 && (
+              <ul className="absolute z-10 w-full mt-1 bg-background border border-input rounded-md shadow-lg max-h-60 overflow-auto">
+                {suggestions.map((book, index) => (
+                  <li
+                    key={index}
+                    className="px-3 py-2 hover:bg-accent hover:text-accent-foreground cursor-pointer text-sm"
+                    onClick={() => handleBookTitleChange(book)}
+                  >
+                    {book}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <FormFields
             formData={formData}
             existingBooks={existingBooks}
             onBookTitleChange={handleBookTitleChange}
             onFormDataChange={handleFormDataChange}
           />
+
           <div className="flex gap-4">
-            <Button type="submit" className="w-full">
+            <Button 
+              type="submit" 
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
               Add Excerpt
             </Button>
           </div>
