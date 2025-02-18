@@ -14,9 +14,7 @@ import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from '../components/Footer'; // Adjust the path as necessary
-import { NotificationService } from '@/services/notificationService';
 import { Button } from '@/components/ui/button';
-import { Bell } from "lucide-react";
 const Index = () => {
   const { toast } = useToast();
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
@@ -25,7 +23,6 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
     queryKey: ["excerpt"],
@@ -44,33 +41,9 @@ const Index = () => {
       }
     }
   });
-    const handleEnableNotifications = async () => {
-      const granted = await NotificationService.requestPermission();
-      if (granted) {
-        setNotificationsEnabled(true);
-        NotificationService.scheduleDailyNotification();
-        toast({
-          title: "Notifications Enabled",
-          description: "You'll receive daily wisdom reminders at 11:11 AM",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Notification Permission Denied",
-          description: "Please enable notifications in your browser settings.",
-        });
-      }
-    };
 
-    useEffect(() => {
-      NotificationService.initialize();
 
-      // Check if notifications are already enabled
-      if (Notification.permission === 'granted') {
-        setNotificationsEnabled(true);
-        NotificationService.scheduleDailyNotification();
-      }
-    }, []);
+    
   const convertLocalToExcerptWithMeta = (local: LocalExcerpt): ExcerptWithMeta => ({
     text: local.text,
     bookTitle: local.bookTitle,
@@ -127,19 +100,6 @@ const Index = () => {
         <BackgroundSlideshow />
         
         <div className="container max-w-2xl mx-auto pt-8 flex flex-col gap-8 relative z-10">
-        {!notificationsEnabled && (
-            <div className="text-center mb-4">
-              <Button 
-                variant="outline" 
-                onClick={handleEnableNotifications}
-                className="bg-white/10 backdrop-blur-sm hover:bg-white/20"
-              >
-                <Bell className="w-4 h-4 mr-2" />
-                Enable Daily Wisdom Notifications
-              </Button>
-            </div>
-          )}
-          
           <Tabs value={activeTab} onValueChange={(value) => {
             setActiveTab(value);
             setSearchParams({ tab: value });
