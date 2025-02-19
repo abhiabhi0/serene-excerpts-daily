@@ -2,10 +2,11 @@
 /* articles.css */
 @import url('./index.css');
 @import url('./App.css');
+
 /* General page background with gradient */
 body {
     background: linear-gradient(to bottom right, #0A1929, #0F2942, #1A4067);
-    color: #ffffff; /* White text color for contrast */
+    color: #ffffff;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     margin: 0;
     padding: 0;
@@ -15,7 +16,7 @@ body {
 /* Ensure text is not italic */
 .excerpts-container p,
 .excerpts-container em {
-    font-style: normal; /* Override any italic styles */
+    font-style: normal;
 }
 
 /* Container for all excerpts */
@@ -44,45 +45,34 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
-/* Hover effect for cards */
+
 .card:hover {
-    transform: translateY(-5px); /* Slight lift on hover */
+    transform: translateY(-5px);
 }
 
-/* Text styles within cards */
 .card p {
     margin: 0;
-    color: #ffffff; /* White text color for contrast on dark background */
+    color: #ffffff;
     font-size: 16px;
     line-height: 1.5;
 }
 
-/* Emphasized text styles */
 .card em {
     display: block;
     margin-top: 8px;
-    font-style: normal; /* Remove italic style */
-    color: #cccccc; /* Lighter gray for emphasized text */
+    font-style: normal;
+    color: #cccccc;
 }
 
 /* Header styles */
 header {
-    background-color: #1A4067; /* Example header background color */
+    background-color: #1A4067;
     padding: 16px;
     text-align: center;
     color: #ffffff;
 }
 
-/* Footer styles */
-footer {
-    margin-top: 2rem;
-    padding-bottom: 1rem;
-    text-align: center;
-    color: #ffffff;
-    width: 100%;
-}
-
-/* Add this to the existing articles.css file */
+/* Ads card styles */
 .ads-card {
     width: 90%;
     max-width: 600px;
@@ -150,4 +140,17 @@ footer {
 footer a {
     text-decoration: none;
     transition: color 0.3s ease;
+}
+
+/* Support section styles */
+.bg-\[\#0A1929\] {
+    background-color: #0A1929;
+}
+
+.bg-\[\#1A4067\] {
+    background-color: #1A4067;
+}
+
+.hover\:bg-\[\#1A4067\]\/80:hover {
+    background-color: rgba(26, 64, 103, 0.8);
 }
