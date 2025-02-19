@@ -116,6 +116,10 @@ const Blog = () => {
     {
       "title": "Excerpts from श्रीतन्त्रालोकः",
       "url": "/articles/excerpts_from_श्रीतन्त्रालोकः.html"
+    },
+    {
+      "title": "The Mystic Hill of Illusions: A Journey Through Tripura Rahasya",
+      "url": "/articles/tripura-rahasya-ganda-hill.html"
     }
   ]
   .sort((a, b) => a.title.localeCompare(b.title));

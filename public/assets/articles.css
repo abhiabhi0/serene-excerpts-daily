@@ -150,3 +150,17 @@ footer a {
     text-decoration: none;
     transition: color 0.3s ease;
 }
+
+/* Link styles for both articles and blog posts */
+.excerpts-container a,
+.blog-container a {
+    color: #DAA520;
+    text-decoration: none;
+    border-bottom: 1px dotted #DAA520;
+    transition: border-bottom-color 0.2s ease;
+}
+
+.excerpts-container a:hover,
+.blog-container a:hover {
+    border-bottom-color: transparent;
+}
