@@ -1,3 +1,4 @@
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -49,12 +50,12 @@ export const CategoryLanguage = ({
           value={category}
           onValueChange={(value) => onFormDataChange('category', value)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="h-10 bg-[#0F1A2A] border-[#1E2A3B] text-white">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-[#0F1A2A] border-[#1E2A3B]">
             {categories.map((cat) => (
-              <SelectItem key={cat} value={cat}>
+              <SelectItem key={cat} value={cat} className="text-white hover:bg-[#1A2737] focus:bg-[#1A2737]">
                 {cat}
               </SelectItem>
             ))}
@@ -70,6 +71,7 @@ export const CategoryLanguage = ({
             value={otherCategory}
             onChange={(e) => onFormDataChange('otherCategory', e.target.value)}
             placeholder="Enter your own category (optional)"
+            className="bg-[#0F1A2A] border-[#1E2A3B] text-white"
           />
         </div>
       )}
@@ -80,26 +82,30 @@ export const CategoryLanguage = ({
           value={language}
           onValueChange={(value) => onFormDataChange('language', value)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="h-10 bg-[#0F1A2A] border-[#1E2A3B] text-white">
             <SelectValue placeholder="Select language" />
           </SelectTrigger>
-          <SelectContent className="h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500">
-            <div className="p-2 sticky top-0 bg-background border-b">
+          <SelectContent className="max-h-[300px] bg-[#0F1A2A] border-[#1E2A3B]">
+            <div className="p-2 sticky top-0 bg-[#0F1A2A] border-b border-[#1E2A3B]">
               <Input
                 placeholder="Search language..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
                 onClick={(e) => e.stopPropagation()}
-                className="mb-2"
+                className="bg-[#0F1A2A] border-[#1E2A3B] text-white h-8"
               />
             </div>
 
             {indianLanguages.length > 0 && (
               <>
-                <div className="p-2 font-semibold text-sm text-muted-foreground">Indian Languages</div>
+                <div className="px-2 py-1.5 text-sm font-semibold text-white/70">Indian Languages</div>
                 {indianLanguages.map((lang) => (
-                  <SelectItem key={lang.code} value={lang.code}>
+                  <SelectItem 
+                    key={lang.code} 
+                    value={lang.code}
+                    className="text-white hover:bg-[#1A2737] focus:bg-[#1A2737]"
+                  >
                     {lang.name}
                   </SelectItem>
                 ))}
@@ -108,9 +114,15 @@ export const CategoryLanguage = ({
             
             {internationalLanguages.length > 0 && (
               <>
-                <div className="p-2 font-semibold text-sm text-muted-foreground border-t mt-2">International Languages</div>
+                <div className="px-2 py-1.5 text-sm font-semibold text-white/70 border-t border-[#1E2A3B] mt-1">
+                  International Languages
+                </div>
                 {internationalLanguages.map((lang) => (
-                  <SelectItem key={lang.code} value={lang.code}>
+                  <SelectItem 
+                    key={lang.code} 
+                    value={lang.code}
+                    className="text-white hover:bg-[#1A2737] focus:bg-[#1A2737]"
+                  >
                     {lang.name}
                   </SelectItem>
                 ))}
@@ -118,7 +130,7 @@ export const CategoryLanguage = ({
             )}
 
             {filteredLanguages.length === 0 && (
-              <div className="p-2 text-sm text-muted-foreground text-center">
+              <div className="p-2 text-sm text-white/70 text-center">
                 No languages found
               </div>
             )}
