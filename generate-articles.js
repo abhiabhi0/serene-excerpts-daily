@@ -2,17 +2,26 @@ import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from 
 import { join, extname } from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-
+import { JSDOM } from 'jsdom';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
   function generateArticle(jsonData) {
-      console.log('Processing JSON data:', JSON.stringify(jsonData, null, 2));
-    
       const { metadata, excerpts } = jsonData;
-      if (!metadata || !excerpts) {
-          console.error('Invalid JSON structure. Expected metadata and excerpts properties.');
-          return null;
+    
+      // Get filename that will be generated
+      const articleFilename = `excerpts_from_${metadata.title.toLowerCase().replace(/\s+/g, '_')}.html`;
+      const articlePath = join(__dirname, 'public', 'articles', articleFilename);
+    
+      // Extract existing date if file exists
+      let existingDate = '';
+      if (existsSync(articlePath)) {
+          const dom = new JSDOM(readFileSync(articlePath, 'utf8'));
+          const timeElement = dom.window.document.querySelector('time');
+          existingDate = timeElement?.getAttribute('datetime') || '';
       }
+
+      // Use existing date or leave empty
+      const publishDate = existingDate;
 
       // Add these default meta values at the top of generateArticle function
       const defaultMetaDescription = "Explore spiritual wisdom, meditation insights, and philosophical excerpts from ancient texts and modern thinkers. Discover transformative ideas from Indian philosophy and beyond.";
@@ -21,7 +30,6 @@ const __dirname = dirname(__filename);
 
       // Create meta description and format date
       const metaDescription = metadata.description || excerpts[0]?.text.substring(0, 160) || '';
-      const publishDate = metadata.date ? new Date(metadata.date).toISOString() : new Date().toISOString();
     
       // Create subtitle before HTML template
       let subtitle = metadata.title;
@@ -48,7 +56,7 @@ const __dirname = dirname(__filename);
       <div class="excerpts-container w-[98%] mx-auto space-y-4">
           <h1>Excerpts from ${metadata.title}</h1>
           <h2>${subtitle}</h2>
-        
+      
           <div class="article-meta">
               <time datetime="${publishDate}">${new Date(publishDate).toLocaleDateString()}</time>
               ${metadata.tags ? `
@@ -58,8 +66,7 @@ const __dirname = dirname(__filename);
                   ).join(' ')}
               </div>
               ` : ''}
-          </div>`;      if (metadata.amazonLink) {
-          html += `<a href="${metadata.amazonLink}" style="color: #FFD700;">Buy book on Amazon</a>\n`;
+          </div>`;      if (metadata.amazonLink) {          html += `<a href="${metadata.amazonLink}" style="color: #FFD700;">Buy book on Amazon</a>\n`;
       }
 
       let excerptCount = 0;

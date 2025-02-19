@@ -6,8 +6,9 @@
   "scripts": {
     "generate-sitemap": "node generate-sitemap.js",
     "generate-articles-json": "node generate-articles-json.js",
+    "generate-tag": "node generate-tags.js",
     "dev": "vite",
-    "build": "npm run generate-sitemap && vite build",
+    "build": "npm run generate-tag && npm run generate-sitemap && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
