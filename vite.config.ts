@@ -14,11 +14,21 @@ export default defineConfig(({ mode }) => ({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  base: "./",
   server: {
-    headers: {
-      'Service-Worker-Allowed': '/'
-    },
     host: "::",
     port: 8080
-  }
+  },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        about: path.resolve(__dirname, 'about/index.html'),
+        blog: path.resolve(__dirname, 'blog/index.html')
+      }
+    }
+  },
 }));
