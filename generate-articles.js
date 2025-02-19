@@ -14,24 +14,51 @@ const __dirname = dirname(__filename);
           return null;
       }
 
+      // Add these default meta values at the top of generateArticle function
+      const defaultMetaDescription = "Explore spiritual wisdom, meditation insights, and philosophical excerpts from ancient texts and modern thinkers. Discover transformative ideas from Indian philosophy and beyond.";
+
+      const defaultKeywords = "spirituality, meditation, philosophy, indian philosophy, vedanta, buddhism, yoga, mindfulness, wisdom, consciousness, self-realization, ancient wisdom, spiritual growth, eastern philosophy";
+
+      // Create meta description and format date
+      const metaDescription = metadata.description || excerpts[0]?.text.substring(0, 160) || '';
+      const publishDate = metadata.date ? new Date(metadata.date).toISOString() : new Date().toISOString();
+    
+      // Create subtitle before HTML template
+      let subtitle = metadata.title;
+      if (metadata.author) subtitle += ` by ${metadata.author}`;
+      if (metadata.translator) subtitle += ` (Translated by ${metadata.translator})`;
+
+      // Now we can use subtitle in our HTML template
       let html = `<!DOCTYPE html>
   <html lang="${metadata.language || 'en'}">
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="${metadata.description || metaDescription || defaultMetaDescription}">
+      <meta name="keywords" content="${metadata.keywords || defaultKeywords}">
+      <meta property="og:title" content="Excerpts from ${metadata.title}">
+      <meta property="og:description" content="${metadata.description || metaDescription || defaultMetaDescription}">
+      <meta property="article:published_time" content="${publishDate}">
+      <meta property="og:type" content="article">
+      ${metadata.tags ? `<meta name="article:tag" content="${metadata.tags.join(', ')}">` : ''}
       <title>Excerpts from ${metadata.title}</title>
       <link rel="stylesheet" href="../assets/articles.css">
   </head>
   <body>
       <div class="excerpts-container w-[98%] mx-auto space-y-4">
-
-      <h1>Excerpts from ${metadata.title}</h1>`;
-
-      let subtitle = metadata.title;
-      if (metadata.author) subtitle += ` by ${metadata.author}`;
-      if (metadata.translator) subtitle += ` (Translated by ${metadata.translator})`;
-      html += `<h2>${subtitle}</h2>`;
-      if (metadata.amazonLink) {
+          <h1>Excerpts from ${metadata.title}</h1>
+          <h2>${subtitle}</h2>
+        
+          <div class="article-meta">
+              <time datetime="${publishDate}">${new Date(publishDate).toLocaleDateString()}</time>
+              ${metadata.tags ? `
+              <div class="tags">
+                  ${metadata.tags.map(tag => 
+                      `<a href="../tags/tags.html#${tag.toLowerCase().replace(/\s+/g, '_')}" class="tag">${tag}</a>`
+                  ).join(' ')}
+              </div>
+              ` : ''}
+          </div>`;      if (metadata.amazonLink) {
           html += `<a href="${metadata.amazonLink}" style="color: #FFD700;">Buy book on Amazon</a>\n`;
       }
 
