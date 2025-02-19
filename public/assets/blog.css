@@ -4,16 +4,17 @@
 
 /* Container matches excerpts-container exactly */
 .blog-container {
-  width: 100%;
+  max-width: 800px; /* Sets a maximum width for larger screens */
+  width: 100%; /* Takes full width on smaller screens */
+  margin: 0 auto; /* Centers the container */
   box-sizing: border-box;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
   gap: 16px;
   overflow-x: hidden;
 }
-
 /* Blog specific text styles while keeping article structure */
 .blog-container h1 {
   color: #DAA520;
