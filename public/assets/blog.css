@@ -1,15 +1,22 @@
+/* Import the same base styles as articles.css */
+@import url('./index.css');
+@import url('./App.css');
+
+/* Container matches excerpts-container exactly */
 .blog-container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
-  text-align: left;
-  line-height: 1.6;
-  padding: 20px;
+  width: 100%;
   box-sizing: border-box;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  overflow-x: hidden;
 }
 
+/* Blog specific text styles while keeping article structure */
 .blog-container h1 {
-  color: #DAA520; /* Golden color */
+  color: #DAA520;
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
   text-align: center;
@@ -27,49 +34,34 @@
   text-align: left;
 }
 
-.blog-container ul {
-  margin-left: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.blog-container li {
-  margin-bottom: 0.5rem;
-}
-
-.blog-container em {
-  font-style: italic;
-}
-
-.blog-container strong {
-  font-weight: 600;
-}
-
-.blog-image-container {
-    margin: 2rem 0;
-    text-align: center;
-}
-
-.blog-feature-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.image-caption {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #666;
-    font-style: italic;
-}
-
+/* Keep the same link styles as articles */
 .blog-container a {
-    color: #DAA520;
-    text-decoration: none;
-    border-bottom: 1px dotted #DAA520;
-    transition: border-bottom-color 0.2s ease;
+  color: #DAA520;
+  text-decoration: none;
+  border-bottom: 1px dotted #DAA520;
+  transition: border-bottom-color 0.2s ease;
 }
 
 .blog-container a:hover {
-    border-bottom-color: transparent;
+  border-bottom-color: transparent;
+}
+
+/* Image styles specific to blog */
+.blog-image-container {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.blog-feature-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-caption {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
 }
