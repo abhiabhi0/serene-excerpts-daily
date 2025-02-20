@@ -88,33 +88,24 @@ const __dirname = dirname(__filename);
 
           excerptCount++;
           if (excerptCount % 3 === 0) {
-              html += `
-              <div class="ads-card">
-                  <div class="ads-card-content">
-                      <h3 class="text-xl font-bold mb-2" style="color: #FFD700;">Discover Daily Wisdom</h3>
-                      <p class="text-white mb-4">Start your day with inspiring wisdom and cultivate gratitude through daily journaling</p>
-                      <a href="/" class="inline-block px-6 py-2 bg-[#FFD700] text-[#1A4067] font-bold rounded-full hover:bg-opacity-90 transition-colors style="color: #87CEEB;">
-                          Begin Your Journey
-                      </a>
-                  </div>
-              </div>`;
-          }    });
-
+              html += `<div id="ads-container"></div>`;
+          }
+      });
       if (metadata.amazonLink) {
           html += `<p><a href="${metadata.amazonLink}" style="color: #FFD700;">Buy book on Amazon</a></p>\n`;
       }
+          // Add Support and Footer sections
+          html += `
+        <div id="support-container"></div>
+        <div id="footer-container"></div>
+        </div>
+    </body>
 
-      // Add Support and Footer sections
-      html += `
-      <div class="mt-8 text-center">
-          ${readFileSync(join(__dirname, 'public', 'support.html'), 'utf8')}
-          <br>
-          ${readFileSync(join(__dirname, 'public', 'footer.html'), 'utf8')}
-      </div>`;
+    <script src="../assets/components.js"></script>
 
-      html += '</div>\n</body>\n</html>';
-      return html;
-  }
+    </html>`;
+          return html;
+      }
 function processJsonFiles() {
     const dataDir = join(__dirname, 'public', 'data');
     const articlesDir = join(__dirname, 'public', 'articles');

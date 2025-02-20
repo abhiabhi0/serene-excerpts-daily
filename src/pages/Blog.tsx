@@ -144,6 +144,11 @@ import Footer from '../components/Footer'; // Adjust the path as necessary
         "date": "2025-02-18T09:21:09.098Z"
       },
       {
+        "title": "The Wisdom of Tripura Rahasya : Obligatory Sense Towards Action Condemned and Investigation Recommended",
+        "url": "/articles/tripura-rahasya-ch-2.html",
+        "date": "2025-02-20T09:21:08.959Z"
+      },
+      {
         "title": "The Mystic Hill of Illusions: A Journey Through Tripura Rahasya ",
         "url": "/articles/tripura-rahasya-ganda-hill.html",
         "date": "2025-02-19T09:21:08.959Z"
