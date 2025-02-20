@@ -153,7 +153,7 @@ import Footer from '../components/Footer'; // Adjust the path as necessary
     return (
       <div className="min-h-screen p-4">
         <div className="container max-w-4xl mx-auto pt-8">
-          <h1 className="text-3xl font-semibold mb-8 text-left">Blog Articles</h1>
+          <h1 className="text-3xl font-semibold mb-8 text-left">Blogs</h1>
           <div className="space-y-6">
             {articles.map((article, index) => (
               <div key={index} className="p-4 bg-card rounded-lg shadow-sm hover:shadow-md transition-shadow">
