@@ -11,31 +11,35 @@ interface ExcerptListProps {
   onDelete?: (excerpt: LocalExcerpt) => void;
 }
 
+interface GroupedExcerpts {
+  [key: string]: LocalExcerpt[];
+}
+
 export const ExcerptList = ({ excerpts, onSelectForDisplay, onDelete }: ExcerptListProps) => {
-  // Group excerpts by book title
-  const groupedExcerpts = excerpts.reduce((acc, excerpt) => {
-    const bookTitle = excerpt.bookTitle || 'Untitled';
-    if (!acc[bookTitle]) {
-      acc[bookTitle] = [];
+  // Group excerpts by book title or author
+  const groupedExcerpts = excerpts.reduce((acc: GroupedExcerpts, excerpt) => {
+    const key = excerpt.bookTitle || excerpt.bookAuthor || 'Untitled';
+    if (!acc[key]) {
+      acc[key] = [];
     }
-    acc[bookTitle].push(excerpt);
+    acc[key].push(excerpt);
     return acc;
-  }, {} as Record<string, LocalExcerpt[]>);
+  }, {});
 
   return (
     <Accordion type="single" collapsible className="w-full space-y-4">
-      {Object.entries(groupedExcerpts).map(([bookTitle, bookExcerpts]) => (
+      {Object.entries(groupedExcerpts).map(([groupTitle, groupExcerpts]) => (
         <AccordionItem 
-          key={bookTitle} 
-          value={bookTitle}
+          key={groupTitle} 
+          value={groupTitle}
           className="bg-[#0A1929]/50 backdrop-blur-sm border border-[#1A4067]/30 rounded-lg overflow-hidden"
         >
           <AccordionTrigger className="px-4 hover:bg-[#1A4067]/20">
-            <span className="text-lg font-medium">{bookTitle}</span>
+            <span className="text-lg font-medium">{groupTitle}</span>
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 p-4">
-              {bookExcerpts.map((excerpt) => (
+              {groupExcerpts.map((excerpt) => (
                 <div 
                   key={excerpt.id} 
                   className="relative group flex items-start justify-between gap-4 p-2 rounded-lg hover:bg-[#1A4067]/10"

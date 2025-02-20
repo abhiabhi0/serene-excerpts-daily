@@ -26,44 +26,53 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
   });
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const findExistingBookMetadata = (bookTitle: string) => {
-    console.log("Finding metadata for book:", bookTitle);
+  const findExistingBookMetadata = (searchTerm: string) => {
     const savedExcerpts = localStorage.getItem("localExcerpts");
     if (!savedExcerpts) return null;
     
     const excerpts: LocalExcerpt[] = JSON.parse(savedExcerpts);
-    return excerpts.find(e => e.bookTitle.toLowerCase() === bookTitle.toLowerCase());
+    return excerpts.find(e => 
+      e.bookTitle.toLowerCase() === searchTerm.toLowerCase() ||
+      (e.bookAuthor && e.bookAuthor.toLowerCase() === searchTerm.toLowerCase())
+    );
   };
 
   const handleBookTitleChange = (value: string) => {
     setFormData(prev => ({ ...prev, bookTitle: value }));
     
-    // Filter suggestions based on input
+    // Filter suggestions based on input for both book titles and authors
     if (value.length > 0) {
-      const filtered = existingBooks.filter(book => 
-        book.toLowerCase().includes(value.toLowerCase())
-      );
-      setSuggestions(filtered);
+      const savedExcerpts = localStorage.getItem("localExcerpts");
+      const excerpts: LocalExcerpt[] = savedExcerpts ? JSON.parse(savedExcerpts) : [];
+      
+      const suggestions = new Set([
+        ...excerpts
+          .filter(e => e.bookTitle.toLowerCase().includes(value.toLowerCase()))
+          .map(e => e.bookTitle),
+        ...excerpts
+          .filter(e => e.bookAuthor && e.bookAuthor.toLowerCase().includes(value.toLowerCase()))
+          .map(e => e.bookAuthor)
+      ]);
+      
+      setSuggestions(Array.from(suggestions));
     } else {
       setSuggestions([]);
     }
     
-    // Auto-fill if exact match found
-    const existingBook = findExistingBookMetadata(value);
-    if (existingBook) {
-      console.log("Found existing book metadata:", existingBook);
+    const existingEntry = findExistingBookMetadata(value);
+    if (existingEntry) {
       setFormData(prev => ({
         ...prev,
-        bookTitle: value,
-        bookAuthor: existingBook.bookAuthor || "",
-        translator: existingBook.translator || "",
-        category: existingBook.category || "",
-        language: existingBook.language || "",
+        bookTitle: existingEntry.bookTitle || "",
+        bookAuthor: existingEntry.bookAuthor || "",
+        translator: existingEntry.translator || "",
+        category: existingEntry.category || "",
+        language: existingEntry.language || "",
       }));
       
       toast({
-        title: "Book Found",
-        description: "Book details have been automatically filled.",
+        title: "Details Found",
+        description: "Book/Author details have been automatically filled.",
       });
     }
   };
@@ -75,10 +84,10 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.bookTitle || !formData.category || !formData.language || !formData.text) {
+    if ((!formData.bookTitle && !formData.bookAuthor) || !formData.category || !formData.language || !formData.text) {
       toast({
         title: "Error",
-        description: "Please fill in all required fields",
+        description: "Please fill in either Book Title or Author Name, and all other required fields",
         variant: "destructive",
       });
       return;
@@ -114,19 +123,19 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
                 type="text"
                 value={formData.bookTitle}
                 onChange={(e) => handleBookTitleChange(e.target.value)}
-                placeholder="Search or enter book title"
+                placeholder="Search by book title or author name"
                 className="flex h-10 w-full rounded-md border border-[#1E2A3B] bg-[#0F1A2A] pl-9 pr-3 py-2 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-1 focus:ring-[#3B82F6] focus:border-[#3B82F6]"
               />
             </div>
             {suggestions.length > 0 && (
               <ul className="absolute z-10 w-full mt-1 bg-[#0F1A2A] border border-[#1E2A3B] rounded-md shadow-lg max-h-60 overflow-auto">
-                {suggestions.map((book, index) => (
+                {suggestions.map((suggestion, index) => (
                   <li
                     key={index}
                     className="px-3 py-2 hover:bg-[#1A2737] cursor-pointer text-sm text-white"
-                    onClick={() => handleBookTitleChange(book)}
+                    onClick={() => handleBookTitleChange(suggestion)}
                   >
-                    {book}
+                    {suggestion}
                   </li>
                 ))}
               </ul>

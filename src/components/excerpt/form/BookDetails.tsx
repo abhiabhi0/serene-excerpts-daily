@@ -1,3 +1,4 @@
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -21,12 +22,12 @@ export const BookDetails = ({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="bookTitle">Book Title *</Label>
+        <Label htmlFor="bookTitle">Book Title</Label>
         <Input
           id="bookTitle"
           value={bookTitle}
           onChange={(e) => onBookTitleChange(e.target.value)}
-          placeholder="Enter book title"
+          placeholder="Enter book title (optional if author is provided)"
           list="book-suggestions"
         />
         <datalist id="book-suggestions">
@@ -37,12 +38,12 @@ export const BookDetails = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="bookAuthor">Author Name</Label>
+        <Label htmlFor="bookAuthor">Author Name {!bookTitle && '*'}</Label>
         <Input
           id="bookAuthor"
           value={bookAuthor}
           onChange={(e) => onFormDataChange('bookAuthor', e.target.value)}
-          placeholder="Enter author name"
+          placeholder="Enter author name (required if no book title)"
         />
       </div>
 
