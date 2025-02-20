@@ -53,6 +53,23 @@ function generateArticle(jsonData) {
     ${metadata.tags ? `<meta name="article:tag" content="${metadata.tags.join(', ')}">` : ''}
     <title>Excerpts from ${metadata.title}</title>
     <link rel="stylesheet" href="../assets/articles.css">
+    <script>
+      function bringToMain(text, bookTitle) {
+        const excerpt = {
+          text: text,
+          bookTitle: bookTitle,
+          isLocal: true
+        };
+        
+        if (window.location.pathname === '/') {
+          // If we're already on the main page, use the data directly
+          window.dispatchEvent(new CustomEvent('setExcerpt', { detail: excerpt }));
+        } else {
+          // Otherwise, navigate to main page with parameters
+          window.location.href = '/?text=' + encodeURIComponent(text) + '&bookTitle=' + encodeURIComponent(bookTitle) + '&isFromArticle=true';
+        }
+      }
+    </script>
 </head>
 <body>
     <div class="excerpts-container w-[98%] mx-auto space-y-4">
@@ -68,7 +85,8 @@ function generateArticle(jsonData) {
                 ).join(' ')}
             </div>
             ` : ''}
-        </div>`;      if (metadata.amazonLink) {          html += `<a href="${metadata.amazonLink}" style="color: #FFD700;">Buy book on Amazon</a>\n`;
+        </div>`;
+      if (metadata.amazonLink) {          html += `<a href="${metadata.amazonLink}" style="color: #FFD700;">Buy book on Amazon</a>\n`;
       }
 
       let excerptCount = 0;
@@ -115,7 +133,7 @@ function generateExcerptCard(excerpt) {
 ${commentary}<p>${text}</p>${chapter}${verse}
 <button 
     class="bring-to-main" 
-    onclick="window.location.href='/?text=${encodeURIComponent(text)}&isFromArticle=true'"
+    onclick="bringToMain(${JSON.stringify(text)}, ${JSON.stringify(excerpt.bookTitle || 'Unknown')})"
 >
     <img 
         src="/lovable-uploads/ic_launcher_round.png" 
