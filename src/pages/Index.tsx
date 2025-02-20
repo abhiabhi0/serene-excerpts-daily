@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,6 +14,7 @@ import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from '../components/Footer';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const { toast } = useToast();
@@ -41,6 +43,8 @@ const Index = () => {
     }
   });
 
+
+    
   const convertLocalToExcerptWithMeta = (local: LocalExcerpt): ExcerptWithMeta => ({
     text: local.text,
     bookTitle: local.bookTitle,
@@ -58,7 +62,7 @@ const Index = () => {
 
   useEffect(() => {
     if (remoteExcerpt) {
-      console.log("Fetched remote excerpt:", remoteExcerpt);
+      console.log("Fetched remote excerpt:", remoteExcerpt); // Add this line
       setCurrentExcerpt(remoteExcerpt);
     }
   }, [remoteExcerpt]);
@@ -78,41 +82,6 @@ const Index = () => {
     window.addEventListener('resize', checkScreenSize);
     
     return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
-
-  useEffect(() => {
-    const handleSetExcerpt = (event: CustomEvent) => {
-      const excerptData = event.detail;
-      const excerptFromArticle: ExcerptWithMeta = {
-        text: excerptData.text,
-        bookTitle: excerptData.bookTitle,
-        isLocal: true
-      };
-      setCurrentExcerpt(excerptFromArticle);
-      setActiveTab('random');
-    };
-
-    window.addEventListener('setExcerpt', handleSetExcerpt as EventListener);
-
-    const params = new URLSearchParams(window.location.search);
-    const textFromArticle = params.get('text');
-    const bookTitle = params.get('bookTitle');
-    const isFromArticle = params.get('isFromArticle');
-
-    if (textFromArticle && isFromArticle === 'true') {
-      const excerptFromArticle: ExcerptWithMeta = {
-        text: textFromArticle,
-        bookTitle: bookTitle || undefined,
-        isLocal: true
-      };
-      setCurrentExcerpt(excerptFromArticle);
-      setActiveTab('random');
-      window.history.replaceState({}, '', '/');
-    }
-
-    return () => {
-      window.removeEventListener('setExcerpt', handleSetExcerpt as EventListener);
-    };
   }, []);
 
   const renderContent = () => {
