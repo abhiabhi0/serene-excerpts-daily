@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -43,8 +42,6 @@ const Index = () => {
     }
   });
 
-
-    
   const convertLocalToExcerptWithMeta = (local: LocalExcerpt): ExcerptWithMeta => ({
     text: local.text,
     bookTitle: local.bookTitle,
@@ -62,7 +59,7 @@ const Index = () => {
 
   useEffect(() => {
     if (remoteExcerpt) {
-      console.log("Fetched remote excerpt:", remoteExcerpt); // Add this line
+      console.log("Fetched remote excerpt:", remoteExcerpt);
       setCurrentExcerpt(remoteExcerpt);
     }
   }, [remoteExcerpt]);
@@ -82,6 +79,22 @@ const Index = () => {
     window.addEventListener('resize', checkScreenSize);
     
     return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const textFromArticle = params.get('text');
+    const isFromArticle = params.get('isFromArticle');
+
+    if (textFromArticle && isFromArticle === 'true') {
+      const excerptFromArticle: ExcerptWithMeta = {
+        text: textFromArticle,
+        isLocal: true
+      };
+      setCurrentExcerpt(excerptFromArticle);
+      setActiveTab('random');
+      window.history.replaceState({}, '', '/');
+    }
   }, []);
 
   const renderContent = () => {

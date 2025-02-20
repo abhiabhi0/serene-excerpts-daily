@@ -42,7 +42,10 @@ body {
     transition: transform 0.2s;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    display: flex;
+    flex-direction: column;
 }
+
 /* Hover effect for cards */
 .card:hover {
     transform: translateY(-5px); /* Slight lift on hover */
@@ -54,6 +57,7 @@ body {
     color: #ffffff; /* White text color for contrast on dark background */
     font-size: 16px;
     line-height: 1.5;
+    flex: 1;
 }
 
 /* Emphasized text styles */
@@ -183,7 +187,34 @@ footer a {
     border-radius: 15px;
     font-size: 0.9rem;
 }
-    .excerpts-container h1,
-    .excerpts-container h2 {
-        text-align: left !important;
-    }
+
+.excerpts-container h1,
+.excerpts-container h2 {
+    text-align: left !important;
+}
+
+/* Add styles for the excerpt button */
+.bring-to-main {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    background-color: #1A4067;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.bring-to-main:hover {
+    background-color: rgba(26, 64, 103, 0.8);
+}
+
+.bring-to-main img {
+    width: 1rem;
+    height: 1rem;
