@@ -19,7 +19,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
       const attribution = excerpt.bookTitle || excerpt.bookAuthor || '';
     
       // Construct share text with specific formatting
-      const shareText = `${excerpt.text}\n~ ${attribution}\n\n${websiteUrl}`;
+      const shareText = `${excerpt.text}\n\n~ ${attribution}\n\n${websiteUrl}`;
 
       try {
         // Copy to clipboard for all devices
