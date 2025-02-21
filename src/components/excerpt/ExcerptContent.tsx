@@ -21,9 +21,11 @@ export const ExcerptContent = ({ excerpt }: ExcerptContentProps) => {
         "{renderText(excerpt.text)}"
       </blockquote>
       <div className="text-sm text-muted-foreground space-y-1 text-left">
-        {excerpt.bookTitle && <p className="font-semibold">{excerpt.bookTitle}</p>}
-        {/* {excerpt.bookAuthor && <p>by {excerpt.bookAuthor}</p>}
-        {excerpt.translator && <p>translated by {excerpt.translator}</p>} */}
+        {excerpt.bookTitle ? (
+          <p className="font-semibold">{excerpt.bookTitle}</p>
+        ) : excerpt.bookAuthor ? (
+          <p className="font-semibold">~ {excerpt.bookAuthor}</p>
+        ) : null}
       </div>
       <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
         <img 
@@ -37,4 +39,3 @@ export const ExcerptContent = ({ excerpt }: ExcerptContentProps) => {
     </div>
   );
 };
-
