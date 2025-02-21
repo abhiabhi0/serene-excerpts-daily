@@ -7,9 +7,9 @@ interface TabsContainerProps {
 
 export const TabsContainer = ({ activeTab }: TabsContainerProps) => {
   return (
-    <TabsList className="grid w-full grid-cols-2 rounded-lg">
-      <TabsTrigger value="random">Today's Wisdom</TabsTrigger>
-      <TabsTrigger value="local">My Collection</TabsTrigger>
+    <TabsList className="grid w-full grid-cols-2">
+      <TabsTrigger value="random" className="h-10">Today's Wisdom</TabsTrigger>
+      <TabsTrigger value="local" className="h-10">My Collection</TabsTrigger>
     </TabsList>
   );
 };
