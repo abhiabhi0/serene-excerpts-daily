@@ -50,7 +50,15 @@ export const ExcerptList = ({ excerpts, onSelectForDisplay, onDelete }: ExcerptL
                       variant="ghost"
                       size="sm"
                       className="shrink-0 opacity-70 hover:opacity-100 transition-opacity"
-                      onClick={() => onSelectForDisplay && onSelectForDisplay(excerpt)}
+                      onClick={() => {
+                        if (onSelectForDisplay) {
+                          const displayExcerpt = {
+                            ...excerpt,
+                            bookTitle: excerpt.bookTitle || excerpt.bookAuthor
+                          };
+                          onSelectForDisplay(displayExcerpt);
+                        }
+                      }}
                     >
                       <BookOpen className="w-4 h-4" />
                     </Button>

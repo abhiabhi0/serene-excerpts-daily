@@ -124,7 +124,7 @@ export const getRandomExcerpt = async (): Promise<ExcerptWithMeta> => {
   const excerpt = await getRandomExcerptFromCache();
   return {
     text: excerpt.text,
-    bookTitle: excerpt.bookTitle,
+    bookTitle: excerpt.bookTitle || excerpt.bookAuthor, // Use author name if title is empty
     bookAuthor: excerpt.bookAuthor,
     translator: excerpt.translator,
     amazonLink: excerpt.amazonLink

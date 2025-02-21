@@ -96,6 +96,7 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
     const newExcerpt: LocalExcerpt = {
       id: uuidv4(),
       ...formData,
+      bookTitle: formData.bookTitle || formData.bookAuthor,
       createdAt: new Date().toISOString(),
     };
 
