@@ -13,62 +13,30 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
   const { toast } = useToast();
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isHindi = excerpt.text.match(/[\u0900-\u097F]/); // Check for Devanagari characters
-
-  const handleShare = async () => {
-    const websiteUrl = "https://atmanamviddhi.in";
-    const bookInfo = `${excerpt.bookTitle || ''} ${excerpt.bookAuthor ? `by ${excerpt.bookAuthor}` : ''}`.trim();
-    const shareText = `${excerpt.text}\n\n~ ${bookInfo}\n\n${websiteUrl}`;
+    const handleShare = async () => {
+      const websiteUrl = "https://atmanamviddhi.in";
+      // Get source attribution - use author only if title is empty
+      const attribution = excerpt.bookTitle || excerpt.bookAuthor || '';
     
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    console.log("Device detection:", { isMobile, userAgent: navigator.userAgent });
+      // Construct share text with specific formatting
+      const shareText = `${excerpt.text}\n~ ${attribution}\n\n${websiteUrl}`;
 
-    try {
-      if (isMobile) {
-        console.log("Attempting mobile share...");
-        try {
-          if (navigator.share) {
-            await navigator.share({
-              title: bookInfo,
-              text: excerpt.text + "\n\n~ " + bookInfo,
-              url: websiteUrl
-            });
-            console.log("Web Share API successful");
-            return;
-          }
-          
-          await Share.share({
-            title: bookInfo,
-            text: excerpt.text + "\n\n~ " + bookInfo,
-            url: websiteUrl,
-            dialogTitle: 'Share this excerpt'
-          });
-          console.log("Capacitor Share successful");
-        } catch (error) {
-          console.log("Mobile sharing failed:", error);
-          await navigator.clipboard.writeText(shareText);
-          toast({
-            title: "Text copied to clipboard",
-            description: "You can now paste and share it anywhere",
-          });
-        }
-      } else {
-        console.log("Desktop sharing: copying to clipboard");
+      try {
+        // Copy to clipboard for all devices
         await navigator.clipboard.writeText(shareText);
         toast({
           title: "Text copied to clipboard",
           description: "You can now paste and share it anywhere",
         });
+      } catch (error) {
+        console.error("Sharing failed:", error);
+        toast({
+          title: "Sharing failed", 
+          description: "Unable to copy text at this time",
+          variant: "destructive",
+        });
       }
-    } catch (error) {
-      console.error("Sharing failed:", error);
-      toast({
-        title: "Sharing failed",
-        description: "Unable to share or copy text at this time",
-        variant: "destructive",
-      });
-    }
-  };
-
+    };
   const toggleScreenshotMode = () => {
     const newMode = !isScreenshotMode;
     setIsScreenshotMode(newMode);
