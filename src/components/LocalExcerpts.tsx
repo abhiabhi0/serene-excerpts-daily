@@ -24,21 +24,17 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
     setLocalExcerpts(newExcerpts);
     
     try {
-      // Generate filename from book title
       const bookFileName = `${excerpt.bookTitle.toLowerCase().replace(/\s+/g, '-')}.json`;
       
-      // Get existing book data if it exists
       const savedBookData = localStorage.getItem(bookFileName);
       let bookData: LocalExcerptBook;
       
-      // Get existing files list
       const savedFiles = localStorage.getItem("files.json");
       const files: string[] = savedFiles ? JSON.parse(savedFiles) : [];
       
       if (savedBookData) {
         bookData = JSON.parse(savedBookData);
       } else {
-        // Create new book data structure
         bookData = {
           metadata: {
             title: excerpt.bookTitle,
@@ -53,29 +49,24 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
           excerpts: []
         };
 
-        // Update files.json if it's a new book
         if (!files.includes(bookFileName)) {
           files.push(bookFileName);
           localStorage.setItem("files.json", JSON.stringify(files));
         }
       }
 
-      // Add new excerpt
       bookData.excerpts.push({
         text: excerpt.text,
         commentary: false
       });
 
-      // Save book file
       localStorage.setItem(bookFileName, JSON.stringify(bookData));
 
-      // Update files.json if it's a new book
       if (!files.includes(bookFileName)) {
         files.push(bookFileName);
         localStorage.setItem("files.json", JSON.stringify(files));
       }
 
-      // Keep old format for backward compatibility
       localStorage.setItem("localExcerpts", JSON.stringify(newExcerpts));
 
       setIsFormOpen(false);
@@ -103,30 +94,24 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
     try {
       const bookFileName = `${excerptToDelete.bookTitle.toLowerCase().replace(/\s+/g, '-')}.json`;
       
-      // Get book data
       const savedBookData = localStorage.getItem(bookFileName);
       if (savedBookData) {
         const bookData: LocalExcerptBook = JSON.parse(savedBookData);
         
-        // Remove excerpt
         bookData.excerpts = bookData.excerpts.filter(e => e.text !== excerptToDelete.text);
         
         if (bookData.excerpts.length === 0) {
-          // If no excerpts left, remove book file from files.json
           const savedFiles = localStorage.getItem("files.json");
           if (savedFiles) {
             const files: string[] = JSON.parse(savedFiles);
             const updatedFiles = files.filter(f => f !== bookFileName);
             localStorage.setItem("files.json", JSON.stringify(updatedFiles));
           }
-          // Remove empty book file
           localStorage.removeItem(bookFileName);
         } else {
-          // Update book file with remaining excerpts
           localStorage.setItem(bookFileName, JSON.stringify(bookData));
         }
 
-        // Update local excerpts
         const updatedExcerpts = localExcerpts.filter(e => e.id !== excerptToDelete.id);
         setLocalExcerpts(updatedExcerpts);
         localStorage.setItem("localExcerpts", JSON.stringify(updatedExcerpts));
@@ -168,8 +153,8 @@ export const LocalExcerpts = ({ onSelectForDisplay, localExcerpts, setLocalExcer
               Add Excerpt
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] p-0 bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
-            <ScrollArea className="h-full max-h-[90vh] p-6">
+          <DialogContent className="w-[95%] max-w-2xl h-[90vh] p-0 bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
+            <ScrollArea className="h-full p-6 overflow-y-auto">
               <ExcerptForm 
                 onSubmit={handleSubmit}
                 existingBooks={localExcerpts.map(e => e.bookTitle).filter((value, index, self) => self.indexOf(value) === index)}
