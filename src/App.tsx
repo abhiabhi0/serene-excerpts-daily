@@ -1,25 +1,83 @@
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import About from "./pages/About";
-import Blog from "./pages/Blog";
-import { Toaster } from "@/components/ui/toaster";
-import "./App.css";
+import { lazy, Suspense } from 'react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from '@/components/ui/toaster';
 
-const queryClient = new QueryClient();
+// Lazy load pages
+const Index = lazy(() => import('./pages/Index'));
+const About = lazy(() => import('./pages/About'));
+const Blog = lazy(() => import('./pages/Blog'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="animate-pulse text-xl text-primary">Loading...</div>
+        </div>
+      }>
+        <Index />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/about',
+    element: (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="animate-pulse text-xl text-primary">Loading...</div>
+        </div>
+      }>
+        <About />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/blog',
+    element: (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="animate-pulse text-xl text-primary">Loading...</div>
+        </div>
+      }>
+        <Blog />
+      </Suspense>
+    ),
+  },
+  {
+    path: '*',
+    element: (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="animate-pulse text-xl text-primary">Loading...</div>
+        </div>
+      }>
+        <NotFound />
+      </Suspense>
+    ),
+  },
+]);
+
+// Configure Query Client with performance optimizations
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+      cacheTime: 1000 * 60 * 30, // Cache for 30 minutes
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/blog" element={<Blog />} />
-        </Routes>
-        <Toaster />
-      </Router>
+      <RouterProvider router={router} />
+      <Toaster />
     </QueryClientProvider>
   );
 }

@@ -9,19 +9,22 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Atmanam Viddhi</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFBQ1NPQF8"></script>
+    <!-- Preload key resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="script" href="https://www.googletagmanager.com/gtag/js?id=G-MFBQ1NPQF8" />
+    
+    <!-- Defer non-critical JavaScript -->
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-MFBQ1NPQF8"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-MFBQ1NPQF8');
     </script>
   </head>
   <body>
     <div id="root"></div>
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
