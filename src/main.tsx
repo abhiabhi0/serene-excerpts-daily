@@ -1,15 +1,24 @@
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-const rootElement = document.getElementById("root");
-if (!rootElement) throw new Error('Failed to find the root element');
+// Ensure DOM is ready
+const prepare = () => {
+  const rootElement = document.getElementById("root");
+  if (!rootElement) throw new Error('Failed to find the root element');
+  return rootElement;
+};
 
-const root = createRoot(rootElement);
+// Create root with error boundary
+const root = createRoot(prepare());
 
-root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+// Defer rendering to next frame for better FCP
+requestAnimationFrame(() => {
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+});
