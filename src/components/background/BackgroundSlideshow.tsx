@@ -49,13 +49,13 @@ export const BackgroundSlideshow = () => {
   return (
     <>
       <div 
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 z-[-1]"
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 z-[-1] blur-[8px] grayscale-[30%]"
         style={{
           backgroundImage: `url(${preloadedImages[currentImageIndex]})`,
-          opacity: isLoading ? 0 : 1
+          opacity: isLoading ? 0 : 1,
         }}
       />
-      <div className="fixed inset-0 bg-black/50 z-[-1]" />
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[-1]" />
     </>
   );
 };
