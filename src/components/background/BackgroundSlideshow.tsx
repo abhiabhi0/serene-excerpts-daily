@@ -7,16 +7,14 @@ export const BackgroundSlideshow = () => {
   const [preloadedImages, setPreloadedImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Preload a subset of images initially
+  // Preload all images initially
   const preloadInitialImages = useCallback(async () => {
-    const initialImagesToLoad = imagesList.slice(0, 5); // Load first 5 images
     const loadedImages: string[] = [];
 
-    for (const imagePath of initialImagesToLoad) {
+    for (const imagePath of imagesList) {
       try {
         await new Promise((resolve, reject) => {
           const img = new Image();
-          img.loading = "lazy"; // Add lazy loading
           img.onload = resolve;
           img.onerror = reject;
           img.src = imagePath;
@@ -36,45 +34,11 @@ export const BackgroundSlideshow = () => {
 
     // Rotate background every 30 seconds
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % preloadedImages.length);
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imagesList.length);
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [preloadedImages.length, preloadInitialImages]);
-
-  // Add progressive loading of remaining images
-  useEffect(() => {
-    if (!isLoading) {
-      const remainingImages = imagesList.slice(5);
-      let loadedCount = 0;
-
-      const loadNextImage = async () => {
-        if (loadedCount < remainingImages.length) {
-          const imagePath = remainingImages[loadedCount];
-          try {
-            await new Promise((resolve, reject) => {
-              const img = new Image();
-              img.loading = "lazy";
-              img.onload = resolve;
-              img.onerror = reject;
-              img.src = imagePath;
-            });
-            setPreloadedImages(prev => [...prev, imagePath]);
-            loadedCount++;
-            if (loadedCount < remainingImages.length) {
-              setTimeout(loadNextImage, 1000); // Load next image after 1 second
-            }
-          } catch (error) {
-            console.error(`Failed to load image: ${imagePath}`, error);
-            loadedCount++;
-            setTimeout(loadNextImage, 1000);
-          }
-        }
-      };
-
-      loadNextImage();
-    }
-  }, [isLoading]);
+  }, [preloadInitialImages]);
 
   if (preloadedImages.length === 0) {
     return (
