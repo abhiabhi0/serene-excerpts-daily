@@ -14,7 +14,7 @@ export const BackgroundSlideshow = () => {
     if (isPreloading.current || preloadQueue.current.length === 0) return;
     
     isPreloading.current = true;
-    const batchSize = 3;
+    const batchSize = 2; // Reduced batch size for mobile
     const batch = preloadQueue.current.slice(0, batchSize);
     
     const loadPromises = batch.map(async (imagePath) => {
@@ -40,20 +40,18 @@ export const BackgroundSlideshow = () => {
     isPreloading.current = false;
 
     if (preloadQueue.current.length > 0) {
-      setTimeout(preloadNextBatch, 1000); // Continue loading next batch after 1s
+      setTimeout(preloadNextBatch, 2000); // Increased delay for mobile
     }
   }, []);
 
   // Initialize preloading
   useEffect(() => {
     const firstImage = imagesList[0];
-    // Start with first image
     const img = new Image();
     img.onload = () => {
       setPreloadedImages([firstImage]);
       setIsLoading(false);
       
-      // Queue remaining images
       preloadQueue.current = imagesList.slice(1);
       preloadNextBatch();
     };
@@ -75,7 +73,6 @@ export const BackgroundSlideshow = () => {
     return () => clearInterval(interval);
   }, [preloadedImages.length]);
 
-  // Placeholder while loading
   if (preloadedImages.length === 0) {
     return <div className="fixed inset-0 bg-[#0A1929] z-[-1]" />;
   }
@@ -87,10 +84,26 @@ export const BackgroundSlideshow = () => {
         style={{
           backgroundImage: `url(${preloadedImages[currentImageIndex]})`,
           opacity: isLoading ? 0 : 1,
-          transform: 'translateZ(0)', // Force GPU acceleration
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          perspective: '1000px',
+          WebkitBackfaceVisibility: 'hidden',
+          WebkitPerspective: '1000px',
+          WebkitTransform: 'translate3d(0,0,0)',
+          WebkitTransformStyle: 'preserve-3d'
         }}
       />
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[-1]" />
+      <div 
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[-1]"
+        style={{
+          backfaceVisibility: 'hidden',
+          perspective: '1000px',
+          WebkitBackfaceVisibility: 'hidden',
+          WebkitPerspective: '1000px',
+          WebkitTransform: 'translate3d(0,0,0)',
+          WebkitTransformStyle: 'preserve-3d'
+        }}
+      />
     </>
   );
 };

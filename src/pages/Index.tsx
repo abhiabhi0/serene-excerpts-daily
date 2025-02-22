@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -14,7 +13,6 @@ import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from '../components/Footer';
-import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const { toast } = useToast();
@@ -43,8 +41,6 @@ const Index = () => {
     }
   });
 
-
-    
   const convertLocalToExcerptWithMeta = (local: LocalExcerpt): ExcerptWithMeta => ({
     text: local.text,
     bookTitle: local.bookTitle,
@@ -62,7 +58,6 @@ const Index = () => {
 
   useEffect(() => {
     if (remoteExcerpt) {
-      console.log("Fetched remote excerpt:", remoteExcerpt); // Add this line
       setCurrentExcerpt(remoteExcerpt);
     }
   }, [remoteExcerpt]);
