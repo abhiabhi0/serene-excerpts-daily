@@ -1,17 +1,29 @@
+
+import { lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { LocalExcerpts } from "@/components/LocalExcerpts";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { TabsContainer } from "@/components/excerpt/TabsContainer";
 import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
-import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from '../components/Footer';
+
+// Lazy load components
+const ExcerptCard = lazy(() => import('@/components/ExcerptCard'));
+const LocalExcerpts = lazy(() => import('@/components/LocalExcerpts'));
+
+// Loading fallback
+const LoadingCard = () => (
+  <div className="animate-pulse space-y-4">
+    <div className="h-40 bg-white/5 rounded-lg"></div>
+    <div className="h-20 bg-white/5 rounded-lg"></div>
+  </div>
+);
 
 const Index = () => {
   const { toast } = useToast();
@@ -28,6 +40,8 @@ const Index = () => {
     enabled: false,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+    staleTime: 5 * 60 * 1000, // Keep data fresh for 5 minutes
+    cacheTime: 30 * 60 * 1000, // Cache for 30 minutes
     meta: {
       onError: () => {
         console.error("Failed to fetch excerpt");
@@ -62,9 +76,15 @@ const Index = () => {
   }, [remoteExcerpt]);
 
   useEffect(() => {
-    if (!currentExcerpt) {
+    let mounted = true;
+    
+    if (!currentExcerpt && mounted) {
       handleNewExcerpt();
     }
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -72,10 +92,11 @@ const Index = () => {
       setIsScreenTooSmall(window.innerWidth < 320);
     };
     
+    const debouncedCheck = debounce(checkScreenSize, 100);
     checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
     
-    return () => window.removeEventListener('resize', checkScreenSize);
+    window.addEventListener('resize', debouncedCheck);
+    return () => window.removeEventListener('resize', debouncedCheck);
   }, []);
 
   const renderContent = () => {
@@ -103,37 +124,36 @@ const Index = () => {
           >
             <TabsContainer activeTab={activeTab} />
             <TabsContent value="random" className="mt-4">
-              {currentExcerpt && (
-                <ExcerptCard 
-                  excerpt={currentExcerpt}
-                  onNewExcerpt={handleNewExcerpt}
-                  onScreenshotModeChange={setIsScreenshotMode}
-                />
-              )}
-              {isLoading && (
-                <div className="animate-pulse space-y-4">
-                  <div className="h-40 bg-white/5 rounded-lg"></div>
-                  <div className="h-20 bg-white/5 rounded-lg"></div>
-                </div>
-              )}
-              {isError && !currentExcerpt && (
-                <div className="text-center p-4 bg-white/5 rounded-lg">
-                  <p className="text-red-400 mb-2">Unable to load excerpt</p>
-                  <button 
-                    onClick={() => refetchRemote()} 
-                    className="text-blue-400 hover:text-blue-300"
-                  >
-                    Try Again
-                  </button>
-                </div>
-              )}
+              <Suspense fallback={<LoadingCard />}>
+                {currentExcerpt && (
+                  <ExcerptCard 
+                    excerpt={currentExcerpt}
+                    onNewExcerpt={handleNewExcerpt}
+                    onScreenshotModeChange={setIsScreenshotMode}
+                  />
+                )}
+                {isLoading && <LoadingCard />}
+                {isError && !currentExcerpt && (
+                  <div className="text-center p-4 bg-white/5 rounded-lg">
+                    <p className="text-red-400 mb-2">Unable to load excerpt</p>
+                    <button 
+                      onClick={() => refetchRemote()} 
+                      className="text-blue-400 hover:text-blue-300"
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                )}
+              </Suspense>
             </TabsContent>
             <TabsContent value="local" className="mt-4">
-              <LocalExcerpts 
-                onSelectForDisplay={handleSelectExcerpt}
-                localExcerpts={localExcerpts}
-                setLocalExcerpts={setLocalExcerpts}
-              />
+              <Suspense fallback={<LoadingCard />}>
+                <LocalExcerpts 
+                  onSelectForDisplay={handleSelectExcerpt}
+                  localExcerpts={localExcerpts}
+                  setLocalExcerpts={setLocalExcerpts}
+                />
+              </Suspense>
             </TabsContent>
           </Tabs>
         </div>
@@ -143,6 +163,15 @@ const Index = () => {
   };
 
   return renderContent();
+};
+
+// Simple debounce utility
+const debounce = (fn: Function, ms = 300) => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return function (this: any, ...args: any[]) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), ms);
+  };
 };
 
 export default Index;

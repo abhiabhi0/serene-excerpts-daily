@@ -9,10 +9,26 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Atmanam Viddhi</title>
+    
     <!-- Preload key resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="script" href="https://www.googletagmanager.com/gtag/js?id=G-MFBQ1NPQF8" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    
+    <!-- Critical CSS inline -->
+    <style>
+      body {
+        margin: 0;
+        background: #0A1929;
+        color: #fff;
+      }
+      .initial-loader {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
     
     <!-- Defer non-critical JavaScript -->
     <script defer src="https://www.googletagmanager.com/gtag/js?id=G-MFBQ1NPQF8"></script>
@@ -20,11 +36,17 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-MFBQ1NPQF8');
+      gtag('config', 'G-MFBQ1NPQF8', {
+        send_page_view: false
+      });
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="initial-loader">
+        <div style="width: 16rem; height: 10rem; background: rgba(255,255,255,0.05); border-radius: 0.5rem;"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
