@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -78,5 +77,27 @@
 
   input, textarea, select {
     font-size: 16px !important; /* Prevent zoom on focus in iOS */
+  }
+}
+
+@layer utilities {
+  .background-animate {
+    background-size: 200%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+
+  .animate-in {
+    animation-duration: 300ms;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
   }
 }
