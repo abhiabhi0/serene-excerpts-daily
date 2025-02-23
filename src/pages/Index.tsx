@@ -13,9 +13,9 @@ import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from '../components/Footer';
 
-// Lazy load components
-const ExcerptCard = lazy(() => import('@/components/ExcerptCard'));
-const LocalExcerpts = lazy(() => import('@/components/LocalExcerpts'));
+// Lazy load components with proper type annotations
+const ExcerptCard = lazy(() => import('../components/ExcerptCard').then(module => ({ default: module.ExcerptCard })));
+const LocalExcerpts = lazy(() => import('../components/LocalExcerpts').then(module => ({ default: module.LocalExcerpts })));
 
 // Loading fallback
 const LoadingCard = () => (
@@ -40,8 +40,8 @@ const Index = () => {
     enabled: false,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-    staleTime: 5 * 60 * 1000, // Keep data fresh for 5 minutes
-    cacheTime: 30 * 60 * 1000, // Cache for 30 minutes
+    gcTime: 30 * 60 * 1000, // Modern replacement for cacheTime
+    staleTime: 5 * 60 * 1000,
     meta: {
       onError: () => {
         console.error("Failed to fetch excerpt");
