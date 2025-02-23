@@ -11,7 +11,8 @@
     "build": "npm run generate-articles-json && npm run generate-tag && npm run generate-sitemap && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "analyze": "vite build --mode production --report"
   },
   "dependencies": {
     "@capacitor/android": "^7.0.1",

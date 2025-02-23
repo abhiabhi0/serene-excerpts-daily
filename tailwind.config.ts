@@ -1,8 +1,8 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
-	darkMode: ["class"],
+	purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+	darkMode: 'class', // or 'media' or 'class'
 	content: [
 		"./pages/**/*.{ts,tsx}",
 		"./components/**/*.{ts,tsx}",
@@ -87,6 +87,9 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
 		}
+	},
+	variants: {
+		extend: {},
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
