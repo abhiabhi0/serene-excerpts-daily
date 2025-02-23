@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
 import { useToast } from "@/components/ui/use-toast";
@@ -8,13 +7,11 @@ import { LocalExcerpts } from "@/components/LocalExcerpts";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { TabsContainer } from "@/components/excerpt/TabsContainer";
-import { BackgroundSlideshow } from "@/components/background/BackgroundSlideshow";
 import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { ExcerptCard } from "@/components/ExcerptCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from '../components/Footer';
-import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const { toast } = useToast();
@@ -43,8 +40,6 @@ const Index = () => {
     }
   });
 
-
-    
   const convertLocalToExcerptWithMeta = (local: LocalExcerpt): ExcerptWithMeta => ({
     text: local.text,
     bookTitle: local.bookTitle,
@@ -62,7 +57,6 @@ const Index = () => {
 
   useEffect(() => {
     if (remoteExcerpt) {
-      console.log("Fetched remote excerpt:", remoteExcerpt); // Add this line
       setCurrentExcerpt(remoteExcerpt);
     }
   }, [remoteExcerpt]);
@@ -97,9 +91,7 @@ const Index = () => {
     }
 
     return (
-      <div className="min-h-screen p-4 relative">
-        <BackgroundSlideshow />
-        
+      <div className="min-h-screen p-4 relative bg-[#0A1929]">
         <div className="container max-w-[clamp(16rem,90vw,42rem)] mx-auto pt-8 flex flex-col gap-4 md:gap-8 relative z-10">
           <Tabs 
             value={activeTab} 
