@@ -1,4 +1,3 @@
-
 export interface LocalExcerptMetadata {
   title: string;
   author?: string;
@@ -32,6 +31,7 @@ export interface LocalExcerpt {
   language: string;
   text: string;
   createdAt: string;
+  type?: 'user-created' | 'favorite'; // To distinguish between user uploads and favorites
 }
 
 export const categories = [

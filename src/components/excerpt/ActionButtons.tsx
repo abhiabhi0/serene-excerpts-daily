@@ -1,15 +1,23 @@
 
 import { Button } from "@/components/ui/button";
-import { Share as ShareIcon, ShoppingCart } from "lucide-react";
+import { Share as ShareIcon, ShoppingCart, Heart } from "lucide-react";
 import { ExcerptWithMeta } from "@/types/excerpt";
 
 interface ActionButtonsProps {
   excerpt: ExcerptWithMeta;
   onShare: () => void;
   onNewExcerpt: () => void;
+  onToggleFavorite: () => void;
+  isFavorite: boolean;
 }
 
-export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsProps) => {
+export const ActionButtons = ({ 
+  excerpt, 
+  onShare, 
+  onNewExcerpt,
+  onToggleFavorite,
+  isFavorite 
+}: ActionButtonsProps) => {
   const handleBuyBook = () => {
     if (excerpt.amazonLink) {
       window.open(excerpt.amazonLink, '_blank');
@@ -31,12 +39,20 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
         New Excerpt
       </Button>
       <Button 
-        variant="secondary"
+        variant="ghost"
         className="flex-1 min-w-[140px]"
         onClick={onShare}
       >
         <ShareIcon className="w-4 h-4 mr-2" />
         Share
+      </Button>
+      <Button
+        variant="ghost"
+        className={`flex-1 min-w-[140px] ${isFavorite ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'}`}
+        onClick={onToggleFavorite}
+      >
+        <Heart className={`w-4 h-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} />
+        {isFavorite ? 'Favorited' : 'Favorite'}
       </Button>
       {excerpt.amazonLink && excerpt.amazonLink !== "" && (
         <Button 
@@ -51,4 +67,3 @@ export const ActionButtons = ({ excerpt, onShare, onNewExcerpt }: ActionButtonsP
     </div>
   );
 };
-

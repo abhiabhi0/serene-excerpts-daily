@@ -1,5 +1,5 @@
 
-import { ExcerptWithMeta, ExcerptCardProps } from "@/types/excerpt";
+import { ExcerptWithMeta } from "@/types/excerpt";
 import { Card, CardContent } from "@/components/ui/card";
 import { Share } from '@capacitor/share';
 import { useToast } from "@/components/ui/use-toast";
@@ -7,36 +7,101 @@ import { ExcerptContent } from "./excerpt/ExcerptContent";
 import { ActionButtons } from "./excerpt/ActionButtons";
 import { SupportSection } from "./excerpt/SupportSection";
 import { GratitudeAffirmations } from "./excerpt/GratitudeAffirmations";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
+
+interface ExcerptCardProps {
+  excerpt: ExcerptWithMeta;
+  onNewExcerpt: () => void;
+  onScreenshotModeChange?: (mode: boolean) => void;
+}
 
 export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: ExcerptCardProps) => {
   const { toast } = useToast();
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
-  const isHindi = excerpt.text.match(/[\u0900-\u097F]/); // Check for Devanagari characters
-    const handleShare = async () => {
-      const websiteUrl = "https://atmanamviddhi.in";
-      // Get source attribution - use author only if title is empty
-      const attribution = excerpt.bookTitle || excerpt.bookAuthor || '';
-    
-      // Construct share text with specific formatting
-      const shareText = `${excerpt.text}\n\n~ ${attribution}\n\n${websiteUrl}`;
+  const [isFavorite, setIsFavorite] = useState(false);
+  const isHindi = excerpt.text.match(/[\u0900-\u097F]/);
 
-      try {
-        // Copy to clipboard for all devices
-        await navigator.clipboard.writeText(shareText);
-        toast({
-          title: "Text copied to clipboard",
-          description: "You can now paste and share it anywhere",
-        });
-      } catch (error) {
-        console.error("Sharing failed:", error);
-        toast({
-          title: "Sharing failed", 
-          description: "Unable to copy text at this time",
-          variant: "destructive",
-        });
-      }
-    };
+  useEffect(() => {
+    // Check if excerpt is in favorites
+    const favorites = JSON.parse(localStorage.getItem('favoriteExcerpts') || '[]');
+    const isFav = favorites.some((fav: ExcerptWithMeta) => fav.text === excerpt.text);
+    setIsFavorite(isFav);
+  }, [excerpt]);
+
+  const handleShare = async () => {
+    const websiteUrl = "https://atmanamviddhi.in";
+    const attribution = excerpt.bookTitle || excerpt.bookAuthor || '';
+    const shareText = `${excerpt.text}\n\n~ ${attribution}\n\n${websiteUrl}`;
+
+    try {
+      await navigator.clipboard.writeText(shareText);
+      toast({
+        title: "Text copied to clipboard",
+        description: "You can now paste and share it anywhere",
+      });
+    } catch (error) {
+      console.error("Sharing failed:", error);
+      toast({
+        title: "Sharing failed", 
+        description: "Unable to copy text at this time",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleToggleFavorite = () => {
+    const favorites = JSON.parse(localStorage.getItem('favoriteExcerpts') || '[]');
+    
+    if (isFavorite) {
+      // Remove from favorites
+      const updatedFavorites = favorites.filter((fav: ExcerptWithMeta) => fav.text !== excerpt.text);
+      localStorage.setItem('favoriteExcerpts', JSON.stringify(updatedFavorites));
+      setIsFavorite(false);
+      
+      // Remove from local excerpts if it was added as a favorite
+      const localExcerpts = JSON.parse(localStorage.getItem('localExcerpts') || '[]');
+      const updatedLocalExcerpts = localExcerpts.filter((ex: any) => 
+        !(ex.text === excerpt.text && ex.type === 'favorite')
+      );
+      localStorage.setItem('localExcerpts', JSON.stringify(updatedLocalExcerpts));
+      
+      toast({
+        title: "Removed from favorites",
+        description: "Excerpt has been removed from your collection",
+      });
+    } else {
+      // Add to favorites
+      const favoriteExcerpt = {
+        ...excerpt,
+        id: excerpt.id || uuidv4(),
+        isFavorite: true
+      };
+      localStorage.setItem('favoriteExcerpts', JSON.stringify([...favorites, favoriteExcerpt]));
+      setIsFavorite(true);
+
+      // Add to local excerpts as a favorite
+      const localExcerpt = {
+        id: favoriteExcerpt.id,
+        bookTitle: excerpt.bookTitle || 'Unknown',
+        bookAuthor: excerpt.bookAuthor,
+        text: excerpt.text,
+        category: 'Favorites',
+        language: 'en',
+        createdAt: new Date().toISOString(),
+        type: 'favorite' as const
+      };
+
+      const localExcerpts = JSON.parse(localStorage.getItem('localExcerpts') || '[]');
+      localStorage.setItem('localExcerpts', JSON.stringify([...localExcerpts, localExcerpt]));
+
+      toast({
+        title: "Added to favorites",
+        description: "Excerpt has been added to your collection",
+      });
+    }
+  };
+
   const toggleScreenshotMode = () => {
     const newMode = !isScreenshotMode;
     setIsScreenshotMode(newMode);
@@ -47,7 +112,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
 
   return (
     <div className="w-[98%] mx-auto space-y-4">
-      <div className="mt-4 relative ${isScreenshotMode ? 'z-50' : ''}" onClick={toggleScreenshotMode}>
+      <div className="mt-4 relative" onClick={toggleScreenshotMode}>
         <style>
           {`
             @keyframes glowShadow {
@@ -76,6 +141,8 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
               excerpt={excerpt}
               onShare={handleShare}
               onNewExcerpt={onNewExcerpt}
+              onToggleFavorite={handleToggleFavorite}
+              isFavorite={isFavorite}
             />
           </CardContent>
         </Card>

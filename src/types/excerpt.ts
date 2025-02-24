@@ -1,4 +1,3 @@
-
 export interface ExcerptWithMeta {
   text: string;
   bookTitle?: string;
@@ -6,6 +5,8 @@ export interface ExcerptWithMeta {
   translator?: string;
   amazonLink?: string;
   isLocal?: boolean;
+  isFavorite?: boolean;
+  id?: string; // To track favorites
 }
 
 export interface Book {
