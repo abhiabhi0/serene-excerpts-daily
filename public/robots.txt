@@ -1,5 +1,19 @@
-
 User-agent: *
 Allow: /
+Allow: /blog
+Allow: /about
+Allow: /articles/
 
+# Sitemaps
 Sitemap: https://atmanamviddhi.in/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 10
+
+# Disallow patterns
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*.js$
+Disallow: /*.css$
