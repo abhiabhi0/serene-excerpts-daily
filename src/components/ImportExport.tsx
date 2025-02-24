@@ -1,9 +1,9 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Download, Upload } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+
 import { LocalExcerpt } from "@/types/localExcerpt";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { useToast } from "./ui/use-toast";
 
 interface ImportExportProps {
   excerpts: LocalExcerpt[];
@@ -14,86 +14,96 @@ export const ImportExport = ({ excerpts, onImport }: ImportExportProps) => {
   const { toast } = useToast();
 
   const handleExport = () => {
-    const dataStr = JSON.stringify(excerpts, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'my-excerpts.json';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    try {
+      const dataStr = JSON.stringify(excerpts, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', 'atmanamviddhidotin_mycollections.json');
+      document.body.appendChild(linkElement);
+      linkElement.click();
+      document.body.removeChild(linkElement);
+
+      toast({
+        title: "Export successful",
+        description: "Your collection has been downloaded",
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: "Export failed",
+        description: "Unable to export collection",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const importedExcerpts = JSON.parse(e.target?.result as string);
-        if (Array.isArray(importedExcerpts) && importedExcerpts.every(isValidExcerpt)) {
-          onImport(importedExcerpts);
-          toast({
-            title: "Success",
-            description: "Excerpts imported successfully!",
-          });
-        } else {
-          throw new Error("Invalid format");
+      const text = await file.text();
+      const importedExcerpts = JSON.parse(text);
+
+      // Update favorite status in localStorage for all imported excerpts
+      const favorites = JSON.parse(localStorage.getItem('favoriteExcerpts') || '[]');
+      importedExcerpts.forEach((excerpt: LocalExcerpt) => {
+        if (excerpt.type === 'favorite') {
+          const favoriteExcerpt = {
+            text: excerpt.text,
+            bookTitle: excerpt.bookTitle,
+            bookAuthor: excerpt.bookAuthor,
+            id: excerpt.id,
+            isFavorite: true
+          };
+          if (!favorites.some((fav: any) => fav.id === excerpt.id)) {
+            favorites.push(favoriteExcerpt);
+          }
         }
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Invalid file format",
-          variant: "destructive",
-        });
-      }
-    };
-    reader.readAsText(file);
-  };
+      });
+      localStorage.setItem('favoriteExcerpts', JSON.stringify(favorites));
 
-  const isValidExcerpt = (excerpt: any): excerpt is LocalExcerpt => {
-    return typeof excerpt.id === 'string' &&
-           typeof excerpt.bookTitle === 'string' &&
-           typeof excerpt.category === 'string' &&
-           typeof excerpt.language === 'string' &&
-           typeof excerpt.text === 'string' &&
-           typeof excerpt.createdAt === 'string';
+      onImport(importedExcerpts);
+      toast({
+        title: "Import successful",
+        description: "Your collection has been imported",
+      });
+    } catch (error) {
+      console.error('Import error:', error);
+      toast({
+        title: "Import failed",
+        description: "Unable to import collection",
+        variant: "destructive",
+      });
+    }
+    // Reset input
+    event.target.value = '';
   };
 
   return (
-    <Card className="w-full bg-[#0A1929] border-[#1A4067]/30 backdrop-blur-sm">
-      <CardContent className="p-6">
-        <div className="flex flex-col sm:flex-row gap-4 w-full">
-          <Button 
-            onClick={handleExport}
-            className="flex-1"
-            variant="outline"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Export Excerpts
-          </Button>
-          <div className="flex-1">
-            <Input
-              type="file"
-              accept=".json"
-              onChange={handleImport}
-              className="hidden"
-              id="import-file"
-            />
-            <Button 
-              onClick={() => document.getElementById('import-file')?.click()}
-              className="w-full"
-              variant="outline"
-            >
-              <Upload className="w-4 h-4 mr-2" />
-              Import Excerpts
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      <div>
+        <Button 
+          variant="outline" 
+          onClick={handleExport}
+          className="w-full"
+        >
+          Export Collection
+        </Button>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="importFile">Import Collection</Label>
+        <Input
+          id="importFile"
+          type="file"
+          accept=".json"
+          onChange={handleImport}
+          className="cursor-pointer"
+        />
+      </div>
+    </div>
   );
 };

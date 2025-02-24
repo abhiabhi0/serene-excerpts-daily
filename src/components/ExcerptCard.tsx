@@ -23,9 +23,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
   const isHindi = excerpt.text.match(/[\u0900-\u097F]/);
 
   useEffect(() => {
-    // Check if excerpt is in favorites
+    // Check if excerpt is in favorites by id or text
     const favorites = JSON.parse(localStorage.getItem('favoriteExcerpts') || '[]');
-    const isFav = favorites.some((fav: ExcerptWithMeta) => fav.text === excerpt.text);
+    const isFav = favorites.some((fav: ExcerptWithMeta) => 
+      (excerpt.id && fav.id === excerpt.id) || fav.text === excerpt.text
+    );
     setIsFavorite(isFav);
   }, [excerpt]);
 
@@ -55,7 +57,9 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
     
     if (isFavorite) {
       // Remove from favorites
-      const updatedFavorites = favorites.filter((fav: ExcerptWithMeta) => fav.text !== excerpt.text);
+      const updatedFavorites = favorites.filter((fav: ExcerptWithMeta) => 
+        !((excerpt.id && fav.id === excerpt.id) || fav.text === excerpt.text)
+      );
       localStorage.setItem('favoriteExcerpts', JSON.stringify(updatedFavorites));
       setIsFavorite(false);
       
@@ -85,8 +89,9 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
         id: favoriteExcerpt.id,
         bookTitle: excerpt.bookTitle || 'Unknown',
         bookAuthor: excerpt.bookAuthor,
+        translator: excerpt.translator,
         text: excerpt.text,
-        category: 'Favorites',
+        category: excerpt.bookTitle || 'Favorites',
         language: 'en',
         createdAt: new Date().toISOString(),
         type: 'favorite' as const
@@ -124,7 +129,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
         </style>
         <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm animate-[glowShadow_3s_ease-in-out_infinite]">
           <CardContent className={isHindi ? 'font-hindi' : ''}>
-            <ExcerptContent excerpt={excerpt} />
+            <ExcerptContent 
+              excerpt={excerpt} 
+              isFavorite={isFavorite}
+              onToggleFavorite={handleToggleFavorite}
+            />
           </CardContent>
         </Card>
       </div>

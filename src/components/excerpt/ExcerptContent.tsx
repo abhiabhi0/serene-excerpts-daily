@@ -1,11 +1,14 @@
 
 import { ExcerptWithMeta } from "@/types/excerpt";
+import { Heart } from "lucide-react";
 
 interface ExcerptContentProps {
   excerpt: ExcerptWithMeta;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 }
 
-export const ExcerptContent = ({ excerpt }: ExcerptContentProps) => {
+export const ExcerptContent = ({ excerpt, isFavorite, onToggleFavorite }: ExcerptContentProps) => {
   const renderText = (text: string) => {
     return text.split('\n').map((line, index) => (
       <span key={index}>
@@ -28,13 +31,26 @@ export const ExcerptContent = ({ excerpt }: ExcerptContentProps) => {
         ) : null}
       </div>
       <div className="mt-6 pt-4 border-t border-[#1A4067]/30 text-sm text-center text-muted-foreground">
-        <img 
-          src="/lovable-uploads/ic_launcher_round.png" 
-          alt="Atmanam Viddhi Logo" 
-          className="w-8 h-8 mx-auto mb-2"
-        />
-        <p className="font-semibold">Atmanam Viddhi - Know Thyself</p>
-        <p className="mt-1">atmanamviddhi.in</p>
+        <div className="flex flex-col items-center">
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite();
+            }}
+            className={`mb-2 p-2 rounded-full hover:bg-white/10 transition-colors ${
+              isFavorite ? 'text-red-500 hover:text-red-600' : 'text-gray-400 hover:text-red-500'
+            }`}
+          >
+            <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
+          </button>
+          <img 
+            src="/lovable-uploads/ic_launcher_round.png" 
+            alt="Atmanam Viddhi Logo" 
+            className="w-8 h-8 mx-auto mb-2"
+          />
+          <p className="font-semibold">Atmanam Viddhi - Know Thyself</p>
+          <p className="mt-1">atmanamviddhi.in</p>
+        </div>
       </div>
     </div>
   );
