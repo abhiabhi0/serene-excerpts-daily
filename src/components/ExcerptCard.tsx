@@ -1,3 +1,4 @@
+
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { Card, CardContent } from "@/components/ui/card";
 import { Share } from '@capacitor/share';
@@ -36,21 +37,23 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
     const shareText = `${excerpt.text}\n\n~ ${attribution}\n\n${websiteUrl}`;
 
     try {
-      // Try using the Share API for mobile devices
+      // First copy to clipboard
+      await navigator.clipboard.writeText(shareText);
+      toast({
+        title: "Text copied to clipboard",
+        description: "You can now paste and share it anywhere",
+      });
+
+      // Then show share dialog
       await Share.share({
         text: shareText,
         dialogTitle: 'Share Excerpt',
       });
     } catch (error) {
-      // Fallback to clipboard if Share API is not available
-      try {
-        await navigator.clipboard.writeText(shareText);
-        toast({
-          title: "Text copied to clipboard",
-          description: "You can now paste and share it anywhere",
-        });
-      } catch (clipboardError) {
-        console.error("Sharing failed:", clipboardError);
+      console.error("Sharing failed:", error);
+      // Even if share dialog fails, clipboard copy might have worked
+      // Only show error if clipboard copy also failed
+      if (!navigator.clipboard) {
         toast({
           title: "Sharing failed", 
           description: "Unable to share at this time",
@@ -62,6 +65,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
 
   const handleToggleFavorite = () => {
     const favorites = JSON.parse(localStorage.getItem('favoriteExcerpts') || '[]');
+    const localExcerpts = JSON.parse(localStorage.getItem('localExcerpts') || '[]');
     
     if (isFavorite) {
       // Remove from favorites
@@ -72,7 +76,6 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
       setIsFavorite(false);
       
       // Remove from local excerpts if it was added as a favorite
-      const localExcerpts = JSON.parse(localStorage.getItem('localExcerpts') || '[]');
       const updatedLocalExcerpts = localExcerpts.filter((ex: any) => 
         !(ex.text === excerpt.text && ex.type === 'favorite')
       );
@@ -105,8 +108,21 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
         type: 'favorite' as const
       };
 
-      const localExcerpts = JSON.parse(localStorage.getItem('localExcerpts') || '[]');
-      localStorage.setItem('localExcerpts', JSON.stringify([...localExcerpts, localExcerpt]));
+      // Check if excerpt already exists in local excerpts (for backward compatibility)
+      const existingIndex = localExcerpts.findIndex((ex: any) => ex.text === excerpt.text);
+      if (existingIndex === -1) {
+        // Add new excerpt with favorite type
+        localStorage.setItem('localExcerpts', JSON.stringify([...localExcerpts, localExcerpt]));
+      } else {
+        // Update existing excerpt to include favorite type if it doesn't have it
+        const updatedExcerpts = [...localExcerpts];
+        updatedExcerpts[existingIndex] = {
+          ...updatedExcerpts[existingIndex],
+          type: 'favorite',
+          id: localExcerpt.id
+        };
+        localStorage.setItem('localExcerpts', JSON.stringify(updatedExcerpts));
+      }
 
       toast({
         title: "Added to favorites",
