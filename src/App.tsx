@@ -3,8 +3,6 @@ import { lazy, Suspense, useEffect } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
-//import { migrateLocalExcerpts } from './utils/storage';
-import { checkAndRefreshVersion } from './utils/versionCheck';
 
 // Lazy load pages
 const Index = lazy(() => import('./pages/Index'));
@@ -75,12 +73,7 @@ const queryClient = new QueryClient({
   },
 });
 
-  function App() {
-    useEffect(() => {
-      //migrateLocalExcerpts();
-      checkAndRefreshVersion();
-    }, []);
-
+  function App() {;
     return (
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
