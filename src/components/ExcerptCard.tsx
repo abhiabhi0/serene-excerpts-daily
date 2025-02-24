@@ -1,4 +1,3 @@
-
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { Card, CardContent } from "@/components/ui/card";
 import { Share } from '@capacitor/share';
@@ -37,18 +36,27 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
     const shareText = `${excerpt.text}\n\n~ ${attribution}\n\n${websiteUrl}`;
 
     try {
-      await navigator.clipboard.writeText(shareText);
-      toast({
-        title: "Text copied to clipboard",
-        description: "You can now paste and share it anywhere",
+      // Try using the Share API for mobile devices
+      await Share.share({
+        text: shareText,
+        dialogTitle: 'Share Excerpt',
       });
     } catch (error) {
-      console.error("Sharing failed:", error);
-      toast({
-        title: "Sharing failed", 
-        description: "Unable to copy text at this time",
-        variant: "destructive",
-      });
+      // Fallback to clipboard if Share API is not available
+      try {
+        await navigator.clipboard.writeText(shareText);
+        toast({
+          title: "Text copied to clipboard",
+          description: "You can now paste and share it anywhere",
+        });
+      } catch (clipboardError) {
+        console.error("Sharing failed:", clipboardError);
+        toast({
+          title: "Sharing failed", 
+          description: "Unable to share at this time",
+          variant: "destructive",
+        });
+      }
     }
   };
 
