@@ -84,6 +84,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
       toast({
         title: "Removed from favorites",
         description: "Excerpt has been removed from your collection",
+        className: "bottom-0 right-0 flex fixed md:max-w-[420px] md:bottom-4 md:right-4"
       });
     } else {
       // Add to favorites
@@ -127,6 +128,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
       toast({
         title: "Added to favorites",
         description: "Excerpt has been added to your collection",
+        className: "bottom-0 right-0 flex fixed md:max-w-[420px] md:bottom-4 md:right-4"
       });
     }
   };

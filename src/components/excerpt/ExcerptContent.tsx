@@ -20,6 +20,20 @@ export const ExcerptContent = ({ excerpt, isFavorite, onToggleFavorite }: Excerp
 
   return (
     <div className="pt-6 px-4">
+      <style>
+        {`
+          @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+          }
+          .heart-beat {
+            animation: heartbeat 1s ease-in-out;
+          }
+        `}
+      </style>
       <blockquote className="text-lg mb-4 leading-relaxed text-left">
         "{renderText(excerpt.text)}"
       </blockquote>
@@ -41,7 +55,9 @@ export const ExcerptContent = ({ excerpt, isFavorite, onToggleFavorite }: Excerp
               isFavorite ? 'text-red-500 hover:text-red-600' : 'text-gray-400 hover:text-red-500'
             }`}
           >
-            <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
+            <Heart 
+              className={`w-6 h-6 ${isFavorite ? 'fill-current heart-beat' : ''}`} 
+            />
           </button>
           <div className="flex flex-col items-center">
             <img 
