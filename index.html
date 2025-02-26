@@ -40,14 +40,15 @@
         }
       </style>
     
-      <!-- Defer non-critical JavaScript -->
-      <script defer src="https://www.googletagmanager.com/gtag/js?id=G-MFBQ1NPQF8"></script>
+      <!-- In the <head> section, remove defer -->
+      <script src="https://www.googletagmanager.com/gtag/js?id=G-MFBQ1NPQF8"></script>
       <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-MFBQ1NPQF8');
       </script>
+
     </head>
     <body>
       <div id="root">
