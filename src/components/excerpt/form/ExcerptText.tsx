@@ -5,14 +5,16 @@ import { Textarea } from "@/components/ui/textarea";
 interface ExcerptTextProps {
   text: string;
   onFormDataChange: (field: string, value: string) => void;
+  textareaRef?: React.RefObject<HTMLTextAreaElement>;
 }
 
-export const ExcerptText = ({ text, onFormDataChange }: ExcerptTextProps) => {
+export const ExcerptText = ({ text, onFormDataChange, textareaRef }: ExcerptTextProps) => {
   return (
     <div className="space-y-2">
       <Label htmlFor="text" className="text-white">Excerpt *</Label>
       <Textarea
         id="text"
+        ref={textareaRef}
         value={text}
         onChange={(e) => onFormDataChange('text', e.target.value)}
         placeholder="Enter your excerpt"
@@ -21,4 +23,3 @@ export const ExcerptText = ({ text, onFormDataChange }: ExcerptTextProps) => {
     </div>
   );
 };
-

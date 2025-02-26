@@ -1,3 +1,4 @@
+
 import { BookDetails } from "./form/BookDetails";
 import { CategoryLanguage } from "./form/CategoryLanguage";
 import { ExcerptText } from "./form/ExcerptText";
@@ -15,6 +16,7 @@ interface FormFieldsProps {
   existingBooks: string[];
   onBookTitleChange: (value: string) => void;
   onFormDataChange: (field: string, value: string) => void;
+  textareaRef?: React.RefObject<HTMLTextAreaElement>;
 }
 
 export const FormFields = ({
@@ -22,6 +24,7 @@ export const FormFields = ({
   existingBooks,
   onBookTitleChange,
   onFormDataChange,
+  textareaRef
 }: FormFieldsProps) => {
   return (
     <div className="space-y-6">
@@ -42,6 +45,7 @@ export const FormFields = ({
       <ExcerptText
         text={formData.text}
         onFormDataChange={onFormDataChange}
+        textareaRef={textareaRef}
       />
     </div>
   );

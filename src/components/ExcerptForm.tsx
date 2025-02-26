@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { v4 as uuidv4 } from "uuid";
 import { FormFields } from "./excerpt/FormFields";
 import { Search } from "lucide-react";
+import { useOptimizedScroll } from "@/hooks/useOptimizedScroll";
 
 interface ExcerptFormProps {
   onSubmit: (excerpt: LocalExcerpt) => void;
@@ -15,6 +16,9 @@ interface ExcerptFormProps {
 
 export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
   const { toast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const optimizedScroll = useOptimizedScroll();
   const [formData, setFormData] = useState({
     bookTitle: "",
     bookAuthor: "",
@@ -25,6 +29,34 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
     text: "",
   });
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Check if keyboard is likely visible (more than 30% of screen height reduced)
+      const heightChange = window.innerHeight / window.outerHeight;
+      setIsKeyboardVisible(heightChange < 0.7);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Handle focus on textarea
+  useEffect(() => {
+    const handleFocus = () => {
+      if (textareaRef.current) {
+        // Wait for keyboard to appear
+        setTimeout(() => {
+          optimizedScroll(textareaRef.current, -100);
+        }, 300);
+      }
+    };
+
+    const textarea = textareaRef.current;
+    textarea?.addEventListener('focus', handleFocus);
+    return () => textarea?.removeEventListener('focus', handleFocus);
+  }, [optimizedScroll]);
 
   const findExistingBookMetadata = (searchTerm: string) => {
     const savedExcerpts = localStorage.getItem("localExcerpts");
@@ -40,7 +72,6 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
   const handleBookTitleChange = (value: string) => {
     setFormData(prev => ({ ...prev, bookTitle: value }));
     
-    // Filter suggestions based on input for both book titles and authors
     if (value.length > 0) {
       const savedExcerpts = localStorage.getItem("localExcerpts");
       const excerpts: LocalExcerpt[] = savedExcerpts ? JSON.parse(savedExcerpts) : [];
@@ -114,9 +145,11 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
   };
 
   return (
-    <Card className="w-full mx-auto bg-[#0F1A2A] border-[#1E2A3B] shadow-lg">
-      <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="w-full space-y-4">
+    <Card className={`w-full mx-auto bg-[#0F1A2A] border-[#1E2A3B] shadow-lg ${
+      isKeyboardVisible ? 'mb-[40vh]' : ''
+    }`}>
+      <CardContent className="pt-6 overflow-y-auto max-h-[80vh]">
+        <form ref={formRef} onSubmit={handleSubmit} className="w-full space-y-4">
           <div className="relative">
             <div className="flex items-center">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/50" />
@@ -148,6 +181,7 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
             existingBooks={existingBooks}
             onBookTitleChange={handleBookTitleChange}
             onFormDataChange={handleFormDataChange}
+            textareaRef={textareaRef}
           />
 
           <div className="flex gap-4">
