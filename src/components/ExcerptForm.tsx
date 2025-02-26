@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,20 +32,27 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
 
   useEffect(() => {
     const handleResize = () => {
-      // Check if keyboard is likely visible (more than 30% of screen height reduced)
-      const heightChange = window.innerHeight / window.outerHeight;
-      setIsKeyboardVisible(heightChange < 0.7);
+      const viewportHeight = window.innerHeight;
+      const keyboardHeight = window.outerHeight - viewportHeight;
+      const isKeyboardOpen = keyboardHeight > 150; // Threshold for keyboard presence
+
+      if (isKeyboardOpen && textareaRef.current) {
+        textareaRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }
+
+      setIsKeyboardVisible(isKeyboardOpen);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.visualViewport?.addEventListener('resize', handleResize);
+    return () => window.visualViewport?.removeEventListener('resize', handleResize);
   }, []);
 
-  // Handle focus on textarea
   useEffect(() => {
     const handleFocus = () => {
       if (textareaRef.current) {
-        // Wait for keyboard to appear
         setTimeout(() => {
           optimizedScroll(textareaRef.current, -100);
         }, 300);
@@ -146,10 +152,19 @@ export const ExcerptForm = ({ onSubmit, existingBooks }: ExcerptFormProps) => {
 
   return (
     <Card className={`w-full mx-auto bg-[#0F1A2A] border-[#1E2A3B] shadow-lg ${
-      isKeyboardVisible ? 'mb-[40vh]' : ''
+      isKeyboardVisible ? 'mb-[40vh] pb-[env(safe-area-inset-bottom)]' : ''
     }`}>
-      <CardContent className="pt-6 overflow-y-auto max-h-[80vh]">
-        <form ref={formRef} onSubmit={handleSubmit} className="w-full space-y-4">
+      <CardContent className="pt-6 overflow-y-auto max-h-[80vh]" style={{ 
+        paddingBottom: isKeyboardVisible ? 'env(safe-area-inset-bottom)' : undefined 
+      }}>
+        <form 
+          ref={formRef} 
+          onSubmit={handleSubmit} 
+          className="w-full space-y-4"
+          style={{
+            minHeight: isKeyboardVisible ? 'calc(100vh - 60vh)' : undefined,
+          }}
+        >
           <div className="relative">
             <div className="flex items-center">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/50" />

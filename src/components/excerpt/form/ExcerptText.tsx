@@ -1,6 +1,7 @@
 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useEffect } from "react";
 
 interface ExcerptTextProps {
   text: string;
@@ -9,6 +10,24 @@ interface ExcerptTextProps {
 }
 
 export const ExcerptText = ({ text, onFormDataChange, textareaRef }: ExcerptTextProps) => {
+  useEffect(() => {
+    const handleFocus = () => {
+      if (textareaRef?.current) {
+        // Small delay to ensure keyboard is fully shown
+        setTimeout(() => {
+          textareaRef.current?.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }, 300);
+      }
+    };
+
+    const textarea = textareaRef?.current;
+    textarea?.addEventListener('focus', handleFocus);
+    return () => textarea?.removeEventListener('focus', handleFocus);
+  }, [textareaRef]);
+
   return (
     <div className="space-y-2">
       <Label htmlFor="text" className="text-white">Excerpt *</Label>
