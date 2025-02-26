@@ -96,7 +96,7 @@ const __dirname = dirname(__filename);
 
           excerptCount++;
           if (excerptCount % 3 === 0) {
-              html += `<div id="ads-container"></div>`;
+              html += `<div class="ads-container"></div>`;
           }
       });
       if (metadata.amazonLink) {
