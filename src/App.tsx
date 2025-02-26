@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">Loading...</div>
+          <div className="animate-pulse text-xl text-primary">ॐ</div>
         </div>
       }>
         <Index />
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">Loading...</div>
+          <div className="animate-pulse text-xl text-primary">ॐ</div>
         </div>
       }>
         <About />
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">Loading...</div>
+          <div className="animate-pulse text-xl text-primary">ॐ</div>
         </div>
       }>
         <Blog />
@@ -52,7 +52,7 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">Loading...</div>
+          <div className="animate-pulse text-xl text-primary">ॐ</div>
         </div>
       }>
         <NotFound />
