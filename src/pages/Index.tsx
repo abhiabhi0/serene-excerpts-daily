@@ -1,3 +1,4 @@
+
 import { lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getRandomExcerpt } from "@/services/excerptService";
@@ -6,11 +7,13 @@ import { useState, useEffect } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
-import { TabsContainer } from "@/components/excerpt/TabsContainer";
+import { TabsContainer } from "@/components/TabsContainer";
 import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from '../components/Footer';
+import { ThemeSelector } from "@/components/ThemeSelector";
+import { availableThemes } from "@/data/staticData";
 
 const ExcerptCard = lazy(() => 
   Promise.all([
@@ -45,10 +48,11 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
 
   const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
-    queryKey: ["excerpt"],
-    queryFn: getRandomExcerpt,
+    queryKey: ["excerpt", selectedTheme],
+    queryFn: () => getRandomExcerpt(selectedTheme),
     enabled: false,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
@@ -79,6 +83,12 @@ const Index = () => {
   const handleSelectExcerpt = (excerpt: LocalExcerpt) => {
     setCurrentExcerpt(convertLocalToExcerptWithMeta(excerpt));
     setSearchParams({ tab: 'random' });
+  };
+
+  const handleThemeSelect = (theme: string | null) => {
+    setSelectedTheme(theme);
+    setCurrentExcerpt(null);
+    refetchRemote();
   };
 
   useEffect(() => {
@@ -123,6 +133,12 @@ const Index = () => {
     return (
       <div className="min-h-screen p-4 relative bg-[#0A1929]">
         <div className="container max-w-[clamp(16rem,90vw,42rem)] mx-auto pt-8 flex flex-col gap-4 md:gap-8 relative z-10">
+          <ThemeSelector 
+            themes={availableThemes} 
+            selectedTheme={selectedTheme} 
+            onThemeSelect={handleThemeSelect}
+          />
+          
           <Tabs 
             value={activeTab} 
             onValueChange={(value) => {

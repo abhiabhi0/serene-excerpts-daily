@@ -1,3 +1,4 @@
+
 export interface ExcerptWithMeta {
   text: string;
   bookTitle?: string;
@@ -6,7 +7,8 @@ export interface ExcerptWithMeta {
   amazonLink?: string;
   isLocal?: boolean;
   isFavorite?: boolean;
-  id?: string; // To track favorites
+  id?: string;
+  themes?: string[];
 }
 
 export interface Book {
@@ -24,6 +26,7 @@ export interface Book {
     chapter?: string;
     verse?: string;
     commentary?: boolean;
+    themes?: string[];
   }[];
 }
 
@@ -44,4 +47,5 @@ export interface FlattenedExcerpt {
   text: string;
   createdAt: string;
   amazonLink?: string;
+  themes?: string[];
 }
