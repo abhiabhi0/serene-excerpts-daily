@@ -13,31 +13,36 @@
             "text": "When all-pervading consciousness\nshines in the mind constantly,\nwithout interruption,\nthen the yogi attains himself.",
             "chapter": "2",
             "verse": "30",
-            "commentary": false
+            "commentary": false,
+            "themes": ["Restlessness", "Confusion", "Awareness", "Consciousness", "Self Knowledge"]
         },
         {
             "text": "Here on earth, rivers and streams\nbecome one with the ocean.\nLikewise the self becomes one\nwith imperishable, undivided brahman.",
             "chapter": "2",
             "verse": "37",
-            "commentary": false
+            "commentary": false,
+            "themes": ["Loneliness", "Separation", "Unity", "Oneness", "Transcendence"] 
         },
         {
             "text": "all the universes that will be,\nand the things inside of them,\nalways fulfill the order\nof the supreme, highest self.",
             "chapter": "6",
             "verse": "45",
-            "commentary": false
+            "commentary": false,
+            "themes": ["Uncertainty", "Meaninglessness", "Purpose", "Divine Nature", "Harmony"]
         },
         {
             "text": "Concentration is fixing the mind\non a place such as the heart-lotus,\nthe navel, the forehead,\nor the peak of a mountain.",
             "chapter": "11",
             "verse": "39",
-            "commentary": false
+            "commentary": false,
+            "themes": ["Restlessness", "Anxiety", "Presence", "Stillness", "Clarity"]
         },
         {
             "text": "The intellect's continued activity\nresting in a single place, unmixed\nwith other mental activity,\nis what the wise know as meditation.",
             "chapter": "11",
             "verse": "40",
-            "commentary": false
+            "commentary": false,
+            "themes": ["Confusion", "Overwhelm", "Clarity", "Stillness", "Awareness"]
         }
     ]
 }
