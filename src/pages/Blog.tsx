@@ -162,7 +162,12 @@ import Footer from '../components/Footer'; // Adjust the path as necessary
     "title": "Wisdom of Tripura Rahasya : The Fruits of Satsanga",
     "url": "/articles/tripura-rahasya-ch-4.html",
     "date": "2025-02-25T09:21:08.959Z"
-  }
+  },
+  {
+    "title": "Understanding Bondage and Liberation: Insights from Chapter V of Tripura Rahasya",
+    "url": "/articles/tripura-rahasya-ch-5.html",
+    "date": "2025-02-27T09:21:08.959Z"
+  },
 ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
