@@ -23,6 +23,7 @@ export const getRandomExcerpt = async (theme: string | null = null): Promise<Exc
     bookTitle: selectedExcerpt.bookTitle,
     bookAuthor: selectedExcerpt.bookAuthor,
     translator: selectedExcerpt.translator,
-    amazonLink: selectedExcerpt.amazonLink
+    amazonLink: selectedExcerpt.amazonLink,
+    themes: selectedExcerpt.themes // Add themes to returned excerpt
   };
 };
