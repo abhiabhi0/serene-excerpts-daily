@@ -14,7 +14,7 @@
             "chapter": "2",
             "verse": "30",
             "commentary": false,
-            "themes": ["Anxiety", "Uncertainty", "Awareness", "Consciousness", "Self Knowledge"]
+            "themes": ["Awareness", "Consciousness", "Self Knowledge"]
         },
         {
             "text": "Here on earth, rivers and streams\nbecome one with the ocean.\nLikewise the self becomes one\nwith imperishable, undivided brahman.",
@@ -35,14 +35,14 @@
             "chapter": "11",
             "verse": "39",
             "commentary": false,
-            "themes": ["Anxiety", "Anxiety",  "Divine Nature"]
+            "themes": ["Anxiety",  "Divine Nature"]
         },
         {
             "text": "The intellect's continued activity\nresting in a single place, unmixed\nwith other mental activity,\nis what the wise know as meditation.",
             "chapter": "11",
             "verse": "40",
             "commentary": false,
-            "themes": ["Uncertainty", "Anxiety",  "Divine Nature", "Awareness"]
+            "themes": ["Uncertainty", "Divine Nature", "Awareness"]
         }
     ]
 }

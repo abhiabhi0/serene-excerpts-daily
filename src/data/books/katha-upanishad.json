@@ -14,49 +14,49 @@
             "section": "2",
             "chapter": "2",
             "verse": "11",
-            "themes": ["Suffering", "Attachment",  "Detachment", "Divine Nature"]
+            "themes": ["Attachment",  "Detachment", "Divine Nature"]
         },
         {
             "text": "The intelligent man gives up happiness and sorrow by developing concentration of mind on the Self and thereby meditating on the old Deity who is inscrutable, lodged inaccessibly, located in the intellect, and seated in the midst of misery.",
             "section": "2",
             "chapter": "1",
             "verse": "12",
-            "themes": ["Suffering", "Attachment", "Detachment",   "Self Knowledge"]
+            "themes": ["Attachment", "Detachment", "Self Knowledge"]
         },
         {
             "text": "The Self that is subtler than the subtle and greater than the great is lodged in the heart of (every) creature. A desireless man sees that glory of the Self through the serenity of the organs, and (thereby he becomes) free from sorrow.",
             "section": "2",
             "chapter": "1",
             "verse": "20",
-            "themes": ["Suffering", "Attachment", "Inner Peace", "Self Knowledge", "Detachment", "Divine Nature"]
+            "themes": ["Inner Peace", "Self Knowledge", "Divine Nature"]
         },
         {
             "text": "This Self cannot be known through much study, nor through the intellect, nor through much hearing. It can be known through the Self alone that the aspirant prays to; this Self of that seeker reveals Its true nature.",
             "section": "2",
             "chapter": "1",
             "verse": "23",
-            "themes": ["Uncertainty", "Uncertainty", "Uncertainty", "Self Knowledge", "Surrender", "Divine Nature"]
+            "themes": ["Self Knowledge", "Surrender", "Divine Nature"]
         },
         {
             "text": "(Know the individual) Self as the master of the chariot, and the body as the chariot. Know the intellect as the charioteer, and the mind as verily the bridle.",
             "section": "3",
             "chapter": "1",
             "verse": "3",
-            "themes": ["Uncertainty", "Anxiety", "Self Knowledge", "Wisdom", "Awareness"]
+            "themes": ["Anxiety", "Self Knowledge", "Wisdom"]
         },
         {
             "text": "The man, however, who has as his charioteer a discriminating intellect, and who has under control the reins of the mind, attains the end of the road; and that is the highest place of Visnu",
             "section": "3",
             "chapter": "1",
             "verse": "9",
-            "themes": ["Anxiety", "Anxiety", "Wisdom", "Self Knowledge",  "Awakening"]
+            "themes": ["Anxiety", "Wisdom", "Self Knowledge",  "Awakening"]
         },
         {
             "text": "He is hidden in all beings; and hence He does not appear as the Self (of all). But by the seers of subtle things, He is seen through a pointed and fine intellect.",
             "section": "",
             "chapter": "",
             "verse": "",
-            "themes": ["Uncertainty", "Uncertainty", "Wisdom", "Self Knowledge", "Divine Nature", "Awareness"]
+            "themes": ["Uncertainty", "Wisdom", "Self Knowledge", "Divine Nature", "Awareness"]
         },
         {
             "text": "O Gautama, as pure water poured on pure water becomes verily the same, so also does become the Self of the man of knowledge who is given to deAwakening (on the Self).",
@@ -70,7 +70,7 @@
             "section": "3",
             "chapter": "2",
             "verse": "10",
-            "themes": ["Anxiety", "Anxiety", "Divine Nature", "Inner Peace", "Awakening"]
+            "themes": ["Anxiety", "Divine Nature", "Inner Peace", "Awakening"]
         }
     ]
 }

@@ -56,14 +56,14 @@
             "chapter": "",
             "verse": "31",
             "commentary": false,
-            "themes": ["Uncertainty", "Uncertainty",  "Divine Nature", "Surrender"]
+            "themes": ["Uncertainty",   "Divine Nature", "Surrender"]
         },
         {
             "text": "He who hath recognized the Brahma-randhra as the shrine of the Self-God,\nHe who hath known the Unobstructed Sound borne upon the breath (that riseth from the heart) unto the nose,\nHis vain imaginings of themselves have fled far away,\nAnd he himself (recognizeth) himself as the God. To whom else, therefore, should, he offer worship?",
             "chapter": "",
             "verse": "33",
             "commentary": false,
-            "themes": ["Uncertainty", "Uncertainty", "Self Knowledge", "Divine Nature", "Consciousness"]
+            "themes": [ "Uncertainty", "Self Knowledge", "Divine Nature", "Consciousness"]
         },
         {
             "text": "Whate'er work I did, that was worship.\nWhate'er I uttered with my tongue, that was\na mystic formula.\nThis recognition, and this alone, became one with my body,\nThat this alone is the essence of the scriptures of the Supreme Śiva.",
@@ -112,7 +112,7 @@
             "chapter": "",
             "verse": "103",
             "commentary": false,
-            "themes": ["Suffering",   "Awakening", "Awakening"]
+            "themes": ["Suffering",   "Awakening"]
         }
     ]
 }
