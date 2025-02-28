@@ -53,6 +53,12 @@ async function fetchFiles() {
       excerptCount: book.excerpts.length
     }));
 
+    // Add after staticExcerpts is populated in fetchFiles function
+    console.log(`Total excerpts loaded: ${staticExcerpts.length}`);
+    console.log('Themes available in excerpts:', 
+      Array.from(new Set(staticExcerpts.flatMap(e => e.themes || []))).filter(Boolean)
+    );
+
   } catch (error) {
     console.error('Error fetching files:', error);
   }

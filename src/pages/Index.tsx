@@ -84,28 +84,31 @@ const Index = () => {
     setCurrentExcerpt(convertLocalToExcerptWithMeta(excerpt));
     setSearchParams({ tab: 'random' });
   };
-
-  const handleThemeSelect = (theme: string | null) => {
-    setSelectedTheme(theme);
-    setCurrentExcerpt(null);
-    refetchRemote();
-  };
-
-  useEffect(() => {
-    const preloadData = async () => {
-      if (!currentExcerpt) {
-        await refetchRemote();
-      }
+    const handleThemeSelect = (theme: string | null) => {
+      console.log('Theme selection changed to:', theme ? `"${theme}"` : 'null (All)');
+      setSelectedTheme(theme);
+      setCurrentExcerpt(null);
+      
+      // Pass the theme directly to refetchRemote to avoid closure issues
+      setTimeout(() => refetchRemote(), 0);
     };
-    preloadData();
-  }, []);
 
-  useEffect(() => {
-    if (remoteExcerpt) {
-      setCurrentExcerpt(remoteExcerpt);
-    }
-  }, [remoteExcerpt]);
+    useEffect(() => {
+      const preloadData = async () => {
+        if (!currentExcerpt) {
+          console.log('Initial data load with theme:', selectedTheme ? `"${selectedTheme}"` : 'null (All)');
+          await refetchRemote();
+        }
+      };
+      preloadData();
+    }, []);
 
+    useEffect(() => {
+      if (remoteExcerpt) {
+        console.log('Setting current excerpt with theme:', selectedTheme ? `"${selectedTheme}"` : 'null (All)');
+        setCurrentExcerpt(remoteExcerpt);
+      }
+    }, [remoteExcerpt]);
   useEffect(() => {
     const checkScreenSize = () => {
       setIsScreenTooSmall(window.innerWidth < 320);
