@@ -12,7 +12,7 @@ import { useTabNavigation } from "@/hooks/useTabNavigation";
 import { useLocalExcerpts } from "@/hooks/useLocalExcerpts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from '../components/Footer';
-//import { ThemeSelector } from "@/components/ThemeSelector";
+import { ThemeSelector } from "@/components/ThemeSelector";
 import { availableThemes } from "@/data/staticData";
 
 const ExcerptCard = lazy(() => 
@@ -133,11 +133,11 @@ const Index = () => {
     return (
       <div className="min-h-screen p-4 relative bg-[#0A1929]">
         <div className="container max-w-[clamp(16rem,90vw,42rem)] mx-auto pt-8 flex flex-col gap-4 md:gap-8 relative z-10">
-          {/* <ThemeSelector 
+          {<ThemeSelector 
             themes={availableThemes} 
             selectedTheme={selectedTheme} 
             onThemeSelect={handleThemeSelect}
-          /> */}
+          />}
           
           <Tabs 
             value={activeTab} 
