@@ -20,7 +20,16 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
       setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 5); // 5px buffer
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1); // Reduced buffer for better detection
+      
+      // Debug log
+      console.log({
+        scrollLeft,
+        scrollWidth,
+        clientWidth,
+        diff: scrollWidth - clientWidth,
+        showRight: scrollLeft < scrollWidth - clientWidth - 1
+      });
     }
   };
 
@@ -37,7 +46,9 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
 
   // Set up initial scroll check and listeners
   useEffect(() => {
-    checkScroll();
+    // Initial check needs to wait for render to complete
+    setTimeout(checkScroll, 100);
+    
     const scrollContainer = scrollContainerRef.current;
     
     if (scrollContainer) {
@@ -45,13 +56,28 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
       window.addEventListener('resize', checkScroll);
     }
     
+    // Create a ResizeObserver to detect content changes
+    const resizeObserver = new ResizeObserver(() => {
+      checkScroll();
+    });
+    
+    if (scrollContainer) {
+      resizeObserver.observe(scrollContainer);
+    }
+    
     return () => {
       if (scrollContainer) {
         scrollContainer.removeEventListener('scroll', checkScroll);
+        resizeObserver.disconnect();
       }
       window.removeEventListener('resize', checkScroll);
     };
   }, []);
+
+  // Force check when themes change
+  useEffect(() => {
+    setTimeout(checkScroll, 100);
+  }, [themes]);
 
   return (
     <div className="w-full relative">
@@ -101,8 +127,8 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
         <ScrollBar orientation="horizontal" className="invisible" />
       </ScrollArea>
       
-      {/* Right scroll arrow */}
-      {showRightArrow && (
+      {/* Right scroll arrow - force it to show initially if there are enough themes */}
+      {(showRightArrow || themes.length > 5) && (
         <button 
           onClick={() => scroll('right')}
           className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-[#0A1929]/80 hover:bg-[#1E2A3B] rounded-full p-1 shadow-md"
