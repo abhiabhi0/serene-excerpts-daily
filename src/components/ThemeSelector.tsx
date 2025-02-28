@@ -33,10 +33,12 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
     }
   };
 
-  // Handle scroll buttons
+  // Handle scroll buttons - scroll approximately the width of two theme buttons
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 200; // Adjust as needed
+      // Average theme button width (including margin) is around 120px
+      // Scroll by approximately 2 theme buttons
+      const scrollAmount = 240; 
       scrollContainerRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
