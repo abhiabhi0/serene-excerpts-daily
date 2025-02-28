@@ -14,7 +14,7 @@
             "chapter": "1",
             "verse": "11",
             "commentary": false,
-            "themes": ["Depression",  "Paradox"]
+            "themes": ["Wisdom", "Paradox", "Uncertainty"]
         },
         {
             "text": "They regard each other as their own Self,\nAnd neither creates so much as a blade of grass without the other.",
@@ -49,7 +49,7 @@
             "chapter": "1",
             "verse": "45",
             "commentary": false,
-            "themes": ["Uncertainty",  "Transcendence"]
+            "themes": ["Uncertainty"]
         },
         {
             "text": "So long as Unity is undisturbed,\nAnd a graceful pleasure is thereby derived,\nWhy should not the water find delight\nIn the floral fragrance of its own rippled surface?",
@@ -98,7 +98,7 @@
             "chapter": "5",
             "verse": "41",
             "commentary": false,
-            "themes": ["Uncertainty", "Potential", "Divine Nature"]
+            "themes": ["Uncertainty", "Divine Nature"]
         },
         {
             "text": "Only those who are able to see\nTheir own faces without a mirror\nAre capable of understanding\nThe secret of the self-reflecting Reality. ",
@@ -224,7 +224,7 @@
             "chapter": "7",
             "verse": "185",
             "commentary": false,
-            "themes": ["Uncertainty",  "Presence"]
+            "themes": ["Uncertainty"]
         },
         {
             "text": "There is really no action or inaction;\nEverything that is happening\nIs the sport of the Self.",

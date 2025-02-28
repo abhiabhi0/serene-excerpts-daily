@@ -21,14 +21,14 @@
             "section": "",
             "chapter": "",
             "verse": "",
-            "themes": ["Ignorance", "Uncertainty", "Wisdom",  "Awareness"]
+            "themes": [ "Uncertainty", "Wisdom",  "Awareness"]
         },
         {
             "text": "He who thinks \"I am the body\" remains, alas! in ignorance, as also he who thinks \"this body is mine\", as if he were always looking at an earthen vessel belonging to him.",
             "section": "",
             "chapter": "",
             "verse": "",
-            "themes": ["Attachment", "Ignorance", "Self Knowledge", "Awareness"]
+            "themes": ["Attachment", "Self Knowledge", "Awareness"]
         },
         {
             "text": "A dream becomes unreal in the waking state; nor does the waking state exist in dream. Both dream and waking are absent in sleep,and sleep too is absent in dream and in waking.",
@@ -77,7 +77,7 @@
             "section": "",
             "chapter": "",
             "verse": "",
-            "themes": ["Ignorance", "Uncertainty", "Wisdom", "Awakening", "Self Knowledge"]
+            "themes": [ "Uncertainty", "Wisdom", "Awakening", "Self Knowledge"]
         },
         {
             "text": "Passions, desires, happiness, misery, etc., exercise their function when the consciousness is present, and do not exist in deep sleep when the consciousness is absent. They belong, therefore, to the consciousness and not to the self.",
@@ -98,7 +98,7 @@
             "section": "",
             "chapter": "",
             "verse": "",
-            "themes": ["Uncertainty", "Ignorance",   "Wisdom"]
+            "themes": ["Uncertainty",   "Wisdom"]
         }
     ]
 }

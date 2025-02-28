@@ -28,7 +28,7 @@
             "section": "",
             "chapter": "2",
             "verse": "4",
-            "themes": ["Separation",  "Unity"]
+            "themes": ["Creation"]
         },
         {
             "text": "How wonderful! In me, the shoreless ocean, the waves of individual selves rise, strike (each other), play (for a time) and disappear, each according to its nature.",
@@ -56,7 +56,7 @@
             "section": "",
             "chapter": "5",
             "verse": "2",
-            "themes": ["Separation",  "Transcendence"]
+            "themes": ["Self Knowledge"]
         },
         {
             "text": "That I am like the ocean and the phenomenal universe is like the wave. This is Knowledge. So it has neither to be renounced nor accepted nor destroyed. ",
@@ -175,7 +175,7 @@
             "section": "",
             "chapter": "18",
             "verse": "64",
-            "themes": ["Attachment", "Detachment", "Purity"]
+            "themes": ["Attachment", "Detachment"]
         }
     ]
 }

@@ -21,7 +21,7 @@
             "chapter": "1",
             "verse": "1",
             "commentary": true,
-            "themes": ["Uncertainty", "Uncertainty", "Divine Nature",  "Freedom"]
+            "themes": ["Uncertainty", "Uncertainty", "Divine Nature"]
         },
         {
             "text": "Wherein neither pain, nor pleasure, nor object, nor subject, exists, nor wherein does even insentiency exist — that, in the highest sense, is that Spanda principle.",
@@ -42,7 +42,7 @@
             "chapter": "1",
             "verse": "5",
             "commentary": true,
-            "themes": ["Attachment", "Wisdom", "Self Knowledge",  "Reality"]
+            "themes": ["Attachment", "Wisdom", "Self Knowledge"]
         },
         {
             "text": "Really speaking there is one śakti of the Divine, viz. the consciousness of his essential nature as I. The same Śakti in the form of perceiving or feeling, is known as jñāna or knowledge; in the form of its volitional activity, it is known as kriyā or activity.",
@@ -56,7 +56,7 @@
             "chapter": "",
             "verse": "",
             "commentary": false,
-            "themes": ["Separation", "Consciousness",  "Transcendence"]
+            "themes": [ "Consciousness"]
         },
         {
             "text": "Man falsely imagines that he moves his senses to perform their respective functions by the power of his will or desire. His so-called desire has no power of its own. It derives its power of both knowing and doing from Śiva or Spanda-principle whose very nature is knowledge and activity. One has, therefore, to acquire the power of Spanda which is our own essential Self, neither by weaving intellectual cobwebs, nor by maiming desire, but by surrendering all desires, the entire personal will to the Divine.",
@@ -70,28 +70,28 @@
             "chapter": "2",
             "verse": "3-4",
             "commentary": false,
-            "themes": ["Separation", "Limitation",  "Divine Nature", "Consciousness"]
+            "themes": [   "Divine Nature", "Consciousness"]
         },
         {
             "text": "Or he, who has this realization (viz. identity of his Self with the whole universe), being constantly united with the Divine, views the entire world as the play (of the Self identical with Ś𝘪𝘷𝘢), and is liberated while alive. There is no Uncertainty about this.",
             "chapter": "2",
             "verse": "5",
             "commentary": false,
-            "themes": ["Separation", "Attachment", "Awakening",  "Divine Nature"]
+            "themes": [ "Attachment", "Awakening",  "Divine Nature"]
         },
         {
             "text": "When the yogi sees every object as an expression of the inner divine Self, then the delusion of diversity disappears and he has the bliss of unity consciousness. He finds Śiva both within and without.",
             "chapter": "3",
             "verse": "11",
             "commentary": true,
-            "themes": ["Uncertainty",  "Bliss", "Divine Nature"]
+            "themes": ["Uncertainty",   "Divine Nature"]
         },
         {
             "text": "That afore-mentioned operative power of Śiva existing in the bound soul is a source of bondage; the same when realized as residing in him as the way of approach to one's own essential reality brings about success (i.e. the achievement of Awakening).",
             "chapter": "3",
             "verse": "16",
             "commentary": false,
-            "themes": ["Attachment", "Bondage", "Awakening", "Self Knowledge", "Divine Nature"]
+            "themes": ["Attachment",  "Awakening", "Self Knowledge", "Divine Nature"]
         }
     ]
 }

@@ -21,7 +21,7 @@
             "chapter": "1",
             "verse": "1",
             "commentary": true,
-            "themes": ["Attachment", "Detachment", "Purity"]
+            "themes": ["Attachment", "Detachment"]
         },
         {
             "text": "A wise person, who was compelled into the troubling union between knowledge and ignorance, should, having analysed and rejected both, enter the state free from thought.",
@@ -91,7 +91,7 @@
             "chapter": "15",
             "verse": "6",
             "commentary": true,
-            "themes": ["Limitation",  "Reality"]
+            "themes": ["Wisdom"]
         }
     ]
 }

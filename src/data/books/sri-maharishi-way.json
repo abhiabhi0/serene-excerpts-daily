@@ -14,42 +14,42 @@
             "chapter": "",
             "verse": "3",
             "commentary": false,
-            "themes": ["Attachment", "Desire", "Surrender", "Awakening", "Detachment"]
+            "themes": ["Attachment", "Surrender", "Awakening", "Detachment"]
         },
         {
             "text": "The practice of fixing the mind in its own source in the Heart is, without Uncertainty, true bhakti, yoga, and understanding.",
             "chapter": "",
             "verse": "10",
             "commentary": false,
-            "themes": ["Anxiety", "Uncertainty", "Self Knowledge", "Devotion", "Awareness"]
+            "themes": ["Anxiety", "Uncertainty", "Self Knowledge", "Awareness"]
         },
         {
             "text": "The mind may be subdued by regulating the breath, just as a bird is restrained when caught in a net. This practice controls the mind.",
             "chapter": "",
             "verse": "11",
             "commentary": false,
-            "themes": ["Anxiety", "Distraction", "Concentration", "Awareness", "Control"]
+            "themes": ["Anxiety",  "Awareness"]
         },
         {
             "text": "When the mind has been suspended by breath restraint, it may then be annihilated by single-minded attention to the Self.",
             "chapter": "",
             "verse": "14",
             "commentary": false,
-            "themes": ["Anxiety", "Distraction", "Concentration", "Self Knowledge", "Awareness"]
+            "themes": ["Anxiety",  "Self Knowledge", "Awareness"]
         },
         {
             "text": "What one has thought of as his mind is merely a bundle of thoughts. All these thoughts depend upon the one thought of “I”, the ego. Therefore, the so-called mind is the “I” thought.",
             "chapter": "",
             "verse": "18",
             "commentary": false,
-            "themes": ["Uncertainty", "Ego", "Self Knowledge", "Awareness", "Identity"]
+            "themes": ["Uncertainty", "Self Knowledge", "Awareness"]
         },
         {
             "text": "True knowledge is beyond what we think of as 'knowledge' or 'ignorance' because in the State of Non-differentiation what other thing is to be known",
             "chapter": "",
             "verse": "27",
             "commentary": false,
-            "themes": ["Ignorance", "Uncertainty", "Wisdom",  "Reality"]
+            "themes": [ "Uncertainty", "Wisdom"]
         }
     ]
 }

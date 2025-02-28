@@ -21,7 +21,7 @@
             "chapter": "",
             "verse": "4",
             "commentary": false,
-            "themes": ["Uncertainty", "Darkness", "Awakening", "Self Knowledge"]
+            "themes": ["Uncertainty", "Awakening", "Self Knowledge"]
         },
         {
             "text": "He who hath deemed another and himself as the same,\nHe who hath deemed the day (of joy) and the night (of sorrow) to be alike,\nHe whose mind hath become free from duality,\nHe, and he alone, hath seen the Lord of the Chiefest of gods.",
@@ -77,7 +77,7 @@
             "chapter": "",
             "verse": "59",
             "commentary": false,
-            "themes": ["Uncertainty", "Meaninglessness",   "Reality"]
+            "themes": ["Uncertainty", "Meaninglessness"]
         },
         {
             "text": "I searched for myself, and wearied myself in vain,\nFor no one hath, I ween, e'er by such efforts\nreached the hidden knowledge.\nThen absorbed I myself in It, and straightway reached the abode of nectar,\nWhere there are many filled jars, but no one\ndrinketh from them.",
@@ -98,7 +98,7 @@
             "chapter": "",
             "verse": "72",
             "commentary": false,
-            "themes": [ "Anxiety", "Surrender", "Trust", "Divine Nature"]
+            "themes": [ "Anxiety", "Surrender", "Divine Nature"]
         },
         {
             "text": "I, Lalla, went forth in the hope of (blooming like) a cotton-flower.\nMany a kick did the cleaner and the carder give me.\nGossamer made from me did the spinning\nwoman lift from the wheel,\nAnd a hanging kick did I receive in the\nweaver's work-room.",
@@ -112,7 +112,7 @@
             "chapter": "",
             "verse": "103",
             "commentary": false,
-            "themes": ["Suffering", "Pain",  "Awakening", "Awakening"]
+            "themes": ["Suffering",   "Awakening", "Awakening"]
         }
     ]
 }
