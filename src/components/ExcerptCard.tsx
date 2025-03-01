@@ -9,7 +9,6 @@
   import { useState, useEffect } from "react";
   import { v4 as uuidv4 } from 'uuid';
   // Add this import
-  import { useNotifications } from "@/hooks/useNotifications";
   import { MorningRitualChecklist } from "./MorningRitualChecklist";
 
   interface ExcerptCardProps {
@@ -20,7 +19,6 @@
 
   export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: ExcerptCardProps) => {
     // Add this hook
-    const { renderNotificationButton } = useNotifications();
     const { toast } = useToast();
     const [isScreenshotMode, setIsScreenshotMode] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
@@ -188,7 +186,6 @@
 
           {/* Add notification button below ActionButtons */}
           <div className="mt-4 flex justify-center">
-            {renderNotificationButton()}
           </div>
           <MorningRitualChecklist />
 

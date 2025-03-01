@@ -1,0 +1,11 @@
+[[headers]]
+  for = "/firebase-messaging-sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+    Content-Type = "application/javascript"
+
+# For SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
