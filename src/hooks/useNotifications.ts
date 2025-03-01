@@ -27,7 +27,7 @@ export function useNotifications() {
         now.getFullYear(),
         now.getMonth(),
         now.getDate(),
-        7, // 7 AM
+        13, // 7 AM
         0, // 0 minutes
         0 // 0 seconds
       );
