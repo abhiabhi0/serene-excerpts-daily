@@ -186,10 +186,10 @@
             </CardContent>
           </Card>
 
-          {/* Add notification button below ActionButtons */}
+          {/* Add notification button below ActionButtons
           <div className="mt-4 flex justify-center">
             {renderNotificationButton()}
-          </div>
+          </div> */}
           <MorningRitualChecklist />
 
           <GratitudeAffirmations />
