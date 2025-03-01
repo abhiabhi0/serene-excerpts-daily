@@ -20,19 +20,29 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
       
-      // Show left arrow if we're not at the beginning
-      setShowLeftArrow(scrollLeft > 2);
+      // First determine if scrolling is even possible
+      const canScroll = scrollWidth > clientWidth;
       
-      // Show right arrow if there's more content to scroll to
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 2);
+      // Only show arrows if scrolling is possible
+      if (canScroll) {
+        // Show left arrow if we're not at the beginning
+        setShowLeftArrow(scrollLeft > 0);
+        
+        // Show right arrow if there's more content to scroll to
+        setShowRightArrow(scrollLeft < scrollWidth - clientWidth);
+      } else {
+        // If scrolling isn't possible, hide both arrows
+        setShowLeftArrow(false);
+        setShowRightArrow(false);
+      }
       
       console.log("Scroll check:", {
         scrollLeft,
         scrollWidth,
         clientWidth,
-        canScroll: scrollWidth > clientWidth,
-        showLeftArrow: scrollLeft > 2,
-        showRightArrow: scrollLeft < scrollWidth - clientWidth - 2
+        canScroll,
+        showLeftArrow: canScroll && scrollLeft > 0,
+        showRightArrow: canScroll && scrollLeft < scrollWidth - clientWidth
       });
     }
   };
@@ -58,29 +68,28 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
 
   // Initial setup and event listeners
   useEffect(() => {
-    // Do initial check immediately and after a small delay to ensure content is properly rendered
+    // Check scroll on mount and after a short delay to ensure proper rendering
     checkScroll();
-    setTimeout(checkScroll, 100);
+    
+    // Sometimes content rendering can be delayed, so check again after a moment
+    const initialCheckTimer = setTimeout(checkScroll, 100);
     
     const scrollContainer = scrollContainerRef.current;
     if (scrollContainer) {
       // Add scroll handler
-      const handleScroll = () => checkScroll();
-      scrollContainer.addEventListener('scroll', handleScroll);
+      scrollContainer.addEventListener('scroll', checkScroll);
       
       // Add resize handler
-      const handleResize = () => checkScroll();
-      window.addEventListener('resize', handleResize);
+      window.addEventListener('resize', checkScroll);
       
       // Use ResizeObserver for content changes
-      const resizeObserver = new ResizeObserver(() => {
-        checkScroll();
-      });
+      const resizeObserver = new ResizeObserver(checkScroll);
       resizeObserver.observe(scrollContainer);
       
       return () => {
-        scrollContainer.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('resize', handleResize);
+        clearTimeout(initialCheckTimer);
+        scrollContainer.removeEventListener('scroll', checkScroll);
+        window.removeEventListener('resize', checkScroll);
         resizeObserver.disconnect();
       };
     }
@@ -88,9 +97,10 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
 
   // Recheck when themes change
   useEffect(() => {
-    // Check immediately and after a small delay
     checkScroll();
-    setTimeout(checkScroll, 100);
+    // Check again after a delay to ensure rendering is complete
+    const themeChangeTimer = setTimeout(checkScroll, 100);
+    return () => clearTimeout(themeChangeTimer);
   }, [themes]);
 
   return (
@@ -110,7 +120,6 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
         <div 
           ref={scrollContainerRef}
           className="flex w-max space-x-2 p-2"
-          onScroll={checkScroll}
         >
           <button
             onClick={() => onThemeSelect(null)}
