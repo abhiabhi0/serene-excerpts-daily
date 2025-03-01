@@ -1,43 +1,46 @@
-const CACHE_NAME = 'site-cache-v1.0.1'; // Update version to invalidate old cache
-const URLS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/index.css',
-    '/main.js',
-    // Add other assets as needed
-];
+// Service worker for handling notifications
+self.addEventListener('install', event => {
+    self.skipWaiting();
+});
 
-// Install event: Cache site assets
-self.addEventListener('install', (event) => {
+self.addEventListener('activate', event => {
+    return self.clients.claim();
+});
+
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+  
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            console.log('Opened cache');
-            return cache.addAll(URLS_TO_CACHE);
-        })
+      clients.matchAll({ type: 'window' }).then(clientList => {
+        // If a window client is available, focus it
+        for (const client of clientList) {
+          if (client.url && 'focus' in client) {
+            return client.focus();
+          }
+        }
+      
+        // Otherwise, open a new window
+        if (clients.openWindow) {
+          return clients.openWindow('/');
+        }
+      })
     );
 });
 
-// Activate event: Clear old caches except user data
-self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
-});
+// Listen for push messages
+self.addEventListener('push', event => {
+    const data = event.data.json();
+  
+    const options = {
+      body: data.body || 'Time for your morning ritual with Atmanam Viddhi. Start your day mindfully.',
+      icon: '/favicon.ico',
+      badge: '/favicon.ico',
+      data: {
+        url: data.url || '/'
+      }
+    };
 
-// Fetch event: Serve from cache or fetch from network
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request).then((response) => {
-            return response || fetch(event.request);
-        })
+    event.waitUntil(
+      self.registration.showNotification('Morning Ritual', options)
     );
 });
