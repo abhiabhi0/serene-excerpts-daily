@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging } from "firebase/messaging";
+import { getMessaging, isSupported } from "firebase/messaging";
 
-// Firebase configuration object loaded from environment variables
+// Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -11,22 +11,48 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Initialize Firebase app
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Messaging
-const messaging = getMessaging(app);
+// Initialize Messaging with lazy loading
+let messagingInstance = null;
 
-// Register service worker for background notifications
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("/firebase-messaging-sw.js")
-    .then((registration) => {
-      console.log("Service Worker registered successfully:", registration);
-    })
-    .catch((error) => {
-      console.error("Service Worker registration failed:", error);
-    });
+async function initializeMessaging() {
+  try {
+    // Check if messaging is supported in this environment
+    const isMessagingSupported = await isSupported();
+    
+    if (isMessagingSupported) {
+      messagingInstance = getMessaging(app);
+      console.log("Firebase Messaging initialized successfully");
+      
+      // Register service worker if in browser environment
+      if (typeof window !== 'undefined' && "serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/firebase-messaging-sw.js")
+          .then((registration) => {
+            console.log("Service Worker registered successfully:", registration);
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      }
+    } else {
+      console.warn("Firebase Messaging is not supported in this environment");
+    }
+  } catch (error) {
+    console.error("Error initializing Firebase Messaging:", error);
+  }
 }
 
-export { messaging };
+// Don't initialize messaging during SSR
+if (typeof window !== 'undefined') {
+  initializeMessaging();
+}
+
+// Expose a function to get messaging instance
+export function getMessagingInstance() {
+  return messagingInstance;
+}
+
+export { app };

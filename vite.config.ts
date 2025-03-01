@@ -1,16 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
-import { componentTagger } from "lovable-tagger";
+import { resolve } from 'path';
 
-export default defineConfig(({ mode }) => ({
-  plugins: [
-    react(),
-    mode === 'development' && componentTagger(),
-  ].filter(Boolean),
+export default defineConfig({
+  plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': resolve(__dirname, 'src'),
     },
   },
   base: "./",
@@ -30,11 +26,24 @@ export default defineConfig(({ mode }) => ({
       },
     },
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html'),
-        about: path.resolve(__dirname, 'about/index.html'),
-        blog: path.resolve(__dirname, 'blog/index.html')
-      }
-    }
+      // Add external dependencies that shouldn't be bundled
+      external: ['firebase', 'firebase/app', 'firebase/messaging'],
+      output: {
+        manualChunks: {
+          // Separate Firebase into its own chunk
+          firebase: ['firebase/app', 'firebase/messaging'],
+        },
+      },
+    },
+    // Ensure that dynamic imports work properly
+    dynamicImportVarsOptions: {
+      warnOnError: true,
+    },
+    // Improve source maps for debugging
+    sourcemap: true,
   },
-}));
+  // Ensure optimizations don't break Firebase
+  optimizeDeps: {
+    include: ['firebase/app', 'firebase/messaging'],
+  },
+});
