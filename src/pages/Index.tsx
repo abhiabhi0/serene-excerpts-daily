@@ -13,6 +13,7 @@
   import Footer from '../components/Footer';
   import { ThemeSelector } from "@/components/ThemeSelector";
   import { availableThemes } from "@/data/staticData";
+  import { useNotifications } from "@/hooks/useNotifications"; // Import the notifications hook
   
   const ExcerptCard = lazy(() => 
     Promise.all([
@@ -49,6 +50,8 @@
     const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
     const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
 
+    const { isPermissionGranted, requestPermission } = useNotifications();
+
     const { data: remoteExcerpt, refetch: refetchRemote, isLoading, isError } = useQuery({
       queryKey: ["excerpt", selectedTheme],
       queryFn: () => getRandomExcerpt(selectedTheme),
@@ -83,31 +86,33 @@
       setCurrentExcerpt(convertLocalToExcerptWithMeta(excerpt));
       setSearchParams({ tab: 'random' });
     };
-      const handleThemeSelect = (theme: string | null) => {
-        console.log('Theme selection changed to:', theme ? `"${theme}"` : 'null (All)');
-        setSelectedTheme(theme);
-        setCurrentExcerpt(null);
-    
-        // Pass the theme directly to refetchRemote to avoid closure issues
-        setTimeout(() => refetchRemote(), 0);
-      };
 
-      useEffect(() => {
-        const preloadData = async () => {
-          if (!currentExcerpt) {
-            console.log('Initial data load with theme:', selectedTheme ? `"${selectedTheme}"` : 'null (All)');
-            await refetchRemote();
-          }
-        };
-        preloadData();
-      }, []);
+    const handleThemeSelect = (theme: string | null) => {
+      console.log('Theme selection changed to:', theme ? `"${theme}"` : 'null (All)');
+      setSelectedTheme(theme);
+      setCurrentExcerpt(null);
 
-      useEffect(() => {
-        if (remoteExcerpt) {
-          console.log('Setting current excerpt with theme:', selectedTheme ? `"${selectedTheme}"` : 'null (All)');
-          setCurrentExcerpt(remoteExcerpt);
+      // Pass the theme directly to refetchRemote to avoid closure issues
+      setTimeout(() => refetchRemote(), 0);
+    };
+
+    useEffect(() => {
+      const preloadData = async () => {
+        if (!currentExcerpt) {
+          console.log('Initial data load with theme:', selectedTheme ? `"${selectedTheme}"` : 'null (All)');
+          await refetchRemote();
         }
-      }, [remoteExcerpt]);
+      };
+      preloadData();
+    }, []);
+
+    useEffect(() => {
+      if (remoteExcerpt) {
+        console.log('Setting current excerpt with theme:', selectedTheme ? `"${selectedTheme}"` : 'null (All)');
+        setCurrentExcerpt(remoteExcerpt);
+      }
+    }, [remoteExcerpt]);
+
     useEffect(() => {
       const checkScreenSize = () => {
         setIsScreenTooSmall(window.innerWidth < 320);
@@ -119,6 +124,36 @@
       window.addEventListener('resize', debouncedCheck);
       return () => window.removeEventListener('resize', debouncedCheck);
     }, []);
+
+    // Request notification permission after initial data load
+    useEffect(() => {
+      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        // Wait a few seconds after loading to ask for permission
+        const timer = setTimeout(() => {
+          requestPermission();
+        }, 3000);
+      
+        return () => clearTimeout(timer);
+      }
+    }, []);
+
+    // Render notification prompt if needed
+    const renderNotificationPrompt = () => {
+      if (!isPermissionGranted && Notification.permission !== 'denied') {
+        return (
+          <div className="my-4 p-3 bg-white/5 rounded-lg animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <p className="mb-2">Enable notifications to receive daily wisdom directly to your device</p>
+            <button 
+              onClick={requestPermission}
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg text-sm font-medium transition-colors"
+            >
+              Enable Notifications
+            </button>
+          </div>
+        );
+      }
+      return null;
+    };
 
     const renderContent = () => {
       if (isScreenTooSmall && !isMobile) {
@@ -142,7 +177,10 @@
                 onThemeSelect={handleThemeSelect}
               />
             </div>
-        
+          
+            {/* Add notification prompt here */}
+            {renderNotificationPrompt()}
+      
             <Tabs 
               value={activeTab} 
               onValueChange={(value) => {
@@ -190,7 +228,6 @@
                   </div>
                 </Suspense>
               </TabsContent>
-              
             </Tabs>
           </div>
           <Footer />
