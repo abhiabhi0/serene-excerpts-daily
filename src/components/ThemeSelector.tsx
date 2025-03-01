@@ -20,19 +20,19 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
       
-      // Show left arrow if we're not at the beginning (with small buffer for precision)
-      setShowLeftArrow(scrollLeft > 2);
+      // Show left arrow if we're not at the beginning
+      setShowLeftArrow(scrollLeft > 5);
       
-      // Show right arrow if there's more content to scroll to (with small buffer for precision)
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 2);
+      // Show right arrow if there's more content to scroll to
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 5);
       
-      console.log({
+      console.log("Scroll check:", {
         scrollLeft,
         scrollWidth,
         clientWidth,
-        canScrollRight: scrollWidth > clientWidth,
-        showLeft: scrollLeft > 2,
-        showRight: scrollLeft < scrollWidth - clientWidth - 2
+        canScroll: scrollWidth > clientWidth,
+        showLeftArrow: scrollLeft > 5,
+        showRightArrow: scrollLeft < scrollWidth - clientWidth - 5
       });
     }
   };
@@ -50,53 +50,48 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
       });
-      
-      // Force check scroll after animation completes
-      setTimeout(checkScroll, 300);
     }
   };
 
   // Initial setup and event listeners
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    
-    // Initial check function
-    const checkInitialScroll = () => {
-      if (scrollContainer) {
-        const { scrollWidth, clientWidth } = scrollContainer;
+    // Do initial check after a small delay to ensure content is properly rendered
+    setTimeout(() => {
+      if (scrollContainerRef.current) {
+        const { scrollWidth, clientWidth } = scrollContainerRef.current;
+        console.log("Initial check:", { scrollWidth, clientWidth, canScroll: scrollWidth > clientWidth });
+        
         // Only show right arrow initially if content is wider than container
-        const needsScroll = scrollWidth > clientWidth;
-        console.log("Initial scroll check:", { scrollWidth, clientWidth, needsScroll });
-        setShowRightArrow(needsScroll);
+        setShowRightArrow(scrollWidth > clientWidth);
       }
-    };
+    }, 100);
     
-    // Check initial scroll state after content renders
-    setTimeout(checkInitialScroll, 100);
-    
+    const scrollContainer = scrollContainerRef.current;
     if (scrollContainer) {
-      // Handle scroll events
-      const handleScroll = () => {
-        checkScroll();
-      };
-      
+      // Add scroll handler
+      const handleScroll = () => checkScroll();
       scrollContainer.addEventListener('scroll', handleScroll);
       
-      // Create resize observer to detect content changes
+      // Add resize handler
+      const handleResize = () => {
+        if (scrollContainerRef.current) {
+          const { scrollWidth, clientWidth } = scrollContainerRef.current;
+          setShowRightArrow(scrollWidth > clientWidth);
+          checkScroll();
+        }
+      };
+      window.addEventListener('resize', handleResize);
+      
+      // Use ResizeObserver for content changes
       const resizeObserver = new ResizeObserver(() => {
-        checkInitialScroll();
-        checkScroll();
+        handleResize();
       });
-      
       resizeObserver.observe(scrollContainer);
-      
-      // Handle window resize
-      window.addEventListener('resize', checkInitialScroll);
       
       return () => {
         scrollContainer.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', handleResize);
         resizeObserver.disconnect();
-        window.removeEventListener('resize', checkInitialScroll);
       };
     }
   }, []);
@@ -106,7 +101,7 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
     setTimeout(() => {
       if (scrollContainerRef.current) {
         const { scrollWidth, clientWidth } = scrollContainerRef.current;
-        console.log("Themes changed, checking scroll:", { scrollWidth, clientWidth });
+        console.log("Themes changed:", { scrollWidth, clientWidth, canScroll: scrollWidth > clientWidth });
         setShowRightArrow(scrollWidth > clientWidth);
         checkScroll();
       }
