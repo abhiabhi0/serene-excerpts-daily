@@ -168,6 +168,11 @@ import Footer from '../components/Footer'; // Adjust the path as necessary
     "url": "/articles/tripura-rahasya-ch-5.html",
     "date": "2025-02-27T09:21:08.959Z"
   },
+  {
+    "title": "The Merits of Faith and the Dangers of Dry Polemics: Insights from Tripura Rahasya Chapter 6",
+    "url": "/articles/tripura-rahasya-ch-6.html",
+    "date": "2025-03-04T09:21:08.959Z"
+  }
 ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
