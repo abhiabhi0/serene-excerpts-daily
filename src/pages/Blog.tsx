@@ -154,11 +154,6 @@ import Footer from '../components/Footer'; // Adjust the path as necessary
     "date": "2025-02-21T09:21:08.959Z"
   },
   {
-    "title": "The Mystic Hill of Illusions: A Journey Through Tripura Rahasya ",
-    "url": "/articles/tripura-rahasya-ganda-hill.html",
-    "date": "2025-02-19T09:21:08.959Z"
-  },
-  {
     "title": "Wisdom of Tripura Rahasya : The Fruits of Satsanga",
     "url": "/articles/tripura-rahasya-ch-4.html",
     "date": "2025-02-25T09:21:08.959Z"
@@ -172,6 +167,11 @@ import Footer from '../components/Footer'; // Adjust the path as necessary
     "title": "The Merits of Faith and the Dangers of Dry Polemics: Insights from Tripura Rahasya Chapter 6",
     "url": "/articles/tripura-rahasya-ch-6.html",
     "date": "2025-03-04T09:21:08.959Z"
+  },
+  {
+    "title": "The Mystic Hill of Illusions: A Journey Through Tripura Rahasya ",
+    "url": "/articles/tripura-rahasya-ganda-hill.html",
+    "date": "2025-02-19T09:21:08.959Z"
   }
 ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
