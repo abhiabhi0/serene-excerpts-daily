@@ -177,6 +177,11 @@ import Footer from '../components/Footer'; // Adjust the path as necessary
         "title": "Understanding Bondage and Liberation: Insights from Chapter V of Tripura Rahasya",
         "url": "/articles/tripura-rahasya-Understanding-Bondage-and-Liberation.html",
         "date": "2025-02-27T09:21:08.959Z"
+      },
+      {
+        "title": "Unveiling the Self: Insights from Chapter 9 of Tripura Rahasya",
+        "url": "/articles/tripura-rahasya-Unveiling-the-Self-Insights-from-Chapter-9.html",
+        "date": "2025-03-11T09:21:08.959Z"
       }
     ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
