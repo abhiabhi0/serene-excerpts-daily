@@ -1,3 +1,4 @@
+
   <!DOCTYPE html>
   <html lang="en">
     <head>
@@ -40,13 +41,22 @@
         }
       </style>
     
-      <!-- In the <head> section, remove defer -->
-      <script src="https://www.googletagmanager.com/gtag/js?id=G-MFBQ1NPQF8"></script>
+      <!-- Deferred Google Analytics -->
       <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
+        
+        // Initialize gtag function for use before analytics loads
         gtag('js', new Date());
         gtag('config', 'G-MFBQ1NPQF8');
+        
+        // Load analytics script asynchronously
+        window.addEventListener('load', function() {
+          const script = document.createElement('script');
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-MFBQ1NPQF8';
+          script.async = true;
+          document.head.appendChild(script);
+        });
       </script>
 
     </head>
