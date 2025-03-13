@@ -1,91 +1,23 @@
-import { useState, useEffect } from 'react';
-import { CheckSquare, Square } from 'lucide-react';
 
-interface ChecklistItem {
-  id: string;
-  label: string;
-  checked: boolean;
-}
+import { useMorningRitual } from '@/hooks/useMorningRitual';
+import { ChecklistItem } from '@/components/ritual/ChecklistItem';
+import { useAnalyticsTracker } from '@/components/excerpt/AnalyticsTracker';
 
 export const MorningRitualChecklist = () => {
-  const [items, setItems] = useState<ChecklistItem[]>([
-    { id: 'wisdom', label: 'Wisdom', checked: false },
-    { id: 'gratitude', label: 'Gratitude', checked: false },
-    { id: 'affirmation', label: 'Affirmation', checked: false },
-  ]);
+  const { items, toggleItem } = useMorningRitual();
+  const { trackEvent } = useAnalyticsTracker();
 
-  // Load saved state from localStorage on component mount
-  useEffect(() => {
-    const savedDate = localStorage.getItem('morningRitualChecklistDate');
-    const today = new Date().toLocaleDateString();
+  const handleToggleItem = (id: string) => {
+    toggleItem(id);
     
-    // Check if we need to reset (new day or past 1:00 AM)
-    const shouldReset = () => {
-      if (!savedDate) return true;
-      
-      // If the date is different, we should reset
-      if (savedDate !== today) {
-        const currentTime = new Date();
-        const resetTime = new Date();
-        resetTime.setHours(1, 0, 0, 0); // 1:00 AM
-        
-        // If current time is past 1:00 AM, we should reset
-        return currentTime >= resetTime;
+    // Track the event
+    trackEvent({
+      eventName: 'morning_ritual_toggle',
+      params: {
+        item_id: id,
+        action: 'toggle'
       }
-      
-      return false;
-    };
-    
-    if (shouldReset()) {
-      // Reset checkboxes
-      localStorage.setItem('morningRitualChecklistDate', today);
-      localStorage.removeItem('morningRitualChecklist');
-      setItems(items.map(item => ({ ...item, checked: false })));
-    } else {
-      // Load saved state
-      const savedItems = localStorage.getItem('morningRitualChecklist');
-      if (savedItems) {
-        setItems(JSON.parse(savedItems));
-      }
-    }
-  }, []);
-
-  // Schedule a reset check for 1:00 AM
-  useEffect(() => {
-    const scheduleReset = () => {
-      const now = new Date();
-      const resetTime = new Date();
-      resetTime.setDate(now.getDate() + 1); // Tomorrow
-      resetTime.setHours(1, 0, 0, 0); // 1:00 AM
-      
-      const timeUntilReset = resetTime.getTime() - now.getTime();
-      
-      // Schedule the reset
-      const timer = setTimeout(() => {
-        const today = new Date().toLocaleDateString();
-        localStorage.setItem('morningRitualChecklistDate', today);
-        localStorage.removeItem('morningRitualChecklist');
-        setItems(items.map(item => ({ ...item, checked: false })));
-        
-        // Schedule the next reset
-        scheduleReset();
-      }, timeUntilReset);
-      
-      return timer;
-    };
-    
-    const timer = scheduleReset();
-    return () => clearTimeout(timer);
-  }, [items]);
-
-  // Toggle checkbox state
-  const toggleItem = (id: string) => {
-    const newItems = items.map(item => 
-      item.id === id ? { ...item, checked: !item.checked } : item
-    );
-    
-    setItems(newItems);
-    localStorage.setItem('morningRitualChecklist', JSON.stringify(newItems));
+    });
   };
 
   return (
@@ -93,18 +25,13 @@ export const MorningRitualChecklist = () => {
       <p className="text-center text-sm text-white/70 mb-2">Today's Morning Ritual</p>
       <div className="flex flex-wrap justify-center gap-3">
         {items.map(item => (
-          <div 
+          <ChecklistItem
             key={item.id}
-            onClick={() => toggleItem(item.id)}
-            className="flex items-center gap-1 bg-white/10 px-3 py-2 rounded-md cursor-pointer hover:bg-white/15 transition-colors"
-          >
-            {item.checked ? (
-              <CheckSquare className="w-4 h-4 text-green-400" />
-            ) : (
-              <Square className="w-4 h-4" />
-            )}
-            <span className="text-sm">{item.label}</span>
-          </div>
+            id={item.id}
+            label={item.label}
+            checked={item.checked}
+            onToggle={handleToggleItem}
+          />
         ))}
       </div>
     </div>
