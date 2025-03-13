@@ -1,5 +1,5 @@
 
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 const Index = lazy(() => import('./pages/Index'));
 const About = lazy(() => import('./pages/About'));
 const Blog = lazy(() => import('./pages/Blog'));
+const Breathwork = lazy(() => import('./pages/Breathwork'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const router = createBrowserRouter([
@@ -48,6 +49,18 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: '/breathwork',
+    element: (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="animate-pulse text-xl text-primary">ॐ</div>
+        </div>
+      }>
+        <Breathwork />
+      </Suspense>
+    ),
+  },
+  {
     path: '*',
     element: (
       <Suspense fallback={
@@ -73,12 +86,13 @@ const queryClient = new QueryClient({
   },
 });
 
-  function App() {;
-    return (
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <Toaster />
-      </QueryClientProvider>
-    );
-  }
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <Toaster />
+    </QueryClientProvider>
+  );
+}
+
 export default App;
