@@ -85,41 +85,65 @@ const Breathwork = () => {
 const BreathingAnimation = () => {
   const [phase, setPhase] = useState<'inhale' | 'hold' | 'exhale'>('inhale');
   const [count, setCount] = useState(0);
+  const [size, setSize] = useState(40); // Initial size percentage
   
   useEffect(() => {
-    // Breathing cycle: Inhale (4s), Hold (4s), Exhale (4s)
-    const interval = setInterval(() => {
-      setPhase(currentPhase => {
-        if (currentPhase === 'inhale') return 'hold';
-        if (currentPhase === 'hold') return 'exhale';
-        setCount(prev => prev + 1);
-        return 'inhale';
-      });
-    }, 4000);
+    // Smoother breathing cycle with continuous size changes
+    const breathingCycle = () => {
+      // Inhale phase (4 seconds)
+      setPhase('inhale');
+      
+      // Gradually increase size during inhale
+      const inhaleInterval = setInterval(() => {
+        setSize(prev => Math.min(prev + 2.5, 70)); // Gradually increase to 70%
+      }, 100);
+      
+      // After inhale, move to hold
+      setTimeout(() => {
+        clearInterval(inhaleInterval);
+        setPhase('hold');
+        
+        // After hold, move to exhale
+        setTimeout(() => {
+          setPhase('exhale');
+          
+          // Gradually decrease size during exhale
+          const exhaleInterval = setInterval(() => {
+            setSize(prev => Math.max(prev - 2.5, 40)); // Gradually decrease to 40%
+          }, 100);
+          
+          // After exhale, prepare for next cycle
+          setTimeout(() => {
+            clearInterval(exhaleInterval);
+            setCount(prev => prev + 1);
+          }, 4000);
+        }, 4000);
+      }, 4000);
+    };
     
-    return () => clearInterval(interval);
+    // Start the first breathing cycle
+    breathingCycle();
+    
+    // Continue breathing cycles
+    const cycleInterval = setInterval(breathingCycle, 12000); // 4s inhale + 4s hold + 4s exhale = 12s per cycle
+    
+    return () => {
+      clearInterval(cycleInterval);
+    };
   }, []);
 
   return (
     <div className="relative flex items-center justify-center h-80 w-80">
-      <div className="absolute text-white/80 text-sm top-2">
+      <div className="absolute text-white/80 text-sm top-2 transition-opacity duration-300">
         {phase === 'inhale' ? 'Breathe In' : phase === 'hold' ? 'Hold' : 'Breathe Out'}
       </div>
       
       <div 
-        className={`relative rounded-full bg-cyan-500/20 border border-cyan-500/40 
-          ${phase === 'inhale' 
-            ? 'animate-[grow_4s_ease-in-out_infinite]' 
-            : phase === 'exhale' 
-              ? 'animate-[shrink_4s_ease-in-out_infinite]' 
-              : ''
-          }
-          flex items-center justify-center
-        `}
+        className="relative rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center"
         style={{
-          width: phase === 'inhale' ? '70%' : phase === 'hold' ? '70%' : '40%', 
-          height: phase === 'inhale' ? '70%' : phase === 'hold' ? '70%' : '40%',
-          transition: 'all 4s ease-in-out',
+          width: `${size}%`,
+          height: `${size}%`,
+          transition: 'all 0.5s ease-in-out'
         }}
       >
         <div className="absolute inset-0 rounded-full bg-cyan-500/10 animate-pulse"></div>
