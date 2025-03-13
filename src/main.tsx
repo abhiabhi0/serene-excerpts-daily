@@ -1,8 +1,9 @@
+
 import { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 
-// Lazy load App component
+// Properly implement lazy loading with correct typing
 const App = lazy(() => import('./App'));
 
 // Ensure DOM is ready
