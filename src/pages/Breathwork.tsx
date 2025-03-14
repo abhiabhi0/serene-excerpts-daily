@@ -8,21 +8,28 @@ import { CirclePause, Wind, RotateCw } from 'lucide-react';
 const Breathwork = () => {
   const [isActive, setIsActive] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);  // Add loading state
   const animationRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   const startBreathwork = () => {
-    setIsActive(true);
-    setAnimationComplete(false);
+    setIsLoading(true); // Show loader first
     
-    animationRef.current = setTimeout(() => {
-      setIsActive(false);
-      setAnimationComplete(true);
-      toast({
-        title: "Breathwork Complete",
-        description: "Great job! You've completed your one-minute breathwork session.",
-      });
-    }, 60000);
+    // Simulate loading time (remove this in production if not needed)
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsActive(true);
+      setAnimationComplete(false);
+      
+      animationRef.current = setTimeout(() => {
+        setIsActive(false);
+        setAnimationComplete(true);
+        toast({
+          title: "Breathwork Complete",
+          description: "Great job! You've completed your one-minute breathwork session.",
+        });
+      }, 60000);
+    }, 1500);
   };
 
   const stopBreathwork = () => {
@@ -47,7 +54,9 @@ const Breathwork = () => {
         <p className="text-center text-white/80 mb-8">Take a moment to breathe deeply and refocus your mind.</p>
         
         <div className="w-full flex flex-col items-center justify-center">
-          {!isActive ? (
+          {isLoading ? (
+            <RevolveLoader />
+          ) : !isActive ? (
             <Button 
               onClick={startBreathwork}
               className="px-8 py-6 rounded-full text-lg flex items-center gap-2"
@@ -76,6 +85,19 @@ const Breathwork = () => {
         )}
       </div>
       <Footer />
+    </div>
+  );
+};
+
+const RevolveLoader = () => {
+  return (
+    <div className="relative h-24 w-24">
+      <div className="revolve-loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   );
 };
