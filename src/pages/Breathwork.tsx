@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -15,7 +14,6 @@ const Breathwork = () => {
     setIsActive(true);
     setAnimationComplete(false);
     
-    // Complete after 60 seconds (1 minute)
     animationRef.current = setTimeout(() => {
       setIsActive(false);
       setAnimationComplete(true);
@@ -33,7 +31,6 @@ const Breathwork = () => {
     setIsActive(false);
   };
 
-  // Clean up on component unmount
   useEffect(() => {
     return () => {
       if (animationRef.current) {
@@ -88,53 +85,69 @@ const BreathingAnimation = () => {
   const [size, setSize] = useState(40); // Initial size percentage
   
   useEffect(() => {
-    // Smoother breathing cycle with continuous size changes
-    const breathingCycle = () => {
-      // Inhale phase (4 seconds)
+    let inhaleInterval: NodeJS.Timeout;
+    let exhaleInterval: NodeJS.Timeout;
+    let cycleTimer: NodeJS.Timeout;
+    let phaseTimer: NodeJS.Timeout;
+    
+    const startInhalePhase = () => {
       setPhase('inhale');
       
-      // Gradually increase size during inhale
-      const inhaleInterval = setInterval(() => {
-        setSize(prev => Math.min(prev + 2.5, 70)); // Gradually increase to 70%
-      }, 100);
+      if (inhaleInterval) clearInterval(inhaleInterval);
+      if (exhaleInterval) clearInterval(exhaleInterval);
       
-      // After inhale, move to hold
-      setTimeout(() => {
+      inhaleInterval = setInterval(() => {
+        setSize(prev => {
+          const newSize = prev + 0.5;
+          return newSize <= 70 ? newSize : 70;
+        });
+      }, 50);
+      
+      phaseTimer = setTimeout(() => {
         clearInterval(inhaleInterval);
-        setPhase('hold');
-        
-        // After hold, move to exhale
-        setTimeout(() => {
-          setPhase('exhale');
-          
-          // Gradually decrease size during exhale
-          const exhaleInterval = setInterval(() => {
-            setSize(prev => Math.max(prev - 2.5, 40)); // Gradually decrease to 40%
-          }, 100);
-          
-          // After exhale, prepare for next cycle
-          setTimeout(() => {
-            clearInterval(exhaleInterval);
-            setCount(prev => prev + 1);
-          }, 4000);
-        }, 4000);
+        startHoldPhase();
       }, 4000);
     };
     
-    // Start the first breathing cycle
-    breathingCycle();
+    const startHoldPhase = () => {
+      setPhase('hold');
+      
+      phaseTimer = setTimeout(() => {
+        startExhalePhase();
+      }, 4000);
+    };
     
-    // Continue breathing cycles
-    const cycleInterval = setInterval(breathingCycle, 12000); // 4s inhale + 4s hold + 4s exhale = 12s per cycle
+    const startExhalePhase = () => {
+      setPhase('exhale');
+      
+      exhaleInterval = setInterval(() => {
+        setSize(prev => {
+          const newSize = prev - 0.5;
+          return newSize >= 40 ? newSize : 40;
+        });
+      }, 50);
+      
+      phaseTimer = setTimeout(() => {
+        clearInterval(exhaleInterval);
+        setCount(prev => prev + 1);
+        
+        startInhalePhase();
+      }, 4000);
+    };
+    
+    startInhalePhase();
     
     return () => {
-      clearInterval(cycleInterval);
+      clearInterval(inhaleInterval);
+      clearInterval(exhaleInterval);
+      clearTimeout(phaseTimer);
+      clearTimeout(cycleTimer);
     };
   }, []);
 
   return (
     <div className="relative flex items-center justify-center h-80 w-80">
-      <div className="absolute text-white/80 text-sm top-2 transition-opacity duration-300">
+      <div className="absolute text-white/80 text-sm top-2 transition-opacity duration-500">
         {phase === 'inhale' ? 'Breathe In' : phase === 'hold' ? 'Hold' : 'Breathe Out'}
       </div>
       
@@ -143,7 +156,7 @@ const BreathingAnimation = () => {
         style={{
           width: `${size}%`,
           height: `${size}%`,
-          transition: 'all 0.5s ease-in-out'
+          transition: 'all 0.25s ease-in-out'
         }}
       >
         <div className="absolute inset-0 rounded-full bg-cyan-500/10 animate-pulse"></div>
