@@ -80,83 +80,44 @@ const Breathwork = () => {
 };
 
 const BreathingAnimation = () => {
-  const [phase, setPhase] = useState<'inhale' | 'hold' | 'exhale'>('inhale');
-  const [count, setCount] = useState(0);
   const [size, setSize] = useState(40); // Initial size percentage
+  const [direction, setDirection] = useState<'expanding' | 'contracting'>('expanding');
   
   useEffect(() => {
-    let inhaleInterval: NodeJS.Timeout;
-    let exhaleInterval: NodeJS.Timeout;
-    let cycleTimer: NodeJS.Timeout;
-    let phaseTimer: NodeJS.Timeout;
-    
-    const startInhalePhase = () => {
-      setPhase('inhale');
-      
-      if (inhaleInterval) clearInterval(inhaleInterval);
-      if (exhaleInterval) clearInterval(exhaleInterval);
-      
-      inhaleInterval = setInterval(() => {
-        setSize(prev => {
-          const newSize = prev + 0.5;
-          return newSize <= 70 ? newSize : 70;
-        });
-      }, 50);
-      
-      phaseTimer = setTimeout(() => {
-        clearInterval(inhaleInterval);
-        startHoldPhase();
-      }, 4000);
-    };
-    
-    const startHoldPhase = () => {
-      setPhase('hold');
-      
-      phaseTimer = setTimeout(() => {
-        startExhalePhase();
-      }, 4000);
-    };
-    
-    const startExhalePhase = () => {
-      setPhase('exhale');
-      
-      exhaleInterval = setInterval(() => {
-        setSize(prev => {
-          const newSize = prev - 0.5;
-          return newSize >= 40 ? newSize : 40;
-        });
-      }, 50);
-      
-      phaseTimer = setTimeout(() => {
-        clearInterval(exhaleInterval);
-        setCount(prev => prev + 1);
-        
-        startInhalePhase();
-      }, 4000);
-    };
-    
-    startInhalePhase();
+    const animationInterval = setInterval(() => {
+      setSize(prevSize => {
+        // When expanding and reaching max size (70), switch to contracting
+        if (direction === 'expanding' && prevSize >= 70) {
+          setDirection('contracting');
+          return 70;
+        }
+        // When contracting and reaching min size (40), switch to expanding
+        else if (direction === 'contracting' && prevSize <= 40) {
+          setDirection('expanding');
+          return 40;
+        }
+        // Otherwise continue in current direction
+        else {
+          return direction === 'expanding' 
+            ? prevSize + 0.4 // Slow expansion rate
+            : prevSize - 0.4; // Slow contraction rate
+        }
+      });
+    }, 45); // Shorter interval for smoother animation
     
     return () => {
-      clearInterval(inhaleInterval);
-      clearInterval(exhaleInterval);
-      clearTimeout(phaseTimer);
-      clearTimeout(cycleTimer);
+      clearInterval(animationInterval);
     };
-  }, []);
+  }, [direction]);
 
   return (
     <div className="relative flex items-center justify-center h-80 w-80">
-      <div className="absolute text-white/80 text-sm top-2 transition-opacity duration-500">
-        {phase === 'inhale' ? 'Breathe In' : phase === 'hold' ? 'Hold' : 'Breathe Out'}
-      </div>
-      
       <div 
         className="relative rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center"
         style={{
           width: `${size}%`,
           height: `${size}%`,
-          transition: 'all 0.25s ease-in-out'
+          transition: 'all 0.3s ease-in-out'
         }}
       >
         <div className="absolute inset-0 rounded-full bg-cyan-500/10 animate-pulse"></div>
