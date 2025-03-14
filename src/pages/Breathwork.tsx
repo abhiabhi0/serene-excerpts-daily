@@ -1,8 +1,9 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import Footer from '@/components/Footer';
-import { CirclePause, Wind } from 'lucide-react';
+import { CirclePause, Wind, RotateCw } from 'lucide-react';
 
 const Breathwork = () => {
   const [isActive, setIsActive] = useState(false);
@@ -80,50 +81,33 @@ const Breathwork = () => {
 };
 
 const BreathingAnimation = () => {
-  const [size, setSize] = useState(40); // Initial size percentage
-  const [direction, setDirection] = useState<'expanding' | 'contracting'>('expanding');
+  const [rotation, setRotation] = useState(0);
   
   useEffect(() => {
-    const animationInterval = setInterval(() => {
-      setSize(prevSize => {
-        // When expanding and reaching max size (70), switch to contracting
-        if (direction === 'expanding' && prevSize >= 70) {
-          setDirection('contracting');
-          return 70;
-        }
-        // When contracting and reaching min size (40), switch to expanding
-        else if (direction === 'contracting' && prevSize <= 40) {
-          setDirection('expanding');
-          return 40;
-        }
-        // Otherwise continue in current direction
-        else {
-          return direction === 'expanding' 
-            ? prevSize + 0.4 // Slow expansion rate
-            : prevSize - 0.4; // Slow contraction rate
-        }
-      });
-    }, 45); // Shorter interval for smoother animation
+    const rotationInterval = setInterval(() => {
+      setRotation(prevRotation => (prevRotation + 1) % 360);
+    }, 50); // Adjust speed of rotation as needed
     
     return () => {
-      clearInterval(animationInterval);
+      clearInterval(rotationInterval);
     };
-  }, [direction]);
+  }, []);
 
   return (
     <div className="relative flex items-center justify-center h-80 w-80">
       <div 
         className="relative rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center"
         style={{
-          width: `${size}%`,
-          height: `${size}%`,
-          transition: 'all 0.3s ease-in-out'
+          width: '60%',
+          height: '60%',
+          transform: `rotate(${rotation}deg)`,
+          transition: 'transform 0.05s linear'
         }}
       >
         <div className="absolute inset-0 rounded-full bg-cyan-500/10 animate-pulse"></div>
         <div className="absolute inset-4 rounded-full bg-cyan-500/5 border border-cyan-500/30"></div>
         
-        <Wind className="text-white/60" size={40} />
+        <RotateCw className="text-white/60" size={40} />
       </div>
     </div>
   );
