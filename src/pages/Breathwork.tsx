@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import Footer from '@/components/Footer';
-import { CirclePause, Wind, RotateCw } from 'lucide-react';
+import { CirclePause, Wind } from 'lucide-react';
 
 const Breathwork = () => {
   const [isActive, setIsActive] = useState(false);
@@ -103,33 +103,10 @@ const RevolveLoader = () => {
 };
 
 const BreathingAnimation = () => {
-  const [rotation, setRotation] = useState(0);
-  
-  useEffect(() => {
-    const rotationInterval = setInterval(() => {
-      setRotation(prevRotation => (prevRotation + 1) % 360);
-    }, 50); // Adjust speed of rotation as needed
-    
-    return () => {
-      clearInterval(rotationInterval);
-    };
-  }, []);
-
   return (
     <div className="relative flex items-center justify-center h-80 w-80">
-      <div 
-        className="relative rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center"
-        style={{
-          width: '60%',
-          height: '60%',
-          transform: `rotate(${rotation}deg)`,
-          transition: 'transform 0.05s linear'
-        }}
-      >
-        <div className="absolute inset-0 rounded-full bg-cyan-500/10 animate-pulse"></div>
-        <div className="absolute inset-4 rounded-full bg-cyan-500/5 border border-cyan-500/30"></div>
-        
-        <RotateCw className="text-white/60" size={40} />
+      <div className="absolute inset-0 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center animate-pulse">
+        <Wind className="text-white/60" size={80} />
       </div>
     </div>
   );
