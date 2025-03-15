@@ -6,11 +6,13 @@ import { ActionButtons } from "./excerpt/ActionButtons";
 import { SupportSection } from "./excerpt/SupportSection";
 import { GratitudeAffirmations } from "./excerpt/GratitudeAffirmations";
 import { useNotifications } from "@/hooks/useNotifications";
-import { MorningRitualChecklist } from "./MorningRitualChecklist";
 import { ScreenshotOverlay } from "./excerpt/ScreenshotOverlay";
 import { useShareHandler } from "./excerpt/ShareHandler";
 import { useFavoriteHandler } from "./excerpt/FavoriteHandler";
 import { useScreenshotMode } from "./excerpt/ScreenshotMode";
+import { Button } from "@/components/ui/button";
+import { Wind } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ExcerptCardProps {
   excerpt: ExcerptWithMeta;
@@ -43,7 +45,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
               }
             `}
           </style>
-          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm animate-[glowShadow_3s_ease-in-out_infinite]">
+          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm animate-[glowShadow_3s_ease-in-out_infinite] ">
             <CardContent className={isHindi ? 'font-hindi' : ''}>
               <ExcerptContent 
                 excerpt={excerpt} 
@@ -61,7 +63,7 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
             </p>
           )}
 
-          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
+          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm mb-2">
             <CardContent className="p-2">
               <ActionButtons 
                 excerpt={excerpt}
@@ -73,7 +75,21 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
             </CardContent>
           </Card>
 
-          <MorningRitualChecklist />
+          <div className="p-4 rounded-lg bg-blue-900/20 border border-blue-700/20">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-medium mb-1">One Minute Breathwork</h3>
+                <p className="text-sm text-white/70">Take a short breathing break to re-center your mind</p>
+              </div>
+              <Link to="/breathwork">
+                <Button variant="secondary" className="w-full md:w-auto flex items-center gap-2">
+                  <Wind size={16} /> Start Breathing
+                </Button>
+              </Link>
+
+            </div>
+          </div>
+
           <GratitudeAffirmations />
 
           <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">

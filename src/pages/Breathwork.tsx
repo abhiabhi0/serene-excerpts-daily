@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -8,14 +7,13 @@ import { CirclePause, Wind } from 'lucide-react';
 const Breathwork = () => {
   const [isActive, setIsActive] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);  // Add loading state
+  const [isLoading, setIsLoading] = useState(false);
   const animationRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   const startBreathwork = () => {
-    setIsLoading(true); // Show loader first
+    setIsLoading(true);
     
-    // Simulate loading time (remove this in production if not needed)
     setTimeout(() => {
       setIsLoading(false);
       setIsActive(true);
@@ -49,13 +47,73 @@ const Breathwork = () => {
 
   return (
     <div className="min-h-screen bg-[#0A1929] flex flex-col">
+      <style>{`
+        .gradient-loader {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          border-radius: 50%;
+          height: 96px;
+          width: 96px;
+          animation: rotate_loader 1.2s linear infinite;
+          background-color: #0ea5e9;
+          background-image: linear-gradient(#0ea5e9, #2563eb, #6366f1);
+        }
+
+        .gradient-loader span {
+          position: absolute;
+          border-radius: 50%;
+          height: 100%;
+          width: 100%;
+          background-color: #0ea5e9;
+          background-image: linear-gradient(#0ea5e9, #2563eb, #6366f1);
+        }
+
+        .gradient-loader span:nth-of-type(1) {
+          filter: blur(5px);
+        }
+
+        .gradient-loader span:nth-of-type(2) {
+          filter: blur(10px);
+        }
+
+        .gradient-loader span:nth-of-type(3) {
+          filter: blur(25px);
+        }
+
+        .gradient-loader span:nth-of-type(4) {
+          filter: blur(50px);
+        }
+
+        .gradient-loader::after {
+          content: "";
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          right: 10px;
+          bottom: 10px;
+          background-color: #0A1929;
+          border: solid 5px #0c2237;
+          border-radius: 50%;
+        }
+
+        @keyframes rotate_loader {
+          from {
+            transform: translate(-50%, -50%) rotate(0deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(360deg);
+          }
+        }
+      `}</style>
+
       <div className="container max-w-[clamp(16rem,90vw,42rem)] mx-auto flex-grow pt-8 flex flex-col items-center justify-center gap-8">
         <h1 className="text-2xl font-semibold text-center text-white mb-2">One Minute Breathwork</h1>
         <p className="text-center text-white/80 mb-8">Take a moment to breathe deeply and refocus your mind.</p>
         
         <div className="w-full flex flex-col items-center justify-center">
           {isLoading ? (
-            <RevolveLoader />
+            <GradientLoader />
           ) : !isActive ? (
             <Button 
               onClick={startBreathwork}
@@ -74,7 +132,7 @@ const Breathwork = () => {
             </Button>
           )}
           
-          {isActive && <BreathingAnimation />}
+          {isActive && <GradientLoader />}
         </div>
         
         {!isActive && animationComplete && (
@@ -89,24 +147,14 @@ const Breathwork = () => {
   );
 };
 
-const RevolveLoader = () => {
+const GradientLoader = () => {
   return (
     <div className="relative h-24 w-24">
-      <div className="revolve-loader">
+      <div className="gradient-loader">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-      </div>
-    </div>
-  );
-};
-
-const BreathingAnimation = () => {
-  return (
-    <div className="relative flex items-center justify-center h-80 w-80">
-      <div className="absolute inset-0 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center animate-pulse">
-        <Wind className="text-white/60" size={80} />
       </div>
     </div>
   );
