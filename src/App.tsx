@@ -11,15 +11,18 @@ const Blog = lazy(() => import('./pages/Blog'));
 const Breathwork = lazy(() => import('./pages/Breathwork'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+// Common loading fallback
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="animate-pulse text-xl text-primary">ॐ</div>
+  </div>
+);
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">ॐ</div>
-        </div>
-      }>
+      <Suspense fallback={<LoadingFallback />}>
         <Index />
       </Suspense>
     ),
@@ -27,11 +30,7 @@ const router = createBrowserRouter([
   {
     path: '/about',
     element: (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">ॐ</div>
-        </div>
-      }>
+      <Suspense fallback={<LoadingFallback />}>
         <About />
       </Suspense>
     ),
@@ -39,11 +38,7 @@ const router = createBrowserRouter([
   {
     path: '/blog',
     element: (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">ॐ</div>
-        </div>
-      }>
+      <Suspense fallback={<LoadingFallback />}>
         <Blog />
       </Suspense>
     ),
@@ -51,11 +46,7 @@ const router = createBrowserRouter([
   {
     path: '/breathwork',
     element: (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">ॐ</div>
-        </div>
-      }>
+      <Suspense fallback={<LoadingFallback />}>
         <Breathwork />
       </Suspense>
     ),
@@ -63,11 +54,7 @@ const router = createBrowserRouter([
   {
     path: '*',
     element: (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">ॐ</div>
-        </div>
-      }>
+      <Suspense fallback={<LoadingFallback />}>
         <NotFound />
       </Suspense>
     ),
