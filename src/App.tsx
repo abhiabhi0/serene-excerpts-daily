@@ -9,7 +9,6 @@ const Index = lazy(() => import('./pages/Index'));
 const About = lazy(() => import('./pages/About'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Breathwork = lazy(() => import('./pages/Breathwork'));
-const GratitudeAffirmations = lazy(() => import('./pages/GratitudeAffirmations'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const router = createBrowserRouter([
@@ -58,18 +57,6 @@ const router = createBrowserRouter([
         </div>
       }>
         <Breathwork />
-      </Suspense>
-    ),
-  },
-  {
-    path: '/gratitude-affirmations',
-    element: (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="animate-pulse text-xl text-primary">ॐ</div>
-        </div>
-      }>
-        <GratitudeAffirmations />
       </Suspense>
     ),
   },
