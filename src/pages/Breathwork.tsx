@@ -3,19 +3,19 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import Footer from '@/components/Footer';
-import { CirclePause, Wind } from 'lucide-react';
+import { CirclePause, Wind, Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Breathwork = () => {
   const [isActive, setIsActive] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);  // Add loading state
+  const [isLoading, setIsLoading] = useState(false);
   const animationRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   const startBreathwork = () => {
-    setIsLoading(true); // Show loader first
+    setIsLoading(true);
     
-    // Simulate loading time (remove this in production if not needed)
     setTimeout(() => {
       setIsLoading(false);
       setIsActive(true);
@@ -83,6 +83,14 @@ const Breathwork = () => {
             <p className="text-sm mt-2">Remember, you can return anytime for a breathing break.</p>
           </div>
         )}
+
+        <div className="mt-8">
+          <Link to="/gratitude-affirmations">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Heart className="h-4 w-4" /> Gratitude & Affirmations
+            </Button>
+          </Link>
+        </div>
       </div>
       <Footer />
     </div>
