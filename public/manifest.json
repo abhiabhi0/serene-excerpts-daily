@@ -1,0 +1,29 @@
+
+{
+  "name": "Atmanam Viddhi - Daily Spiritual Wisdom",
+  "short_name": "Atmanam Viddhi",
+  "description": "Discover daily spiritual excerpts from ancient Indian texts",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A1929",
+  "theme_color": "#0A1929",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}
