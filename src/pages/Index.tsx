@@ -1,6 +1,8 @@
 
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { TabsContainer } from "@/components/TabsContainer";
 import { useTabNavigation } from "@/hooks/useTabNavigation";
@@ -12,7 +14,7 @@ import { availableThemes } from "@/data/staticData";
 import { RandomExcerptsTab } from "@/components/home/RandomExcerptsTab";
 import { LocalExcerptsTab } from "@/components/home/LocalExcerptsTab";
 import { useExcerptData } from "@/hooks/useExcerptData";
-
+import { useNotifications } from "@/hooks/useNotifications";
 
 const Index = () => {
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
@@ -20,6 +22,7 @@ const Index = () => {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
   const isMobile = useIsMobile();
   const [isScreenTooSmall, setIsScreenTooSmall] = useState(false);
+  const { renderNotificationButton } = useNotifications();
   
   const {
     currentExcerpt,
@@ -71,6 +74,22 @@ const Index = () => {
               selectedTheme={selectedTheme} 
               onThemeSelect={handleThemeSelect}
             />
+            <div className="flex gap-2">
+              {renderNotificationButton()}
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap gap-2 justify-center mb-2">
+            <Link to="/breathwork">
+              <Button variant="outline" className="bg-blue-800/30 border-blue-700/50 hover:bg-blue-700/40 text-blue-100">
+                🧘 Breathing Exercise
+              </Button>
+            </Link>
+            <Link to="/gratitude-affirmations">
+              <Button variant="outline" className="bg-purple-800/30 border-purple-700/50 hover:bg-purple-700/40 text-purple-100">
+                🙏 Gratitude & Affirmations
+              </Button>
+            </Link>
           </div>
         
           <Tabs 
