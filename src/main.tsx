@@ -2,8 +2,6 @@
 import { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import { registerServiceWorker, checkForAppUpdates } from './register-sw';
-import { useToast } from '@/components/ui/use-toast';
 
 // Properly implement lazy loading with correct typing
 const App = lazy(() => import('./App'));
@@ -27,9 +25,6 @@ const LoadingFallback = () => (
   </div>
 );
 
-// Register service worker and check for updates
-registerServiceWorker();
-
 // Defer initial render
 requestAnimationFrame(() => {
   root.render(
@@ -37,19 +32,15 @@ requestAnimationFrame(() => {
       <App />
     </Suspense>
   );
-  
-  // Check for app updates
-  checkForAppUpdates(() => {
-    const { toast } = useToast();
-    toast({
-      title: "Update Available",
-      description: "A new version is available. Please refresh to update.",
-      action: <button 
-        onClick={() => window.location.reload()} 
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Refresh
-      </button>
+
+  // Register the service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+        console.log('Service Worker registered with scope:', registration.scope);
+      }).catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
     });
-  });
+  }
 });
