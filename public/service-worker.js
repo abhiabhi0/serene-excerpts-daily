@@ -1,3 +1,4 @@
+
 // Cache version - update this when content changes
 const CACHE_NAME = 'atmanam-viddhi-v1';
 
@@ -13,18 +14,23 @@ const PRECACHE_ASSETS = [
 
 // Service worker installation
 self.addEventListener('install', event => {
+  console.log('Service Worker installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Opened cache');
         return cache.addAll(PRECACHE_ASSETS);
       })
-      .then(() => self.skipWaiting())
+      .then(() => {
+        console.log('Service Worker installed, skipping wait');
+        return self.skipWaiting();  // Force activation
+      })
   );
 });
 
 // Service worker activation and cache cleanup
 self.addEventListener('activate', event => {
+  console.log('Service Worker activating...');
   const currentCaches = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -33,7 +39,10 @@ self.addEventListener('activate', event => {
       return Promise.all(cachesToDelete.map(cacheToDelete => {
         return caches.delete(cacheToDelete);
       }));
-    }).then(() => self.clients.claim())
+    }).then(() => {
+      console.log('Service Worker activated, claiming clients');
+      return self.clients.claim();  // Take control of all clients
+    })
   );
 });
 

@@ -2,7 +2,8 @@
 export function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js')
+      // Register the service worker from the root path to ensure it can control all pages
+      navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
         .then(registration => {
           console.log('Service Worker registered successfully:', registration);
           

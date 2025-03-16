@@ -34,6 +34,6 @@ requestAnimationFrame(() => {
     </Suspense>
   );
 
-  // Register the service worker
+  // Register the service worker immediately
   registerServiceWorker();
 });

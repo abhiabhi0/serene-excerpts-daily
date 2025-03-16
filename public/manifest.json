@@ -3,7 +3,7 @@
   "name": "Atmanam Viddhi - Know Thyself",
   "short_name": "Atmanam Viddhi",
   "description": "Discover daily spiritual excerpts from ancient Indian texts",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
   "display": "standalone",
   "background_color": "#0A1929",
   "theme_color": "#0A1929",
