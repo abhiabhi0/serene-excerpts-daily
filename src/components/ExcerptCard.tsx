@@ -57,12 +57,6 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
         </div>
         
         <div className={`transition-opacity duration-300 ${isScreenshotMode ? 'opacity-0 pointer-events-none absolute' : 'opacity-100'}`}>
-          {excerpt.isLocal && (
-            <p className="text-center text-sm text-muted-foreground italic">
-              Click on the excerpt to enter screenshot mode!
-            </p>
-          )}
-
           <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm mb-2">
             <CardContent className="p-2">
               <ActionButtons 
