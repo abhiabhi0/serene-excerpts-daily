@@ -2,7 +2,7 @@
 import { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import { registerServiceWorker, ensureDataPersistence } from './register-sw';
+import { registerServiceWorker } from './register-sw';
 import { AuthProvider } from './context/AuthContext';
 
 // Properly implement lazy loading with correct typing
@@ -26,9 +26,6 @@ const LoadingFallback = () => (
     </div>
   </div>
 );
-
-// Ensure data persistence before rendering
-ensureDataPersistence();
 
 // Defer initial render
 requestAnimationFrame(() => {

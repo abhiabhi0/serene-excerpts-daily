@@ -64,11 +64,7 @@ export const useRitualStorage = (userId: string | undefined) => {
       }
       
       // Ensure we're parsing a string - cast to string if needed
-      if (data?.items) {
-        const itemsStr = String(data.items);
-        return JSON.parse(itemsStr);
-      }
-      return null;
+      return data?.items ? JSON.parse(String(data.items)) : null;
     } catch (error) {
       console.error('Error loading from Supabase:', error);
       return null;
@@ -96,11 +92,7 @@ export const useRitualStorage = (userId: string | undefined) => {
       }
       
       // Ensure we're parsing a string - cast to string if needed
-      if (data?.items) {
-        const itemsStr = String(data.items);
-        return JSON.parse(itemsStr);
-      }
-      return null;
+      return data?.items ? JSON.parse(String(data.items)) : null;
     } catch (error) {
       console.error('Error in getRitualByDate:', error);
       return null;

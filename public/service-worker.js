@@ -1,5 +1,6 @@
+
 // Cache version - update this when content changes
-const CACHE_NAME = 'atmanam-viddhi-v2';
+const CACHE_NAME = 'atmanam-viddhi-v1';
 
 // Assets to cache immediately on install
 const PRECACHE_ASSETS = [
@@ -30,13 +31,10 @@ self.addEventListener('install', event => {
 // Service worker activation and cache cleanup
 self.addEventListener('activate', event => {
   console.log('Service Worker activating...');
-  
-  // Keep user data caches when updating
-  const cacheKeepList = [CACHE_NAME, 'user-data-cache'];
-  
+  const currentCaches = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
-      return cacheNames.filter(cacheName => !cacheKeepList.includes(cacheName));
+      return cacheNames.filter(cacheName => !currentCaches.includes(cacheName));
     }).then(cachesToDelete => {
       return Promise.all(cachesToDelete.map(cacheToDelete => {
         return caches.delete(cacheToDelete);
@@ -52,19 +50,6 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   // Skip cross-origin requests
   if (!event.request.url.startsWith(self.location.origin)) {
-    return;
-  }
-
-  // Skip Supabase API requests to avoid caching authentication data
-  if (event.request.url.includes('supabase.co')) {
-    return fetch(event.request);
-  }
-
-  // For localStorage-related URLs, use network-only to ensure fresh data
-  if (event.request.url.includes('localStorage') || 
-      event.request.url.includes('localExcerpts') ||
-      event.request.url.includes('morningRitual')) {
-    event.respondWith(fetch(event.request));
     return;
   }
 
