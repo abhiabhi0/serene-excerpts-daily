@@ -1,4 +1,3 @@
-
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { Card, CardContent } from "@/components/ui/card";
 import { ExcerptContent } from "./excerpt/ExcerptContent";
@@ -11,7 +10,7 @@ import { useShareHandler } from "./excerpt/ShareHandler";
 import { useFavoriteHandler } from "./excerpt/FavoriteHandler";
 import { useScreenshotMode } from "./excerpt/ScreenshotMode";
 import { Button } from "@/components/ui/button";
-import { Wind } from "lucide-react";
+import { Bell, BellRing, Wind } from "lucide-react";
 import { Link } from "react-router-dom";
 import { UserAccountButton } from "./UserAccountButton";
 import { MorningRitualChecklist } from "./MorningRitualChecklist";
@@ -24,7 +23,7 @@ interface ExcerptCardProps {
 
 export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: ExcerptCardProps) => {
   // Extract functionality to custom hooks
-  const { renderNotificationButton } = useNotifications();
+  const { isSupported, isEnabled, requestNotificationPermission } = useNotifications();
   const { handleShare } = useShareHandler(excerpt);
   const { isFavorite, handleToggleFavorite } = useFavoriteHandler(excerpt);
   const { isScreenshotMode, toggleScreenshotMode } = useScreenshotMode(onScreenshotModeChange);
@@ -34,7 +33,17 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
   return (
     <div className="w-[98%] mx-auto space-y-4">
       {/* User Account Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        {isSupported && (
+          <Button
+            variant={isEnabled ? "ghost" : "outline"}
+            size="icon"
+            className={isEnabled ? "text-green-400" : "animate-pulse"}
+            onClick={requestNotificationPermission}
+          >
+            {isEnabled ? <BellRing size={20} /> : <Bell size={20} />}
+          </Button>
+        )}
         <UserAccountButton />
       </div>
       

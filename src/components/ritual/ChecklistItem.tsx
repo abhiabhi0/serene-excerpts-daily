@@ -1,5 +1,4 @@
-
-import { CheckSquare, Square } from 'lucide-react';
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ChecklistItemProps {
   id: string;
@@ -10,16 +9,19 @@ interface ChecklistItemProps {
 
 export const ChecklistItem = ({ id, label, checked, onToggle }: ChecklistItemProps) => {
   return (
-    <div 
-      onClick={() => onToggle(id)}
-      className="flex items-center gap-1 bg-white/10 px-3 py-2 rounded-md cursor-pointer hover:bg-white/15 transition-colors"
-    >
-      {checked ? (
-        <CheckSquare className="w-4 h-4 text-green-400" />
-      ) : (
-        <Square className="w-4 h-4" />
-      )}
-      <span className="text-sm">{label}</span>
+    <div className="flex items-center gap-2">
+      <Checkbox
+        id={id}
+        checked={checked}
+        onCheckedChange={() => onToggle(id)}
+        className="h-[18px] w-[18px] rounded-[2px] bg-[#132F4C] border-[#1E4976]"
+      />
+      <label
+        htmlFor={id}
+        className="text-[13px] font-normal text-white/70"
+      >
+        {label}
+      </label>
     </div>
   );
 };

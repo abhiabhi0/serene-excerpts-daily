@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import React from 'react';
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 type NotificationPermissionStatus = 'default' | 'granted' | 'denied';
 
@@ -118,35 +118,10 @@ export function useNotifications() {
     checkNotificationSettings();
   }, []);
 
-  // Render the notification button based on permission status
-  const renderNotificationButton = () => {
-    if (!('Notification' in window)) {
-      return null; // Don't show button if notifications aren't supported
-    }
-
-    if (notificationStatus === 'granted') {
-      return React.createElement(
-        'button',
-        { 
-          className: "px-4 py-2 rounded-lg bg-green-600/30 text-green-200 text-sm font-medium hover:bg-green-500/40 transition-colors"
-        },
-        "✓ Morning Rituals Enabled"
-      );
-    }
-    
-    return React.createElement(
-      'button',
-      {
-        onClick: requestNotificationPermission,
-        className: "px-4 py-2 rounded-lg bg-blue-600/30 text-blue-200 text-sm font-medium hover:bg-blue-500/40 transition-colors animate-pulse"
-      },
-      "Get notified for Morning Rituals"
-    );
-  };
-
   return {
     notificationStatus,
     requestNotificationPermission,
-    renderNotificationButton
+    isSupported: 'Notification' in window,
+    isEnabled: notificationStatus === 'granted'
   };
 }

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useMorningRitual } from '@/hooks/morning-ritual';
 import { ChecklistItem } from '@/components/ritual/ChecklistItem';
@@ -6,7 +5,6 @@ import { useAnalyticsTracker } from '@/components/excerpt/AnalyticsTracker';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { AuthModal } from '@/components/AuthModal';
-import { Shield } from 'lucide-react';
 
 export const MorningRitualChecklist = () => {
   const { items, toggleItem, streak, isLoading } = useMorningRitual();
@@ -17,7 +15,6 @@ export const MorningRitualChecklist = () => {
   const handleToggleItem = (id: string) => {
     toggleItem(id);
     
-    // Track the event
     trackEvent({
       eventName: 'morning_ritual_toggle',
       params: {
@@ -28,39 +25,37 @@ export const MorningRitualChecklist = () => {
   };
 
   return (
-    <div className="mt-4">
-      <div className="flex flex-col items-center mb-4">
-        <p className="text-center text-sm text-white/70 mb-2">Today's Morning Ritual</p>
-        
-        {user ? (
-          <div className="flex items-center gap-2 bg-blue-500/20 px-3 py-1 rounded-full text-sm">
-            <Shield size={16} className="text-blue-400" />
-            <span>Current Streak: {isLoading ? '...' : streak} days</span>
+    <div className="space-y-4">
+      <div className="bg-[#0A1929] rounded-lg p-4">
+        <h2 className="text-sm font-normal text-white/90 mb-4">Today's Morning Ritual</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          {items.map(item => (
+            <ChecklistItem
+              key={item.id}
+              id={item.id}
+              label={item.label}
+              checked={item.checked}
+              onToggle={handleToggleItem}
+            />
+          ))}
+        </div>
+        {user && (
+          <div className="mt-3 text-xs text-white/50">
+            Current streak: {isLoading ? '...' : streak} days
           </div>
-        ) : (
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="text-xs" 
-            onClick={() => setIsAuthModalOpen(true)}
-          >
-            Sign in to track your streak
-          </Button>
         )}
       </div>
-      
-      <div className="flex flex-wrap justify-center gap-3">
-        {items.map(item => (
-          <ChecklistItem
-            key={item.id}
-            id={item.id}
-            label={item.label}
-            checked={item.checked}
-            onToggle={handleToggleItem}
-          />
-        ))}
-      </div>
-      
+
+      {!user && (
+        <Button 
+          variant="outline" 
+          className="w-full bg-[#132F4C] text-sm font-normal text-white/90 border-[#1E4976] hover:bg-[#132F4C]/80"
+          onClick={() => setIsAuthModalOpen(true)}
+        >
+          Sign in to track your streak
+        </Button>
+      )}
+
       <AuthModal 
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
