@@ -9,7 +9,72 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      morning_rituals: {
+        Row: {
+          date: string
+          id: string
+          items: Json
+          user_id: string
+        }
+        Insert: {
+          date: string
+          id?: string
+          items: Json
+          user_id: string
+        }
+        Update: {
+          date?: string
+          id?: string
+          items?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_practice_data: {
+        Row: {
+          affirmations: Json | null
+          gratitudes: Json | null
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          affirmations?: Json | null
+          gratitudes?: Json | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          affirmations?: Json | null
+          gratitudes?: Json | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_streaks: {
+        Row: {
+          current_streak: number | null
+          id: string
+          last_updated: string | null
+          user_id: string
+        }
+        Insert: {
+          current_streak?: number | null
+          id?: string
+          last_updated?: string | null
+          user_id: string
+        }
+        Update: {
+          current_streak?: number | null
+          id?: string
+          last_updated?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
