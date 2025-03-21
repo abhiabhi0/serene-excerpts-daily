@@ -13,6 +13,8 @@ import { useScreenshotMode } from "./excerpt/ScreenshotMode";
 import { Button } from "@/components/ui/button";
 import { Wind } from "lucide-react";
 import { Link } from "react-router-dom";
+import { UserAccountButton } from "./UserAccountButton";
+import { MorningRitualChecklist } from "./MorningRitualChecklist";
 
 interface ExcerptCardProps {
   excerpt: ExcerptWithMeta;
@@ -31,6 +33,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
 
   return (
     <div className="w-[98%] mx-auto space-y-4">
+      {/* User Account Button */}
+      <div className="flex justify-end">
+        <UserAccountButton />
+      </div>
+      
       <ScreenshotOverlay 
         isScreenshotMode={isScreenshotMode} 
         onToggle={toggleScreenshotMode}
@@ -69,7 +76,10 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
             </CardContent>
           </Card>
 
-          <div className="p-4 rounded-lg bg-blue-900/20 border border-blue-700/20">
+          {/* Morning Ritual Checklist */}
+          <MorningRitualChecklist />
+
+          <div className="p-4 rounded-lg bg-blue-900/20 border border-blue-700/20 mt-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-medium mb-1">One Minute Breathwork</h3>
@@ -80,7 +90,6 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
                   <Wind size={16} /> Start Breathing
                 </Button>
               </Link>
-
             </div>
           </div>
 

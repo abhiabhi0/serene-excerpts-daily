@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { registerServiceWorker } from './register-sw';
+import { AuthProvider } from './context/AuthContext';
 
 // Properly implement lazy loading with correct typing
 const App = lazy(() => import('./App'));
@@ -30,7 +31,9 @@ const LoadingFallback = () => (
 requestAnimationFrame(() => {
   root.render(
     <Suspense fallback={<LoadingFallback />}>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </Suspense>
   );
 
