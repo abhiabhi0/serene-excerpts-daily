@@ -1,4 +1,5 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { useMorningRitual } from '@/hooks/morning-ritual';
 import { ChecklistItem } from '@/components/ritual/ChecklistItem';
 import { useAnalyticsTracker } from '@/components/excerpt/AnalyticsTracker';
@@ -11,6 +12,13 @@ export const MorningRitualChecklist = () => {
   const { trackEvent } = useAnalyticsTracker();
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+
+  // Check if checklist should be shown based on user preference
+  useEffect(() => {
+    const hideChecklist = localStorage.getItem('hideRitualChecklist') === 'true';
+    setIsVisible(!hideChecklist);
+  }, []);
 
   const handleToggleItem = (id: string) => {
     toggleItem(id);
@@ -24,10 +32,23 @@ export const MorningRitualChecklist = () => {
     });
   };
 
+  if (!isVisible) return null;
+
   return (
     <div className="space-y-4">
       <div className="bg-[#0A1929] rounded-lg p-4">
-        <h2 className="text-sm font-normal text-white/90 mb-4">Today's Morning Ritual</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-sm font-normal text-white/90">Today's Morning Ritual</h2>
+          <button 
+            onClick={() => {
+              localStorage.setItem('hideRitualChecklist', 'true');
+              setIsVisible(false);
+            }}
+            className="text-white/50 hover:text-white/80 text-xs"
+          >
+            Hide
+          </button>
+        </div>
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           {items.map(item => (
             <ChecklistItem
