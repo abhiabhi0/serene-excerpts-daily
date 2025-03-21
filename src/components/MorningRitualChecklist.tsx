@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { useMorningRitual } from '@/hooks/useMorningRitual';
+import { useMorningRitual } from '@/hooks/morning-ritual';
 import { ChecklistItem } from '@/components/ritual/ChecklistItem';
 import { useAnalyticsTracker } from '@/components/excerpt/AnalyticsTracker';
 import { useAuth } from '@/context/AuthContext';
