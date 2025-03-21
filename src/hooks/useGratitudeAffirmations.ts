@@ -46,8 +46,17 @@ export const useGratitudeAffirmations = () => {
             setGratitudeList(getStoredData("userGratitude"));
             setAffirmationList(getStoredData("userAffirmation"));
           } else if (data) {
-            setGratitudeList(data.gratitudes || []);
-            setAffirmationList(data.affirmations || []);
+            // Safely convert the JSON data to string arrays
+            const gratitudes = data.gratitudes ? 
+              (Array.isArray(data.gratitudes) ? data.gratitudes as string[] : []) : 
+              [];
+            
+            const affirmations = data.affirmations ? 
+              (Array.isArray(data.affirmations) ? data.affirmations as string[] : []) : 
+              [];
+            
+            setGratitudeList(gratitudes);
+            setAffirmationList(affirmations);
           } else {
             // No data in Supabase yet, check localStorage and sync it
             const localGratitudes = getStoredData("userGratitude");
