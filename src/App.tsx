@@ -1,9 +1,10 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider } from '@/context/AuthContext';
 import IndexPage from './pages/Index'; // Import index directly
+import { clearSiteCache } from './register-sw';
 
 // Lazy load other pages
 const BreathworkPage = lazy(() => import('./pages/Breathwork'));
@@ -27,6 +28,11 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  useEffect(() => {
+    // Clear site cache on mount while preserving user data
+    clearSiteCache();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

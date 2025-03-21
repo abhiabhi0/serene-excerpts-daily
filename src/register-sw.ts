@@ -1,4 +1,3 @@
-
 export function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -36,5 +35,12 @@ export function requestNotificationPermission() {
         console.log('Notification permission denied.');
       }
     });
+  }
+}
+
+export function clearSiteCache() {
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    // Send message to service worker to clear site cache
+    navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_SITE_CACHE' });
   }
 }

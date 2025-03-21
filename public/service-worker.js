@@ -1,6 +1,6 @@
-
 // Cache version - update this when content changes
-const CACHE_NAME = 'atmanam-viddhi-v1';
+const CACHE_NAME = 'site-cache-v1';
+const USER_DATA_CACHE = 'user-data-cache';
 
 // Assets to cache immediately on install
 const PRECACHE_ASSETS = [
@@ -48,42 +48,23 @@ self.addEventListener('activate', event => {
 
 // Fetch handler with network-first strategy for API calls, cache-first for static assets
 self.addEventListener('fetch', event => {
-  // Skip cross-origin requests
-  if (!event.request.url.startsWith(self.location.origin)) {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') return;
+
+  // Handle API requests differently
+  if (event.request.url.includes('/api/')) {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(event.request);
+      })
+    );
     return;
   }
 
+  // For static assets, try cache first
   event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        // Return cached response immediately
-        return cachedResponse;
-      }
-
-      // For non-cached responses, fetch from network
-      return fetch(event.request)
-        .then(response => {
-          // Don't cache if not a valid response
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-
-          // Clone the response as it's a stream and can only be consumed once
-          const responseToCache = response.clone();
-
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-
-          return response;
-        })
-        .catch(() => {
-          // When network fails, return a fallback if available
-          if (event.request.url.indexOf('.html') > -1) {
-            return caches.match('/');
-          }
-        });
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
     })
   );
 });
@@ -125,4 +106,24 @@ self.addEventListener('notificationclick', event => {
       }
     })
   );
+});
+
+// Message event for cache clearing
+self.addEventListener('message', (event) => {
+  if (event.data.type === 'CLEAR_SITE_CACHE') {
+    event.waitUntil(
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            // Only clear the site cache, preserve user data cache
+            if (cacheName === CACHE_NAME) {
+              return caches.delete(cacheName).then(() => {
+                return caches.open(CACHE_NAME);
+              });
+            }
+          })
+        );
+      })
+    );
+  }
 });
