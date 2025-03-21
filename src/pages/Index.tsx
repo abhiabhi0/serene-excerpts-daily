@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LocalExcerpt } from "@/types/localExcerpt";
@@ -12,7 +11,7 @@ import { availableThemes } from "@/data/staticData";
 import { RandomExcerptsTab } from "@/components/home/RandomExcerptsTab";
 import { LocalExcerptsTab } from "@/components/home/LocalExcerptsTab";
 import { useExcerptData } from "@/hooks/useExcerptData";
-
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Index = () => {
   const { localExcerpts, setLocalExcerpts } = useLocalExcerpts();
@@ -30,7 +29,8 @@ const Index = () => {
     selectedTheme,
     handleNewExcerpt,
     handleThemeSelect,
-    convertLocalToExcerptWithMeta
+    convertLocalToExcerptWithMeta,
+    isPreloading
   } = useExcerptData();
 
   const handleSelectExcerpt = (excerpt: LocalExcerpt) => {
@@ -50,6 +50,21 @@ const Index = () => {
     return () => window.removeEventListener('resize', debouncedCheck);
   }, []);
 
+  const renderLoadingState = () => (
+    <div className="min-h-screen p-4 relative bg-[#0A1929]">
+      <div className="container max-w-[clamp(16rem,90vw,42rem)] mx-auto pt-8 flex flex-col gap-4 md:gap-8 relative z-10">
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-10 w-[200px]" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-[300px] w-full" />
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+
   const renderContent = () => {
     if (isScreenTooSmall && !isMobile) {
       return (
@@ -60,6 +75,10 @@ const Index = () => {
           </div>
         </div>
       );
+    }
+
+    if (isPreloading) {
+      return renderLoadingState();
     }
 
     return (

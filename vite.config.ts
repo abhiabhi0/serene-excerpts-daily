@@ -1,4 +1,3 @@
-
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -37,7 +36,7 @@ export default defineConfig(({ mode }) => ({
         blog: path.resolve(__dirname, 'blog/index.html')
       },
       external: [
-        // This helps with resolving the supabase package
+        '@supabase/supabase-js'
       ]
     }
   },

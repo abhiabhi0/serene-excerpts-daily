@@ -1,53 +1,52 @@
-  import { staticExcerpts } from "@/data/staticData";
-  import { ExcerptWithMeta } from "@/types/excerpt";
-    export const getRandomExcerpt = async (theme: string | null = null): Promise<ExcerptWithMeta> => {
-      console.log('------ getRandomExcerpt called ------');
-      console.log('Theme parameter:', theme ? `"${theme}"` : 'null (All)');
-  
-      let filteredExcerpts = staticExcerpts;
-      console.log('Total excerpts available:', staticExcerpts.length);
-  
-      // Log some sample themes from the data to debug
-      const sampleThemes = staticExcerpts
-        .slice(0, 5)
-        .map(e => ({ text: e.text.substring(0, 30), themes: e.themes }));
-      console.log('Sample excerpt themes:', sampleThemes);
-  
-      if (theme) {
-        console.log('Filtering excerpts for theme:', theme);
-        filteredExcerpts = staticExcerpts.filter(excerpt => {
-          // Check if excerpt.themes exists and includes the theme
-          const hasTheme = Array.isArray(excerpt.themes) && excerpt.themes.includes(theme);
-          if (hasTheme) {
-            console.log('Found matching excerpt:', excerpt.text.substring(0, 50));
-          }
-          return hasTheme;
-        });
-        console.log('Filtered excerpts count:', filteredExcerpts.length);
-      } else {
-        console.log('No theme filter applied, using all excerpts');
-      }
+import { staticExcerpts } from "@/data/staticData";
+import { ExcerptWithMeta } from "@/types/excerpt";
 
-      if (filteredExcerpts.length === 0) {
-        console.error('No excerpts found for theme:', theme);
-        throw new Error("No excerpts found for the selected theme");
-      }
+// Cache for excerpts
+const excerptCache = new Map<string, ExcerptWithMeta[]>();
 
-      const randomIndex = Math.floor(Math.random() * filteredExcerpts.length);
-      const selectedExcerpt = filteredExcerpts[randomIndex];
+export const getRandomExcerpt = async (theme: string | null = null): Promise<ExcerptWithMeta> => {
+  const cacheKey = theme || 'all';
   
-      console.log('Selected excerpt:', {
-        text: selectedExcerpt.text.substring(0, 50) + '...',
-        themes: selectedExcerpt.themes,
-        bookTitle: selectedExcerpt.bookTitle
-      });
+  // Check cache first
+  if (excerptCache.has(cacheKey)) {
+    const cachedExcerpts = excerptCache.get(cacheKey)!;
+    const randomIndex = Math.floor(Math.random() * cachedExcerpts.length);
+    return cachedExcerpts[randomIndex];
+  }
+
+  // If not in cache, filter and cache the results
+  let filteredExcerpts = staticExcerpts;
   
-      return {
-        text: selectedExcerpt.text,
-        bookTitle: selectedExcerpt.bookTitle,
-        bookAuthor: selectedExcerpt.bookAuthor,
-        translator: selectedExcerpt.translator,
-        amazonLink: selectedExcerpt.amazonLink,
-        themes: selectedExcerpt.themes
-      };
-    };
+  if (theme) {
+    filteredExcerpts = staticExcerpts.filter(excerpt => 
+      Array.isArray(excerpt.themes) && excerpt.themes.includes(theme)
+    );
+  }
+
+  if (filteredExcerpts.length === 0) {
+    throw new Error("No excerpts found for the selected theme");
+  }
+
+  // Cache the filtered results
+  excerptCache.set(cacheKey, filteredExcerpts);
+
+  const randomIndex = Math.floor(Math.random() * filteredExcerpts.length);
+  return {
+    text: filteredExcerpts[randomIndex].text,
+    bookTitle: filteredExcerpts[randomIndex].bookTitle,
+    bookAuthor: filteredExcerpts[randomIndex].bookAuthor,
+    translator: filteredExcerpts[randomIndex].translator,
+    amazonLink: filteredExcerpts[randomIndex].amazonLink,
+    themes: filteredExcerpts[randomIndex].themes
+  };
+};
+
+// Preload function to warm up the cache
+export const preloadExcerpts = async () => {
+  // Preload all themes
+  const themes = Array.from(new Set(staticExcerpts.flatMap(e => e.themes || [])));
+  await Promise.all([
+    getRandomExcerpt(null), // Preload all excerpts
+    ...themes.map(theme => getRandomExcerpt(theme))
+  ]);
+};

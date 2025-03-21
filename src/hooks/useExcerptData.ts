@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getRandomExcerpt } from "@/services/excerptService";
+import { getRandomExcerpt, preloadExcerpts } from "@/services/excerptService";
 import { ExcerptWithMeta } from "@/types/excerpt";
 import { LocalExcerpt } from "@/types/localExcerpt";
 import { useToast } from "@/components/ui/use-toast";
@@ -10,7 +9,9 @@ export const useExcerptData = () => {
   const { toast } = useToast();
   const [currentExcerpt, setCurrentExcerpt] = useState<ExcerptWithMeta | null>(null);
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
+  const [isPreloading, setIsPreloading] = useState(true);
   
+  // Query for initial excerpt
   const { 
     data: remoteExcerpt, 
     refetch: refetchRemote, 
@@ -22,8 +23,8 @@ export const useExcerptData = () => {
     enabled: false,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-    gcTime: 30 * 60 * 1000,
-    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000, // Cache for 30 minutes
+    staleTime: 5 * 60 * 1000, // Consider fresh for 5 minutes
     meta: {
       onError: () => {
         console.error("Failed to fetch excerpt");
@@ -35,6 +36,18 @@ export const useExcerptData = () => {
       }
     }
   });
+
+  // Preload data in the background
+  useEffect(() => {
+    const preload = async () => {
+      try {
+        await preloadExcerpts();
+      } finally {
+        setIsPreloading(false);
+      }
+    };
+    preload();
+  }, []);
 
   const handleNewExcerpt = () => {
     refetchRemote();
@@ -53,16 +66,18 @@ export const useExcerptData = () => {
     isLocal: true
   });
 
+  // Load initial excerpt
   useEffect(() => {
-    const preloadData = async () => {
-      if (!currentExcerpt) {
+    const loadInitialExcerpt = async () => {
+      if (!currentExcerpt && !isLoading) {
         console.log('Initial data load with theme:', selectedTheme ? `"${selectedTheme}"` : 'null (All)');
         await refetchRemote();
       }
     };
-    preloadData();
+    loadInitialExcerpt();
   }, []);
 
+  // Update current excerpt when remote data changes
   useEffect(() => {
     if (remoteExcerpt) {
       console.log('Setting current excerpt with theme:', selectedTheme ? `"${selectedTheme}"` : 'null (All)');
@@ -80,6 +95,7 @@ export const useExcerptData = () => {
     selectedTheme,
     handleNewExcerpt,
     handleThemeSelect,
-    convertLocalToExcerptWithMeta
+    convertLocalToExcerptWithMeta,
+    isPreloading
   };
 };
