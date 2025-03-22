@@ -37,6 +37,18 @@ export interface UserPracticeData {
   affirmations: string[];
 }
 
+export interface MorningRitualState {
+  date: string;
+  rituals: {
+    wisdom: boolean;
+    breathwork: boolean;
+    gratitude: boolean;
+    affirmations: boolean;
+  };
+  userId: string;
+  last_updated: string;
+}
+
 export const ritualService = {
   // Gratitude methods
   async addGratitudeEntry(content: string) {
@@ -146,52 +158,52 @@ export const ritualService = {
   },
 
   async updateStreak() {
-    const today = new Date().toISOString().split('T')[0];
-    
-    // First, check if we already completed today's ritual
-    const { data: existingRitual } = await supabase
-      .from('morning_rituals')
-      .select('*')
-      .eq('date', today)
-      .single();
+    try {
+      // Get current streak
+      const { data: streakData, error: streakError } = await supabase
+        .from('user_streaks')
+        .select('*')
+        .eq('user_id', this.userId)
+        .single();
 
-    if (existingRitual) {
-      return existingRitual;
+      if (streakError) throw streakError;
+
+      // Check if previous day's ritual was completed
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      const { data: yesterdayRitual, error: ritualError } = await supabase
+        .from('morning_rituals')
+        .select('*')
+        .eq('user_id', this.userId)
+        .eq('date', yesterdayStr)
+        .single();
+
+      if (ritualError && ritualError.code !== 'PGRST116') throw ritualError;
+
+      // Update streak based on previous day's completion
+      const currentStreak = streakData?.current_streak || 0;
+      const newStreak = yesterdayRitual ? currentStreak + 1 : 1;
+
+      // Update streak in database
+      const { data: updatedStreak, error: updateError } = await supabase
+        .from('user_streaks')
+        .upsert({
+          user_id: this.userId,
+          current_streak: newStreak,
+          last_completed: new Date().toISOString(),
+          last_updated: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (updateError) throw updateError;
+      return updatedStreak;
+    } catch (error) {
+      console.error('Error updating streak:', error);
+      throw error;
     }
-
-    // Get current streak
-    const { data: currentStreak } = await supabase
-      .from('user_streaks')
-      .select('*')
-      .single();
-
-    // Calculate new streak
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-    const { data: yesterdayRitual } = await supabase
-      .from('morning_rituals')
-      .select('*')
-      .eq('date', yesterdayStr)
-      .single();
-
-    const isConsecutiveDay = !!yesterdayRitual;
-    const newCurrentStreak = isConsecutiveDay ? (currentStreak?.current_streak || 0) + 1 : 1;
-
-    // Update streak
-    const { data: updatedStreak, error: streakError } = await supabase
-      .from('user_streaks')
-      .upsert({
-        current_streak: newCurrentStreak,
-        last_updated: new Date().toISOString()
-      })
-      .select()
-      .single();
-
-    if (streakError) throw streakError;
-
-    return updatedStreak;
   },
 
   async getCompletionHistory() {
@@ -202,5 +214,50 @@ export const ritualService = {
 
     if (error) throw error;
     return data;
+  },
+
+  // Get ritual state for a specific date
+  async getRitualState(date: string, userId: string): Promise<MorningRitualState | null> {
+    const { data, error } = await supabase
+      .from('morning_rituals')
+      .select('*')
+      .eq('date', date)
+      .eq('user_id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching ritual state:', error);
+      return null;
+    }
+
+    return data;
+  },
+
+  // Save ritual state
+  async saveRitualState(state: MorningRitualState) {
+    try {
+      const now = new Date().toISOString();
+      const { data, error } = await supabase
+        .from('morning_rituals')
+        .upsert({
+          user_id: this.userId,
+          date: state.date,
+          rituals: state.rituals,
+          last_updated: now
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      // Ensure the returned data has the correct last_updated timestamp
+      return {
+        ...data,
+        last_updated: now
+      };
+    } catch (error) {
+      console.error('Error saving ritual state:', error);
+      throw error;
+    }
   }
 }; 

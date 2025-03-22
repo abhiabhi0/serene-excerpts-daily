@@ -6,7 +6,7 @@ export interface ChecklistItem {
 
 export const DEFAULT_ITEMS: ChecklistItem[] = [
   { id: 'wisdom', label: 'Wisdom', checked: false },
+  { id: 'breathwork', label: 'Breathwork', checked: false },
   { id: 'gratitude', label: 'Gratitude', checked: false },
   { id: 'affirmation', label: 'Affirmation', checked: false },
-  { id: 'breathwork', label: 'Breathwork', checked: false },
 ];

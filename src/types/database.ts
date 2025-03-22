@@ -35,18 +35,21 @@ export interface Database {
           user_id: string
           date: string
           items: Json
+          last_updated: string
         }
         Insert: {
           id?: string
           user_id?: string
           date: string
           items: Json
+          last_updated: string
         }
         Update: {
           id?: string
           user_id?: string
           date?: string
           items?: Json
+          last_updated?: string
         }
       }
       user_practice_data: {

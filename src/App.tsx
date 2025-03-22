@@ -3,11 +3,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
-import IndexPage from './pages/Index'; // Import index directly
+import IndexPage from './pages/Index';
 import { clearSiteCache } from './register-sw';
 
 // Lazy load other pages
+const WisdomPage = lazy(() => import('./pages/Wisdom'));
 const BreathworkPage = lazy(() => import('./pages/Breathwork'));
+const GratitudePage = lazy(() => import('./pages/Gratitude'));
+const AffirmationPage = lazy(() => import('./pages/Affirmation'));
 const BlogPage = lazy(() => import('./pages/Blog'));
 const AboutPage = lazy(() => import('./pages/About'));
 const NotFoundPage = lazy(() => import('./pages/NotFound'));
@@ -39,9 +42,24 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<IndexPage />} />
+            <Route path="/wisdom" element={
+              <Suspense fallback={<div className="loading-placeholder">Loading...</div>}>
+                <WisdomPage />
+              </Suspense>
+            } />
             <Route path="/breathwork" element={
               <Suspense fallback={<div className="loading-placeholder">Loading...</div>}>
                 <BreathworkPage />
+              </Suspense>
+            } />
+            <Route path="/gratitude" element={
+              <Suspense fallback={<div className="loading-placeholder">Loading...</div>}>
+                <GratitudePage />
+              </Suspense>
+            } />
+            <Route path="/affirmation" element={
+              <Suspense fallback={<div className="loading-placeholder">Loading...</div>}>
+                <AffirmationPage />
               </Suspense>
             } />
             <Route path="/blog" element={
