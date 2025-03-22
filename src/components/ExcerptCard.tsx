@@ -4,13 +4,12 @@ import { ExcerptContent } from "./excerpt/ExcerptContent";
 import { ActionButtons } from "./excerpt/ActionButtons";
 import { SupportSection } from "./excerpt/SupportSection";
 import { GratitudeAffirmations } from "./excerpt/GratitudeAffirmations";
-import { useNotifications } from "@/hooks/useNotifications";
 import { ScreenshotOverlay } from "./excerpt/ScreenshotOverlay";
 import { useShareHandler } from "./excerpt/ShareHandler";
 import { useFavoriteHandler } from "./excerpt/FavoriteHandler";
 import { useScreenshotMode } from "./excerpt/ScreenshotMode";
 import { Button } from "@/components/ui/button";
-import { Bell, BellRing, Wind } from "lucide-react";
+import { Wind } from "lucide-react";
 import { Link } from "react-router-dom";
 import { UserAccountButton } from "./UserAccountButton";
 
@@ -22,7 +21,6 @@ interface ExcerptCardProps {
 
 export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: ExcerptCardProps) => {
   // Extract functionality to custom hooks
-  const { isSupported, isEnabled, requestNotificationPermission } = useNotifications();
   const { handleShare } = useShareHandler(excerpt);
   const { isFavorite, handleToggleFavorite } = useFavoriteHandler(excerpt);
   const { isScreenshotMode, toggleScreenshotMode } = useScreenshotMode(onScreenshotModeChange);
@@ -31,21 +29,6 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
 
   return (
     <div className="w-[98%] mx-auto space-y-4">
-      {/* User Account Button */}
-      <div className="flex justify-end gap-2">
-        {isSupported && (
-          <Button
-            variant={isEnabled ? "ghost" : "outline"}
-            size="icon"
-            className={isEnabled ? "text-green-400" : "animate-pulse"}
-            onClick={requestNotificationPermission}
-          >
-            {isEnabled ? <BellRing size={20} /> : <Bell size={20} />}
-          </Button>
-        )}
-        <UserAccountButton />
-      </div>
-      
       <ScreenshotOverlay 
         isScreenshotMode={isScreenshotMode} 
         onToggle={toggleScreenshotMode}
@@ -100,7 +83,11 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
 
           <GratitudeAffirmations />
 
-          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm">
+          <div className="flex justify-center mt-4">
+            <UserAccountButton />
+          </div>
+
+          <Card className="w-full bg-[#0A1929]/70 border-[#1A4067]/30 backdrop-blur-sm mt-4">
             <CardContent>
               <SupportSection />
             </CardContent>

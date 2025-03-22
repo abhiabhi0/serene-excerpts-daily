@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AuthModal } from '@/components/AuthModal';
@@ -46,7 +45,7 @@ export const UserAccountButton = () => {
           className="gap-2"
         >
           <User size={16} />
-          <span>Sign In</span>
+          <span>Sign in to sync gratitude & affirmations</span>
         </Button>
       )}
       
