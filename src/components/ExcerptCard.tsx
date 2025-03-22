@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Bell, BellRing, Wind } from "lucide-react";
 import { Link } from "react-router-dom";
 import { UserAccountButton } from "./UserAccountButton";
-import { MorningRitualChecklist } from "./MorningRitualChecklist";
 
 interface ExcerptCardProps {
   excerpt: ExcerptWithMeta;
@@ -84,9 +83,6 @@ export const ExcerptCard = ({ excerpt, onNewExcerpt, onScreenshotModeChange }: E
               />
             </CardContent>
           </Card>
-
-          {/* Morning Ritual Checklist */}
-          <MorningRitualChecklist />
 
           <div className="p-4 rounded-lg bg-blue-900/20 border border-blue-700/20 mt-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">

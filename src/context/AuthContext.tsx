@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/components/ui/use-toast";
-import { ritualService } from '@/services/ritualService';
 
 type AuthContextType = {
   session: Session | null;
@@ -27,20 +26,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Get cached data
       const cachedGratitudes = localStorage.getItem('gratitudes');
       const cachedAffirmations = localStorage.getItem('affirmations');
-      const cachedStreak = localStorage.getItem('streak');
 
       // If we have cached data, update the database
       if (cachedGratitudes || cachedAffirmations) {
-        await ritualService.updatePracticeData({
-          gratitudes: cachedGratitudes ? JSON.parse(cachedGratitudes) : [],
-          affirmations: cachedAffirmations ? JSON.parse(cachedAffirmations) : []
-        });
+        const { error } = await supabase
+          .from('user_practice_data')
+          .upsert({
+            user_id: user?.id,
+            gratitudes: cachedGratitudes ? JSON.parse(cachedGratitudes) : [],
+            affirmations: cachedAffirmations ? JSON.parse(cachedAffirmations) : [],
+            updated_at: new Date().toISOString()
+          });
+
+        if (error) throw error;
       }
 
       // Clear cache after successful sync
       localStorage.removeItem('gratitudes');
       localStorage.removeItem('affirmations');
-      localStorage.removeItem('streak');
       localStorage.removeItem('last_sync');
     } catch (error) {
       console.error('Failed to sync cache to database:', error);
