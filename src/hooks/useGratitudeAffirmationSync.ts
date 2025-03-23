@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -32,12 +31,16 @@ export const useGratitudeAffirmationSync = () => {
     lastUpdated = new Date().toISOString()
   ) => {
     try {
+      console.log(`[${new Date().toISOString()}] Saving to cache - Gratitudes: ${grts.length}, Affirmations: ${affs.length}`);
+      
       localStorage.setItem(CACHE_KEYS.GRATITUDES, JSON.stringify(grts));
       localStorage.setItem(CACHE_KEYS.AFFIRMATIONS, JSON.stringify(affs));
       localStorage.setItem(CACHE_KEYS.LAST_UPDATED, lastUpdated);
       localStorage.setItem(CACHE_KEYS.LAST_SYNC, new Date().toISOString());
+      
+      console.log(`[${new Date().toISOString()}] Successfully saved to cache`);
     } catch (error) {
-      console.error('Error saving to cache:', error);
+      console.error(`[${new Date().toISOString()}] Error saving to cache:`, error);
     }
   }, []);
 
@@ -70,6 +73,8 @@ export const useGratitudeAffirmationSync = () => {
     if (!user) return null;
 
     try {
+      console.log(`[${new Date().toISOString()}] Attempting to save to DB`);
+      
       const { data, error } = await supabase
         .from('user_practice_data')
         .upsert({
@@ -77,13 +82,20 @@ export const useGratitudeAffirmationSync = () => {
           gratitudes: grts,
           affirmations: affs,
           updated_at: lastUpdated
+        }, {
+          onConflict: 'user_id'
         })
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error(`[${new Date().toISOString()}] Error saving to DB:`, error);
+        throw error;
+      }
+
+      console.log(`[${new Date().toISOString()}] Successfully saved to DB`);
       return data;
     } catch (error) {
-      console.error('Error saving to DB:', error);
+      console.error(`[${new Date().toISOString()}] Error in saveToDB:`, error);
       return null;
     }
   }, [user]);
@@ -113,6 +125,7 @@ export const useGratitudeAffirmationSync = () => {
     
     try {
       setIsSyncing(true);
+      console.log(`[${new Date().toISOString()}] Starting sync process`);
       
       // Get last sync time
       const lastSync = localStorage.getItem(CACHE_KEYS.LAST_SYNC);
@@ -120,22 +133,53 @@ export const useGratitudeAffirmationSync = () => {
       
       // Skip sync if not forced and last sync was less than SYNC_INTERVAL ago
       if (!force && lastSync && (now - new Date(lastSync).getTime()) < SYNC_INTERVAL) {
+        console.log(`[${new Date().toISOString()}] Skipping sync - Last sync was too recent`);
         setIsSyncing(false);
         return;
       }
       
       // Get data from cache and DB
       const cacheData = loadFromCache();
-      const dbData = await loadFromDB();
+      console.log(`[${new Date().toISOString()}] Cache data loaded`);
       
-      // If no data in both sources, nothing to sync
-      if (!dbData && (!cacheData.gratitudes.length && !cacheData.affirmations.length)) {
+      const dbData = await loadFromDB();
+      console.log(`[${new Date().toISOString()}] DB data loaded`);
+      
+      // Check if this is first time sync after sign up
+      const isFirstTimeSync = localStorage.getItem('is_first_time_sync') === null;
+      
+      // If user is logged in and has data in DB, always prioritize DB data
+      if (user && dbData) {
+        console.log(`[${new Date().toISOString()}] User logged in with DB data, updating cache`);
+        const dbGratitudes = Array.isArray(dbData.gratitudes) ? dbData.gratitudes : [];
+        const dbAffirmations = Array.isArray(dbData.affirmations) ? dbData.affirmations : [];
+        
+        setGratitudes(dbGratitudes);
+        setAffirmations(dbAffirmations);
+        saveToCache(dbGratitudes, dbAffirmations, dbData.updated_at);
         setIsSyncing(false);
         return;
       }
       
-      // If data only in cache, push to DB
-      if (!dbData && (cacheData.gratitudes.length > 0 || cacheData.affirmations.length > 0)) {
+      // If user is logged in but no DB data, and this is first time sync after sign up
+      if (user && !dbData && isFirstTimeSync && (cacheData.gratitudes.length > 0 || cacheData.affirmations.length > 0)) {
+        console.log(`[${new Date().toISOString()}] First time sync after sign up, using cache data`);
+        await saveToDB(cacheData.gratitudes, cacheData.affirmations, cacheData.lastUpdated);
+        localStorage.setItem('is_first_time_sync', 'false');
+        setIsSyncing(false);
+        return;
+      }
+      
+      // If no data in both sources, nothing to sync
+      if (!dbData && (!cacheData.gratitudes.length && !cacheData.affirmations.length)) {
+        console.log(`[${new Date().toISOString()}] No data to sync in either source`);
+        setIsSyncing(false);
+        return;
+      }
+      
+      // If data only in cache and not first time sync, update DB
+      if (!dbData && (cacheData.gratitudes.length > 0 || cacheData.affirmations.length > 0) && !isFirstTimeSync) {
+        console.log(`[${new Date().toISOString()}] Updating DB with cache data`);
         await saveToDB(cacheData.gratitudes, cacheData.affirmations, cacheData.lastUpdated);
         setIsSyncing(false);
         return;
@@ -143,6 +187,7 @@ export const useGratitudeAffirmationSync = () => {
       
       // If data only in DB, update cache
       if (dbData && (!cacheData.gratitudes.length && !cacheData.affirmations.length)) {
+        console.log(`[${new Date().toISOString()}] Updating cache with DB data`);
         const dbGratitudes = Array.isArray(dbData.gratitudes) ? dbData.gratitudes : [];
         const dbAffirmations = Array.isArray(dbData.affirmations) ? dbData.affirmations : [];
         
@@ -158,11 +203,13 @@ export const useGratitudeAffirmationSync = () => {
         const cacheTimestamp = new Date(cacheData.lastUpdated).getTime();
         const dbTimestamp = new Date(dbData.updated_at).getTime();
         
-        if (cacheTimestamp > dbTimestamp) {
-          // Cache is newer, update DB
+        console.log(`[${new Date().toISOString()}] Comparing timestamps`);
+        
+        if (cacheTimestamp > dbTimestamp && !isFirstTimeSync) {
+          console.log(`[${new Date().toISOString()}] Cache is newer, updating DB`);
           await saveToDB(cacheData.gratitudes, cacheData.affirmations, cacheData.lastUpdated);
         } else if (dbTimestamp > cacheTimestamp) {
-          // DB is newer, update cache
+          console.log(`[${new Date().toISOString()}] DB is newer, updating cache`);
           const dbGratitudes = Array.isArray(dbData.gratitudes) ? dbData.gratitudes : [];
           const dbAffirmations = Array.isArray(dbData.affirmations) ? dbData.affirmations : [];
           
@@ -172,9 +219,10 @@ export const useGratitudeAffirmationSync = () => {
         }
       }
     } catch (error) {
-      console.error('Error syncing data:', error);
+      console.error(`[${new Date().toISOString()}] Error in sync process:`, error);
     } finally {
       setIsSyncing(false);
+      console.log(`[${new Date().toISOString()}] Sync process completed`);
     }
   }, [user, loadFromCache, loadFromDB, saveToDB, saveToCache]);
 
