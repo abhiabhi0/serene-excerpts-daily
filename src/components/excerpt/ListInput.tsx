@@ -8,14 +8,22 @@ interface ListInputProps {
   onChange: (value: string) => void;
   onAdd: () => void;
   placeholder: string;
+  onKeyPress?: (e: React.KeyboardEvent) => void;
 }
 
-export const ListInput = ({ value, onChange, onAdd, placeholder }: ListInputProps) => (
+export const ListInput = ({ 
+  value, 
+  onChange, 
+  onAdd, 
+  placeholder,
+  onKeyPress
+}: ListInputProps) => (
   <div className="flex gap-2">
     <Input
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      onKeyDown={onKeyPress}
       maxLength={100}
       className="bg-white/10 border-[#1A4067]/30"
     />
@@ -28,4 +36,3 @@ export const ListInput = ({ value, onChange, onAdd, placeholder }: ListInputProp
     </Button>
   </div>
 );
-

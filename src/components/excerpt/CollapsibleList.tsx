@@ -1,9 +1,9 @@
+
 import { Label } from "@/components/ui/label";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { ListInput } from "./ListInput";
 import { ListItem } from "./ListItem";
-import { ChangeEvent } from "react";
 
 // Define gtag for TypeScript
 declare global {
@@ -55,10 +55,17 @@ export const CollapsibleList = ({
     onOpenChange(open);
   };
 
+  // Handle keypress on input
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      onAdd();
+    }
+  };
+
   return (
     <Collapsible 
       open={isOpen} 
-      onOpenChange={handleOpenChangeWithAnalytics} // Updated with analytics
+      onOpenChange={handleOpenChangeWithAnalytics}
     >
       <CollapsibleTrigger className="flex w-full items-center justify-between">
         <Label className="text-lg font-semibold cursor-pointer">
@@ -72,6 +79,7 @@ export const CollapsibleList = ({
           onChange={onInputChange}
           onAdd={onAdd}
           placeholder={inputPlaceholder}
+          onKeyPress={handleKeyPress}
         />
         <ul className="space-y-2">
           {items.map((item, index) => (

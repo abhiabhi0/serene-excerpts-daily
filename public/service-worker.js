@@ -1,6 +1,6 @@
-// Cache version - update this when content changes
+// Cache versions - update these when content changes
 const CACHE_NAME = 'site-cache-v1';
-const USER_DATA_CACHE = 'user-data-cache';
+const USER_DATA_CACHE = 'user-data-cache-v1'; // Separate cache for user data
 
 // Assets to cache immediately on install
 const PRECACHE_ASSETS = [
@@ -16,22 +16,31 @@ const PRECACHE_ASSETS = [
 self.addEventListener('install', event => {
   console.log('Service Worker installing...');
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(PRECACHE_ASSETS);
-      })
-      .then(() => {
-        console.log('Service Worker installed, skipping wait');
-        return self.skipWaiting();  // Force activation
-      })
+    Promise.all([
+      // Create site content cache
+      caches.open(CACHE_NAME)
+        .then(cache => {
+          console.log('Opened site cache');
+          return cache.addAll(PRECACHE_ASSETS);
+        }),
+      // Create user data cache
+      caches.open(USER_DATA_CACHE)
+        .then(cache => {
+          console.log('Opened user data cache');
+          return cache;
+        })
+    ])
+    .then(() => {
+      console.log('Service Worker installed, skipping wait');
+      return self.skipWaiting();  // Force activation
+    })
   );
 });
 
 // Service worker activation and cache cleanup
 self.addEventListener('activate', event => {
   console.log('Service Worker activating...');
-  const currentCaches = [CACHE_NAME];
+  const currentCaches = [CACHE_NAME, USER_DATA_CACHE];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return cacheNames.filter(cacheName => !currentCaches.includes(cacheName));
@@ -108,7 +117,7 @@ self.addEventListener('notificationclick', event => {
   );
 });
 
-// Message event for cache clearing
+// Message event for cache management
 self.addEventListener('message', (event) => {
   if (event.data.type === 'CLEAR_SITE_CACHE') {
     event.waitUntil(
@@ -125,5 +134,21 @@ self.addEventListener('message', (event) => {
         );
       })
     );
+  }
+  
+  // Add specific handler for user data cache
+  if (event.data.type === 'CLEAR_USER_DATA_CACHE') {
+    event.waitUntil(
+      caches.delete(USER_DATA_CACHE).then(() => {
+        return caches.open(USER_DATA_CACHE);
+      })
+    );
+  }
+  
+  // Sync user data (gratitude and affirmations)
+  if (event.data.type === 'SYNC_USER_DATA') {
+    // This would be implemented for more advanced caching if needed
+    // Currently using localStorage for simplicity and immediacy
+    console.log('User data sync requested');
   }
 });
