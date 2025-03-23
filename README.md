@@ -2,6 +2,12 @@
 
 A modern web application that provides daily wisdom excerpts and helps users cultivate mindfulness through daily rituals.
 
+### Deploy to prod
+
+```
+git checkout prod && git reset --hard main && git push --force origin prod && git switch main
+```
+
 ## Project Structure
 
 ```
