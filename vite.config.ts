@@ -34,10 +34,10 @@ export default defineConfig(({ mode }) => ({
         main: path.resolve(__dirname, 'index.html'),
         about: path.resolve(__dirname, 'about/index.html'),
         blog: path.resolve(__dirname, 'blog/index.html')
-      },
-      external: [
-        '@supabase/supabase-js'
-      ]
+      }
     }
   },
+  optimizeDeps: {
+    include: ['@supabase/supabase-js']
+  }
 }));
