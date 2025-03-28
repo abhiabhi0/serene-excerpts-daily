@@ -30,6 +30,8 @@ export const useGratitudeAffirmationSync = () => {
     affs: string[], 
     lastUpdated = new Date().toISOString()
   ) => {
+    if (!user) return; // Don't save to cache if user is not logged in
+    
     try {
       console.log(`[${new Date().toISOString()}] Saving to cache - Gratitudes: ${grts.length}, Affirmations: ${affs.length}`);
       
@@ -42,10 +44,12 @@ export const useGratitudeAffirmationSync = () => {
     } catch (error) {
       console.error(`[${new Date().toISOString()}] Error saving to cache:`, error);
     }
-  }, []);
+  }, [user]);
 
   // Load data from cache
   const loadFromCache = useCallback(() => {
+    if (!user) return { gratitudes: [], affirmations: [], lastUpdated: new Date().toISOString() }; // Return empty data if user is not logged in
+    
     try {
       const cachedGratitudes = localStorage.getItem(CACHE_KEYS.GRATITUDES);
       const cachedAffirmations = localStorage.getItem(CACHE_KEYS.AFFIRMATIONS);
@@ -62,7 +66,7 @@ export const useGratitudeAffirmationSync = () => {
       console.error('Error loading from cache:', error);
       return { gratitudes: [], affirmations: [], lastUpdated: new Date().toISOString() };
     }
-  }, []);
+  }, [user]);
 
   // Save data to DB
   const saveToDB = useCallback(async (
@@ -261,7 +265,7 @@ export const useGratitudeAffirmationSync = () => {
 
   // Handle adding a gratitude
   const addGratitude = async () => {
-    if (!newGratitude.trim()) return;
+    if (!newGratitude.trim() || !user) return; // Don't add if user is not logged in
     
     try {
       const now = new Date().toISOString();
@@ -294,7 +298,7 @@ export const useGratitudeAffirmationSync = () => {
 
   // Handle adding an affirmation
   const addAffirmation = async () => {
-    if (!newAffirmation.trim()) return;
+    if (!newAffirmation.trim() || !user) return; // Don't add if user is not logged in
     
     try {
       const now = new Date().toISOString();
@@ -327,6 +331,8 @@ export const useGratitudeAffirmationSync = () => {
 
   // Handle removing a gratitude
   const removeGratitude = async (index: number) => {
+    if (!user) return; // Don't remove if user is not logged in
+    
     try {
       const now = new Date().toISOString();
       const updatedGratitudes = gratitudes.filter((_, i) => i !== index);
@@ -357,6 +363,8 @@ export const useGratitudeAffirmationSync = () => {
 
   // Handle removing an affirmation
   const removeAffirmation = async (index: number) => {
+    if (!user) return; // Don't remove if user is not logged in
+    
     try {
       const now = new Date().toISOString();
       const updatedAffirmations = affirmations.filter((_, i) => i !== index);

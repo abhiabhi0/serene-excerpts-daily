@@ -1,13 +1,14 @@
-
 import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { CollapsibleList } from "./CollapsibleList";
 import { useGratitudeAffirmationSync } from '@/hooks/useGratitudeAffirmationSync';
 import { Spinner } from "@/components/ui/spinner";
+import { useAuth } from '@/context/AuthContext';
 
 export const GratitudeAffirmations = () => {
   const [openGratitude, setOpenGratitude] = useState(false);
   const [openAffirmation, setOpenAffirmation] = useState(false);
+  const { user } = useAuth();
   
   const {
     gratitudes,
@@ -22,15 +23,6 @@ export const GratitudeAffirmations = () => {
     removeAffirmation,
     isLoading
   } = useGratitudeAffirmationSync();
-
-  // Track collapsible toggle for analytics
-  const handleGratitudeOpenChange = (open: boolean) => {
-    setOpenGratitude(open);
-  };
-
-  const handleAffirmationOpenChange = (open: boolean) => {
-    setOpenAffirmation(open);
-  };
 
   if (isLoading) {
     return (
@@ -48,12 +40,13 @@ export const GratitudeAffirmations = () => {
             title="🙏 Appreciate Life: Write Your Gratitudes"
             items={gratitudes}
             isOpen={openGratitude}
-            onOpenChange={handleGratitudeOpenChange}
+            onOpenChange={setOpenGratitude}
             inputValue={newGratitude}
             onInputChange={(value: string) => setNewGratitude(value)}
             onAdd={addGratitude}
             onRemove={removeGratitude}
             inputPlaceholder="I am grateful for..."
+            disabled={!user}
           />
         </CardContent>
       </Card>
@@ -64,12 +57,13 @@ export const GratitudeAffirmations = () => {
             title="✨ Realize Your Divine Nature: Sacred Affirmations"
             items={affirmations}
             isOpen={openAffirmation}
-            onOpenChange={handleAffirmationOpenChange}
+            onOpenChange={setOpenAffirmation}
             inputValue={newAffirmation}
             onInputChange={(value: string) => setNewAffirmation(value)}
             onAdd={addAffirmation}
             onRemove={removeAffirmation}
             inputPlaceholder="I am..."
+            disabled={!user}
           />
         </CardContent>
       </Card>
