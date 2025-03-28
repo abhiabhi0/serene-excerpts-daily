@@ -1,4 +1,3 @@
-
 export interface ExcerptWithMeta {
   text: string;
   bookTitle?: string;
@@ -38,14 +37,19 @@ export interface ExcerptCardProps {
 
 export interface FlattenedExcerpt {
   id: string;
-  bookTitle: string;
-  bookAuthor?: string;
-  translator?: string;
-  category: string;
-  otherCategory?: string;
-  language: string;
   text: string;
-  createdAt: string;
-  amazonLink?: string;
+  chapter?: string;
+  verse?: string;
+  commentary?: boolean;
   themes?: string[];
+  metadata: {
+    title: string;
+    author?: string;
+    translator?: string;
+    amazonLink?: string;
+    category?: string;
+    language?: string;
+    tags?: string[];
+    sourceFile: string;
+  };
 }
