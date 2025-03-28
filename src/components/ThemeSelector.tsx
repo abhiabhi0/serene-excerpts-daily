@@ -35,15 +35,6 @@ export const ThemeSelector = ({ themes, selectedTheme, onThemeSelect }: ThemeSel
         setShowLeftArrow(false);
         setShowRightArrow(false);
       }
-      
-      console.log("Scroll check:", {
-        scrollLeft,
-        scrollWidth,
-        clientWidth,
-        canScroll,
-        showLeftArrow: canScroll && scrollLeft > 0,
-        showRightArrow: canScroll && scrollLeft < scrollWidth - clientWidth
-      });
     }
   };
 

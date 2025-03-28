@@ -42,82 +42,166 @@ git switch main
 - `src/pages/Breathwork.tsx`: Breathwork practice page
 - `src/pages/Index.tsx`: Home page
 
+#### Excerpt System
+- `src/data/books/*.json`: Static JSON files containing spiritual texts and their excerpts
+- `src/data/staticData.ts`: Manages static excerpt data and transforms books into flattened excerpts
+- `src/services/excerptService.ts`: Service for managing excerpt retrieval and caching
+- `src/hooks/useExcerptData.ts`: React hook for managing excerpt state and data fetching
+- `src/components/ExcerptCard.tsx`: Main component for displaying excerpts
+- `src/components/excerpt/RandomExcerptsTab.tsx`: Tab component for random excerpt display
+
+#### Data Structures
+```typescript
+// Excerpt with metadata
+interface ExcerptWithMeta {
+  text: string;
+  bookTitle?: string;
+  bookAuthor?: string;
+  translator?: string;
+  amazonLink?: string;
+  isLocal?: boolean;
+  isFavorite?: boolean;
+  id?: string;
+  themes?: string[];
+}
+
+// Book structure
+interface Book {
+  metadata: {
+    title: string;
+    author?: string;
+    translator?: string;
+    amazonLink?: string;
+    category?: string;
+    language?: string;
+    tags?: string[];
+  };
+  excerpts: {
+    text: string;
+    chapter?: string;
+    verse?: string;
+    commentary?: boolean;
+    themes?: string[];
+  }[];
+}
+```
+
+### Excerpt System Flow
+
+1. **Build Time Process**
+   - `generate-static-excerpts.js` script runs
+   - Reads all JSON files from `books` directory
+   - Creates `staticExcerpts.json` with all excerpts
+   - This file is stored in the GitHub repo
+
+2. **App Initialization**
+   - App loads `staticExcerpts.json`
+   - Logs total number of available excerpts
+   - Initializes empty cache in localStorage
+
+3. **First Excerpt Display**
+   - `useExcerptData` hook mounts
+   - Calls `getNextExcerpt`
+   - Since cache is empty:
+     - Generates 15 random excerpts from `staticExcerpts`
+     - Stores them in localStorage
+     - Returns first excerpt
+     - Logs remaining count (14)
+
+4. **User Interaction Flow**
+   - When user clicks "New Excerpt":
+     - `handleNewExcerpt` is called
+     - `getNextExcerpt` is called
+     - Takes next excerpt from cache
+     - Removes it from cache
+     - Logs remaining count
+   - When cache gets to 1 excerpt:
+     - Generates new 15 random excerpts
+     - Logs new cache size
+     - Continues process
+
+5. **Theme Change Handling**
+   - `handleThemeSelect` is called
+   - Clears current excerpt
+   - Generates new cache filtered by theme
+   - Returns first excerpt from new cache
+
+### Cache Management
+
+1. **Cache Structure**
+   - Stores 15 random excerpts at a time
+   - Uses localStorage for persistence
+   - Maintains separate caches for different themes
+   - Cache key: 'cached_excerpts'
+
+2. **Cache Operations**
+   - **Generation**: Creates new cache of 15 random excerpts
+   - **Retrieval**: Gets and removes one excerpt at a time
+   - **Update**: Regenerates cache when it gets low
+   - **Persistence**: Saves cache state in localStorage
+
+3. **Performance Optimizations**
+   - Efficient loading (only 15 excerpts at a time)
+   - Smooth user experience (no delay when clicking "New Excerpt")
+   - Theme filtering support
+   - Persistent cache across page reloads
+   - Automatic cache regeneration when needed
+
+### Debug Logging
+
+The system includes strategic console logs to track:
+1. Total available excerpts from static data
+2. Cache generation and management
+3. Remaining excerpts after each use
+
+Example log sequence:
+```
+Loaded Static Excerpts: 376
+Generating new cache of excerpts...
+Generated new cache with 15 excerpts
+Remaining excerpts in cache: 14
+Remaining excerpts in cache: 13
+...
+```
+
 ### Data Flow
 
-1. **Local Storage (Cache)**
-   - Data is always stored in localStorage first for quick access
-   - Cache keys:
-     ```typescript
-     const CACHE_KEYS = {
-       GRATITUDES: 'av_gratitudes',
-       AFFIRMATIONS: 'av_affirmations',
-       LAST_UPDATED: 'av_practice_last_updated',
-       LAST_SYNC: 'av_practice_last_sync'
-     }
-     ```
+1. **Static Data Source**
+   - Excerpts are stored in JSON files in `src/data/books/`
+   - Each book file contains metadata and an array of excerpts
+   - Excerpts include text, chapter/verse info, and thematic tags
 
-2. **Database (Supabase)**
-   - Data is synced to Supabase when user is authenticated
-   - Table: `user_practice_data`
-   - Fields: user_id, gratitudes, affirmations, updated_at
+2. **Data Loading**
+   - On build time: Books are imported and transformed into flattened excerpts
+   - On runtime: Excerpts are loaded into memory and cached
+   - Cache is maintained per theme and all excerpts
 
-3. **Sync Process**
-   - On initial load: Load from cache first, then sync with DB
-   - On user login: Sync cache to DB
-   - On changes: Update cache immediately, then sync to DB
-   - Periodic sync: Every 5 minutes when user is logged in
+3. **Caching System**
+   - In-memory cache using Map structure
+   - Cache keys: theme name or 'all' for unfiltered excerpts
+   - Cache lifetime: 30 minutes (gcTime)
+   - Cache freshness: 5 minutes (staleTime)
 
-### Authentication Flow
+4. **Random Excerpt Selection**
+   - User can request random excerpts
+   - Can filter by theme
+   - System checks cache first
+   - If not in cache, filters and caches results
+   - Returns random excerpt from filtered/cached set
 
-1. **Sign Up**
-   - User enters email and password
-   - Account is created in Supabase
-   - Cache is synced to DB
-   - User is redirected to home
+5. **User Features**
+   - View random excerpts
+   - Filter by theme
+   - Save favorites
+   - Share excerpts
+   - View book details and purchase links
+   - Add personal excerpts
 
-2. **Sign In**
-   - User enters credentials
-   - Session is created in Supabase
-   - Cache is synced to DB
-   - User is redirected to home
-
-3. **Sign Out**
-   - Session is cleared
-   - Cache remains but is not synced
-   - User is redirected to sign-in page
-
-### User Experience
-
-1. **Non-Authenticated Users**
-   - Can view gratitudes and affirmations
-   - Can add items (stored in cache)
-   - Cannot delete items
-   - See sign-in prompt when trying to save
-   - Data persists in cache until browser clear
-
-2. **Authenticated Users**
-   - Full CRUD operations
-   - Data syncs across devices
-   - Automatic periodic sync
-   - Data persists in both cache and DB
-
-### Key Features
-
-1. **Offline Support**
-   - Works without internet
-   - Data stored in localStorage
-   - Syncs when connection is restored
-
-2. **Data Persistence**
-   - Browser cache for quick access
-   - Supabase DB for cross-device sync
-   - Automatic conflict resolution
-
-3. **User Interface**
-   - Clean, modern design
-   - Responsive layout
-   - Progressive enhancement
-   - Clear feedback for actions
+6. **Performance Optimizations**
+   - Lazy loading of excerpt cards
+   - Preloading of excerpt data
+   - Efficient caching system
+   - Optimized filtering and random selection
 
 ### Technical Stack
 
@@ -246,3 +330,119 @@ The application is configured for deployment on Netlify. The build process is ha
 ## License
 
 This project is licensed under the MIT License.
+
+## Static Excerpts System
+
+The app uses a static excerpts system for efficient content delivery. Here's how it works:
+
+### Source Data Structure
+- Book data is stored in JSON files in `src/data/books/`
+- Each book file contains:
+  ```json
+  {
+    "metadata": {
+      "title": "string",
+      "author": "string (optional)",
+      "translator": "string (optional)",
+      "amazonLink": "string (optional)",
+      "category": "string (optional)",
+      "language": "string (optional)",
+      "tags": ["string (optional)"]
+    },
+    "excerpts": [
+      {
+        "text": "string",
+        "chapter": "string (optional)",
+        "verse": "string (optional)",
+        "commentary": "boolean (optional)",
+        "themes": ["string (optional)"]
+      }
+    ]
+  }
+  ```
+
+### Build Process
+1. The `generate-static-excerpts.js` script:
+   - Reads all JSON files from the `books` directory
+   - Flattens the book structure into a single array of excerpts
+   - Generates deterministic IDs for each excerpt
+   - Creates `staticExcerpts.json` with the flattened structure
+
+### Deterministic ID Generation
+- Each excerpt gets a unique, stable ID based on:
+  - Source file name
+  - Excerpt text
+  - Chapter and verse information
+- IDs are generated using SHA-256 hashing
+- First 8 characters of the hash are used as the ID
+- Same excerpt always gets the same ID, even across different builds
+
+### Runtime Usage
+- The app loads `staticExcerpts.json` at startup
+- The `useExcerptData` hook uses this data to:
+  - Generate random excerpts
+  - Filter by themes
+  - Manage the cache of 15 excerpts
+
+### Data Flow
+```
+books/*.json → generate-static-excerpts.js → staticExcerpts.json → useExcerptData hook
+```
+
+### Benefits
+- Pre-processes data at build time
+- Reduces runtime processing
+- Makes data easily accessible in the browser
+- Maintains all book metadata with each excerpt
+- Ensures stable IDs for excerpts across builds
+
+## Data Flow
+
+### Static Data Source
+- Excerpts are pre-processed at build time
+- Source data stored in JSON files in `src/data/books/`
+- Build script generates optimized `staticExcerpts.json`
+- Each excerpt has a deterministic ID based on content
+
+### Data Loading Process
+1. Initial load:
+   - Loads static excerpts from JSON
+   - Initializes excerpt cache
+   - Sets up theme filtering
+
+2. Runtime operations:
+   - Random excerpt selection
+   - Theme-based filtering
+   - Cache management
+   - User interaction handling
+
+### Caching System
+- Maintains a cache of 15 excerpts
+- Cache is regenerated when:
+  - User requests new excerpt
+  - Theme is changed
+  - Cache is empty
+- Cache persists across page reloads
+- Optimized for performance
+
+### Random Excerpt Selection
+- Uses weighted random selection
+- Considers:
+  - Theme preferences
+  - Previous excerpts
+  - Commentary ratio
+- Ensures diverse content delivery
+
+### User Features
+- Theme filtering
+- Daily excerpt viewing
+- Personal gratitude tracking
+- Affirmation management
+- Offline support
+
+### Performance Optimizations
+- Static data pre-processing
+- Efficient caching system
+- Optimized random selection
+- Minimal runtime processing
+- Deterministic IDs for stable references
