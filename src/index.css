@@ -1,30 +1,51 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 217 91% 60%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 215 25% 27%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 217 91% 60%;
-    --accent-foreground: 210 40% 98%;
+    --background: 220 25% 9%;
+    --foreground: 60 30% 98%;
+    --card: 220 25% 12%;
+    --card-foreground: 60 30% 98%;
+    --popover: 220 25% 12%;
+    --popover-foreground: 60 30% 98%;
+    --primary: 35 80% 45%;
+    --primary-foreground: 220 25% 9%;
+    --secondary: 35 80% 45%;
+    --secondary-foreground: 220 25% 9%;
+    --muted: 220 25% 15%;
+    --muted-foreground: 60 30% 65%;
+    --accent: 35 80% 45%;
+    --accent-foreground: 220 25% 9%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 19% 27%;
-    --input: 217 19% 27%;
-    --ring: 224 71.4% 4.1%;
-    --radius: 0.75rem;
+    --destructive-foreground: 60 30% 98%;
+    --border: 220 25% 15%;
+    --input: 220 25% 15%;
+    --ring: 35 80% 45%;
+    --radius: 1.25rem;
+  }
+
+  .dark {
+    --background: 35 25% 9%;
+    --foreground: 60 30% 98%;
+    --card: 35 25% 12%;
+    --card-foreground: 60 30% 98%;
+    --popover: 35 25% 12%;
+    --popover-foreground: 60 30% 98%;
+    --primary: 220 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 35 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 35 25% 15%;
+    --muted-foreground: 60 30% 65%;
+    --accent: 35 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 35 25% 15%;
+    --input: 35 25% 15%;
+    --ring: 35 100% 50%;
   }
 
   * {
@@ -47,6 +68,10 @@
     font-size: 1rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-image: 
+      radial-gradient(circle at 100% 0%, rgba(255,165,0,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 0% 100%, rgba(255,165,0,0.05) 0%, transparent 50%);
+    background-color: #0A1929;
   }
 
   /* Add viewport height adjustment for mobile browsers */
@@ -59,25 +84,52 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold tracking-tight;
     line-height: 1.2;
+    background: linear-gradient(135deg, hsl(35 80% 45%), hsl(35 80% 35%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   /* Using fixed rem values instead of clamp for more consistency */
-  h1 { font-size: 1.75rem; }
-  h2 { font-size: 1.5rem; }
-  h3 { font-size: 1.25rem; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
 
   p, li {
     font-size: 1rem;
-    min-height: 1.2em; /* Prevent text from becoming too small */
+    min-height: 1.2em;
   }
 
   button, .button {
     @apply min-h-[2.5rem] min-w-[2.5rem];
     font-size: 1rem;
+    background: #0F2942;
+    color: hsl(35 60% 40%);
+    border: 1px solid rgba(205, 133, 0, 0.2);
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+  }
+
+  button:hover, .button:hover {
+    transform: translateY(-2px);
+    background: #1A4067;
+    border-color: rgba(205, 133, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(205, 133, 0, 0.1);
   }
 
   input, textarea, select {
-    font-size: 16px !important; /* Prevent zoom on focus in iOS */
+    font-size: 16px !important;
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    background: hsl(var(--input));
+    color: hsl(var(--foreground));
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 2px rgba(255,165,0,0.1);
+    outline: none;
   }
 }
 
@@ -88,12 +140,8 @@
   }
   
   @keyframes shimmer {
-    0% {
-      background-position: 100% 0;
-    }
-    100% {
-      background-position: -100% 0;
-    }
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
   }
 
   .animate-in {
@@ -102,14 +150,170 @@
     animation-fill-mode: forwards;
   }
 
-  /* Breathing animation keyframes */
-  @keyframes grow {
-    0%, 100% { transform: scale(0.7); }
-    50% { transform: scale(1); }
+  /* Spiritual-themed animations */
+  @keyframes lotus-bloom {
+    0% { transform: scale(0.8) rotate(0deg); opacity: 0.8; }
+    50% { transform: scale(1) rotate(180deg); opacity: 1; }
+    100% { transform: scale(0.8) rotate(360deg); opacity: 0.8; }
   }
 
-  @keyframes shrink {
-    0%, 100% { transform: scale(0.7); }
-    50% { transform: scale(0.5); }
+  @keyframes om-sound {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .lotus-animation {
+    animation: lotus-bloom 8s infinite ease-in-out;
+  }
+
+  .om-animation {
+    animation: om-sound 4s infinite ease-in-out;
+  }
+
+  .float-animation {
+    animation: float 3s infinite ease-in-out;
+  }
+
+  /* Spiritual gradient backgrounds */
+  .spiritual-gradient {
+    background: linear-gradient(135deg, 
+      hsl(220 100% 50% / 0.1),
+      hsl(60 30% 98% / 0.1)
+    );
+  }
+
+  .spiritual-gradient-dark {
+    background: linear-gradient(135deg, 
+      hsl(220 100% 50% / 0.1),
+      hsl(35 25% 9% / 0.1)
+    );
+  }
+
+  /* Decorative elements */
+  .spiritual-border {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .spiritual-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, 
+      hsl(220 100% 50%),
+      transparent
+    ) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    border-radius: inherit;
+  }
+
+  .spiritual-border::after {
+    content: 'ॐ';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: hsl(220 100% 50% / 0.1);
+    pointer-events: none;
+  }
+
+  /* Card styles */
+  .spiritual-card {
+    @apply p-6 rounded-2xl;
+    background: linear-gradient(135deg, 
+      hsl(var(--card)),
+      hsl(var(--card) / 0.8)
+    );
+    backdrop-filter: blur(10px);
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+
+  .spiritual-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,123,255,0.1);
+  }
+
+  /* Navigation styles */
+  .nav-link {
+    @apply px-4 py-2 rounded-full;
+    transition: all 0.3s ease;
+  }
+
+  .nav-link:hover {
+    background: #0F2942;
+    color: hsl(35 60% 40%);
+  }
+
+  .nav-link.active {
+    background: #0F2942;
+    color: hsl(35 60% 40%);
+    border: 1px solid rgba(205, 133, 0, 0.2);
+  }
+
+  /* Accent button styles */
+  .accent-button {
+    background: rgb(204, 85, 0);
+    color: white;
+    border: none;
+  }
+
+  .accent-button:hover {
+    background: rgb(179, 75, 0);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(204, 85, 0, 0.2);
+  }
+
+  /* Theme selector / Category buttons */
+  [role="tablist"] button,
+  .theme-selector button {
+    @apply px-4 py-2 rounded-full text-sm;
+    background: rgb(204, 85, 0);
+    color: white;
+    border: 1px solid rgba(205, 133, 0, 0.15);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+  }
+
+  [role="tablist"] button:hover,
+  .theme-selector button:hover {
+    background: rgb(179, 75, 0);
+    border-color: rgba(205, 133, 0, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(204, 85, 0, 0.2);
+  }
+
+  [role="tablist"] button[aria-selected="true"],
+  .theme-selector button.active {
+    background: rgb(204, 85, 0);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(204, 85, 0, 0.2);
+  }
+
+  /* Make the "All" button slightly different to stand out */
+  [role="tablist"] button:first-child,
+  .theme-selector button:first-child {
+    background: rgb(204, 85, 0);
+    border-color: rgba(205, 133, 0, 0.25);
+  }
+
+  [role="tablist"] button:first-child:hover,
+  .theme-selector button:first-child:hover {
+    background: rgb(179, 75, 0);
+    border-color: rgba(205, 133, 0, 0.4);
   }
 }
