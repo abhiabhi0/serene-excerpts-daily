@@ -1,25 +1,38 @@
 import { staticExcerpts } from "@/data/staticData";
-import { ExcerptWithMeta } from "@/types/excerpt";
+import { ExcerptWithMeta, FlattenedExcerpt } from "@/types/excerpt";
 
 // Cache for excerpts
-const excerptCache = new Map<string, ExcerptWithMeta[]>();
+const excerptCache = new Map<string, FlattenedExcerpt[]>();
 const CACHED_EXCERPTS_KEY = 'cached_excerpts';
 const CACHE_SIZE = 15;
 
+// Helper function to transform FlattenedExcerpt to ExcerptWithMeta
+function transformToExcerptWithMeta(excerpt: FlattenedExcerpt): ExcerptWithMeta {
+  return {
+    text: excerpt.text,
+    bookTitle: excerpt.metadata.title,
+    bookAuthor: excerpt.metadata.author,
+    translator: excerpt.metadata.translator,
+    amazonLink: excerpt.metadata.amazonLink,
+    themes: excerpt.themes,
+    id: excerpt.id
+  };
+}
+
 // Helper function to get random excerpts
-function getRandomExcerpts(count: number, fromExcerpts: ExcerptWithMeta[]): ExcerptWithMeta[] {
+function getRandomExcerpts(count: number, fromExcerpts: FlattenedExcerpt[]): FlattenedExcerpt[] {
   const shuffled = [...fromExcerpts].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 }
 
 // Helper function to get cached excerpts
-function getCachedExcerpts(): ExcerptWithMeta[] {
+function getCachedExcerpts(): FlattenedExcerpt[] {
   const cached = localStorage.getItem(CACHED_EXCERPTS_KEY);
   return cached ? JSON.parse(cached) : [];
 }
 
 // Helper function to update cached excerpts
-function updateCachedExcerpts(excerpts: ExcerptWithMeta[]) {
+function updateCachedExcerpts(excerpts: FlattenedExcerpt[]) {
   localStorage.setItem(CACHED_EXCERPTS_KEY, JSON.stringify(excerpts));
 }
 
@@ -30,7 +43,7 @@ export const getRandomExcerpt = async (theme: string | null = null): Promise<Exc
   if (excerptCache.has(cacheKey)) {
     const cachedExcerpts = excerptCache.get(cacheKey)!;
     const randomIndex = Math.floor(Math.random() * cachedExcerpts.length);
-    return cachedExcerpts[randomIndex];
+    return transformToExcerptWithMeta(cachedExcerpts[randomIndex]);
   }
 
   // If not in cache, filter and cache the results
@@ -50,14 +63,7 @@ export const getRandomExcerpt = async (theme: string | null = null): Promise<Exc
   excerptCache.set(cacheKey, filteredExcerpts);
 
   const randomIndex = Math.floor(Math.random() * filteredExcerpts.length);
-  return {
-    text: filteredExcerpts[randomIndex].text,
-    bookTitle: filteredExcerpts[randomIndex].bookTitle,
-    bookAuthor: filteredExcerpts[randomIndex].bookAuthor,
-    translator: filteredExcerpts[randomIndex].translator,
-    amazonLink: filteredExcerpts[randomIndex].amazonLink,
-    themes: filteredExcerpts[randomIndex].themes
-  };
+  return transformToExcerptWithMeta(filteredExcerpts[randomIndex]);
 };
 
 // Function to get next excerpt from cache or generate new cache
@@ -89,5 +95,5 @@ export const getNextExcerpt = async (theme: string | null = null): Promise<Excer
   updateCachedExcerpts(cachedExcerpts);
   console.log(`Remaining excerpts in cache: ${cachedExcerpts.length}`);
 
-  return excerpt;
+  return transformToExcerptWithMeta(excerpt);
 };
